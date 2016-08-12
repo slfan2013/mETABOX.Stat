@@ -1,6 +1,7 @@
 $(document).ready(function(){
   $("#test").click(function(){
-        var req = ocpu.call("hello",{
+    console.log("clicked")
+        var req = ocpu.call("cat_function",{
     },function(session){
       console.log(session.getLoc())
     })

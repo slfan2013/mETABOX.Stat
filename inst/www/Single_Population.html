@@ -82,20 +82,49 @@
             <div class="container-fluid">
 
                 <div class="row">
-                    <div class="col-lg-12">
-                        <h1>Simple Sidebar</h1>
-                        <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
-
-                        <a class="btn btn-default" id="test">Test</a>
-
+                  <div class="col-lg-12">
+                      <h1>Single Population</h1>
+                      <p class = 'text-muted'>A single population is when researchers consider only one measurement, e.g. weight, height, grade point average (GPA), etc.</p><br /><br />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <i class = "fa fa-dashboard"></i> Population
+                        </div>
+                        <div class="panel-body">
+                          <div class="row">
+                            <div class = 'col-lg-3'>
+                              <div class="form-group">
+                                            <label>Minimum Value</label>
+                                            <input class="form-control" type = 'number' placeholder = "The possible smallest value of the population" id = "smallestvalue_singlepopulation">
+                              </div>
+                              <div class="form-group">
+                                            <label>Maximum Value</label>
+                                            <input class="form-control" type = 'number' placeholder = "The possible largest value of the population" id = "largestvalue_singlepopulation">
+                              </div>
+                              <div class="form-group">
+                                            <label>Mean</label>
+                                            <input class="form-control" type = 'number' placeholder = "Average value of population" id = "mean_singlepopulation">
+                              </div>
+                              <div class="form-group">
+                                            <label>Standard Deviation (sd)</label>
+                                            <input class="form-control" type = 'number' placeholder = "The extent of variation of population" id = "sd_singlepopulation">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
+
                 </div>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
 
-    </div>
+
     <!-- /#wrapper -->
 
     <!-- jQuery -->
