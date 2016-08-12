@@ -19,9 +19,12 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
 
+
+
     <!-- Templates -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
 
     <!-- Side-Bar CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet"><!--making the sidebar collapsible-->
@@ -29,10 +32,9 @@
     <!-- Other -->
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
-
     <!-- My JS -->
     <script src="js/myJS.js"></script>
-    <script src="js/Single_Population.js"></script>
+    <script src="js/Two_Population.js"></script>
 
 
 
@@ -84,11 +86,10 @@
         <div id="page-content-wrapper">
           <a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-navicon"></i></a>
             <div class="container-fluid">
-
                 <div class="row">
                   <div class="col-lg-12">
-                      <h1>Single Population</h1>
-                      <p class = 'text-muted'>A single population is when researchers consider only one measurement, e.g. weight, height, grade point average (GPA), etc.</p><br /><br />
+                      <h1>Two Populations</h1>
+                      <p class = 'text-muted'> In many cases we would like to compare two populations. For example, we may determine whether (average) salaries differed between males and females.  In statistics, student t test and Mann-Whitney U Test are two common methods of testing for difference between two populations.</p><br /><br />
                   </div>
                 </div>
                 <div class="row">
@@ -102,20 +103,41 @@
                             <div class = 'col-lg-3'>
                               <div class="form-group">
                                             <label>Minimum Value</label>
-                                            <input class="form-control" type = 'number' placeholder = "The possible smallest value of the population" id = "smallestvalue_singlepopulation">
+                                            <input class="form-control" type = 'number' placeholder = "The possible smallest value of the population" id = "smallestvalue_twopopulation">
                               </div>
                               <div class="form-group">
                                             <label>Maximum Value</label>
-                                            <input class="form-control" type = 'number' placeholder = "The possible largest value of the population" id = "largestvalue_singlepopulation">
+                                            <input class="form-control" type = 'number' placeholder = "The possible largest value of the population" id = "largestvalue_twopopulation">
                               </div>
-                              <div class="form-group">
-                                            <label>Mean</label>
-                                            <input class="form-control" type = 'number' placeholder = "Average value of population" id = "mean_singlepopulation">
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Mean1</label>
+                                                <input class="form-control" type = 'number' placeholder = "first population average" id = "mean1_twopopulation">
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Mean2</label>
+                                                <input class="form-control" type = 'number' placeholder = "second population average" id = "mean2_twopopulation">
+                                  </div>
+                                </div>
                               </div>
-                              <div class="form-group">
-                                            <label>Standard Deviation (sd)</label>
-                                            <input class="form-control" type = 'number' placeholder = "The extent of variation of population" id = "sd_singlepopulation">
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Standard Deviation1 (sd)</label>
+                                                <input class="form-control" type = 'number' placeholder = "first population variation" id = "sd1_twopopulation">
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Standard Deviation2 (sd)</label>
+                                                <input class="form-control" type = 'number' placeholder = "second population variation" id = "sd2_twopopulation">
+                                  </div>
+                                </div>
                               </div>
+
                             </div>
                           </div>
                         </div>
@@ -124,15 +146,15 @@
                   </div>
                   <div class="row">
                     <div class="col-lg-4">
-                      <input id="samplesize_singlepopulation" type="number" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="5" style =
-                      "display:inline"/><span><strong> Sample Size: <span id="samplesize_display_singlepopulation">5</span></strong></span>
+                      <input id="samplesize_twopopulation" type="number" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="5" style =
+                      "display:inline"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
                     </div>
                     <div class="col-lg-4">
                       <input type="checkbox" checked> <strong>Sample One At a Time?</strong>
                     </div>
                     <div class="col-lg-4">
-                      <input id="sampletimes_singlepopulation" type="number" data-slider-min="10" data-slider-max="100" data-slider-step="10" data-slider-value="20" style =
-                      "display:inline"/><span><strong>  Repeated Time: <span id="sampletimes_display_singlepopulation">20</span></strong></span>
+                      <input id="sampletimes_twopopulation" type="number" data-slider-min="10" data-slider-max="100" data-slider-step="10" data-slider-value="20" style =
+                      "display:inline"/><span><strong>  Repeated Time: <span id="sampletimes_display_twopopulation">20</span></strong></span>
                     </div>
                   </div>
                   <br /><br />
@@ -140,7 +162,6 @@
                   <br /><br />
                   <div class="row">
                     <div class = 'col-lg-12'>
-
                           <div class="row">
                             <div class = 'col-lg-3'>
                               <div class="form-group">
@@ -149,12 +170,31 @@
                               <div class="form-group">
                                             <label>Estimated Maximum Value</label>
                               </div>
-                              <div class="form-group">
-                                            <label>Estimated Mean</label>
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Estimated Mean1</label>
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                                <label>Estimated Mean2</label>
+                                  </div>
+                                </div>
                               </div>
-                              <div class="form-group">
-                                            <label>Estimated Standard Deviation (sd)</label>
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                    <label>Estimated Standard Deviation (sd)</label>
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                    <label>Estimated Standard Deviation (sd)</label>
+                                  </div>
+                                </div>
                               </div>
+
                             </div>
                           </div>
 

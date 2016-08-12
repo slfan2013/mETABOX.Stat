@@ -23,13 +23,13 @@
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-
     <!-- Side-Bar CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet"><!--making the sidebar collapsible-->
 
     <!-- Other -->
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
+
     <!-- My JS -->
     <script src="js/myJS.js"></script>
 
@@ -87,11 +87,42 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1>Simple Sidebar</h1>
-                        <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
+                        <h1 style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'>Sample Size Calculator</h1>
+                        <p style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'>Calculate the sample size for different hypothesis testing.</p><hr />
+                        <h3><strong>1. What would you like to test?</strong></h3>
+                        <p>This is the first thing you need to know. There are different kinds of statistical tests correspondnig to different experimental hypothesis.
+                        For example, you may assume that the average salary of males is higher than female. In this case, you are comparing two group means. In this case,
+                        you should choose <em>'one factor --> two independent groups --> t-test'</em>.</p>
+                        <p>Sometimes people are interested in the interaction between two factors. For example, you may be interested in whether the education level, say 'school',
+                        'collage' and 'university', has different influence on salary of male and female. You have two factors, one is education and the other one is
+                        sex. In this case, you should select <em>'two factor --> independent * independent --> two-way ANOVA'</em>. More explanation are given
+                        <a href="url">here</a>.</p>
+                        <div class="well">
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="form-group">
+                                  <label>Number of Factors</label>
+                                  <div class="radio">
+                                      <label>
+                                          <input type="radio" name="numoffactor_samplesize" id="onefactor_samplesize" checked>one factor
+                                      </label>
+                                  </div>
+                                  <div class="radio">
+                                      <label>
+                                          <input type="radio" name="numoffactor_samplesize" id="twofactor_samplesize">two factor
+                                      </label>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-4">
 
-                        <a class="btn btn-default" id="test">Test</a>
+                            </div>
+                          </div>
+                        </div>
+                        <h3><strong>2. What is the effect size of populations?</strong></h3>
+                        <p>In statistics, effect size (d) is a conscept to quantify how distinguish populations are. Different test has different ways of measuring the effect size
+                        but usually effect size envolves with population means and population standard deviations. If you cannot estimate the effect size, you can determine it using
+                        means and standard deviations <span class="text-muted">(you can click the <em>determine!</em> button)</span>. </p>
 
                     </div>
                 </div>
