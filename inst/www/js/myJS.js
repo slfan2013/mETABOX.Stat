@@ -6,7 +6,6 @@
     return(result.slice(0, length))
   }
   pnorm = function(x,mean,sd){//require gaussian.js
-  console.log(sd)
     var distribution = gaussian(mean, Math.pow(sd, 2));
     var result = [];
     for(i=0;i<x.length;i++){
@@ -46,7 +45,10 @@
     return(Math.sqrt(meanFunction(diff)))
 
   }
-
+  storeItemAndReset = function(id){
+    localStorage.setItem(id, $('#'+id).val());
+    document.getElementById(id).value = localStorage.getItem(id);
+  }
 
 $(document).ready(function(){
   $("#test").click(function(){
