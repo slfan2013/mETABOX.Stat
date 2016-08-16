@@ -1,9 +1,7 @@
 
-
-
-
 var app = angular.module('populationplot_singlepopulation', []);
 app.controller('populationplotctrl_singlepopulation', function($scope) {
+  $scope.Math = window.Math;// enable using Math functions in html.
   //Retrieve all the parameters;
   $scope.min = parseInt(localStorage.getItem("smallestvalue_singlepopulation"),10);
   $scope.max = parseInt(localStorage.getItem("largestvalue_singlepopulation"),10);
@@ -13,13 +11,22 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.n = 5;
   $scope.repeat = 1;
   $scope.sampleselected = null;
+  $scope.samplemeans = [1];
+  $scope.tol = 3;
+  $scope.tol_setting_show = false;
+  $scope.tol_step = 1;
+  $scope.tol_max = Math.floor($scope.mean/10);
+
+  $scope.toggle_tol_setting_singlepopulation = function(){
+    $scope.tol_setting_show = !$scope.tol_setting_show
+  }
 
   $scope.sample = function(){
     var sampleset = [];
     var samplemeans = [];
     var samplesds = [];
     var ys = [];
-    for(ii=0;ii<$("#sampletimes_singlepopulation").val();ii++){
+    for(ii=0;ii<$scope.repeat;ii++){
       rdm = rnorm($("#samplesize_singlepopulation").val(),mean=$scope.mean,sd=$scope.sd)
       sampleset.push(rdm)
       samplemeans.push({value:meanFunction(rdm), name:ii+"thsample_singlepopulation"});
@@ -45,11 +52,10 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
                     paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)'}
 
     $scope.populationplot_singlepopulation = Plotly.newPlot('populationplot_singlepopulation', data,layout);
-  };$scope.populationplot()
-
+  };$scope.populationplot();
   // click Sample! and draw plot if repeat one time. Otherwise, need users to mouse over.
   $scope.samplepopulation = function(){
-    if($("#sampletimes_singlepopulation").val()>1){
+    if($scope.repeat>1){
       $scope.displaybottom = true;
     }else{
       $scope.displaybottom = false;
@@ -60,9 +66,9 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     var x = seq($scope.min, $scope.max, length=1000)
     data.push($scope.truevalue);
 
-    for(ii=0;ii<$("#sampletimes_singlepopulation").val();ii++){
+    for(ii=0;ii<$scope.repeat;ii++){
       var y = pnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
-      data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',opacity: 0.75,"xaxis": "x1","yaxis": "y1"},
+      data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"},
       {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#samplesize_singlepopulation").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
       "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
       {x:[$scope.samplemeans[ii].value,$scope.samplemeans[ii].value], y:[0,Math.max.apply(null, y)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
@@ -82,15 +88,29 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     $scope.samplesetplot()
   }
 
-
   $scope.samplesetplot = function(highlight_index = null){
-    var x = Array.from(Array($scope.repeat).keys());
-    var y = $scope.samplemeans.map(function(a) {return parseFloat(a.value);})
-    data = [{x:[0,$scope.repeat-1],y:[$scope.mean,$scope.mean],name:"average",mode: 'lines'},{x:x,y:y,type:'scatter',mode: 'lines+markers',name:"estimated average"}]
-    if(highlight_index!==null){
-      data.push({x:[highlight_index],y:[parseFloat($scope.samplemeans[highlight_index].value)], type:'scatter', name:"highlighted point", marker:{color:"red"},mode: 'markers'})
+    var x = Array.from(Array($scope.repeat).keys()); // from 0 to repeat-1
+    var y = $scope.samplemeans.map(function(a) {return parseFloat(a.value);}) //get the value of same attribute from array.
+    data = [{x:[0,$scope.repeat],y:[$scope.mean,$scope.mean],name:"average",mode: 'lines'},//line of true mean.
+            {x:x,y:y,type:'scatter',mode: 'lines+markers',name:"estimated average"}         //scatters of sample means.
+            ]
+    if(highlight_index!==null){ // red dot.
+      data.push({x:[highlight_index],y:[parseFloat($scope.samplemeans[highlight_index].value)], type:'scatter', name:"highlighted point", marker:{color:"red",size: 12},mode: 'markers'})
     }
-    Plotly.newPlot('samplesetplot_singlepopulation', data,{yaxis:{range:[$scope.min, $scope.max]}});
+
+    Plotly.newPlot('samplesetplot_singlepopulation', data,{yaxis:{range:[$scope.min, $scope.max]},
+                                                                  shapes:[
+                                                                          {type:'line',x0:0,y0:$scope.mean+$scope.tol,x1:$scope.repeat,y1:$scope.mean+$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}},//tol upper line.
+                                                                          {type:'line',x0:0,y0:$scope.mean-$scope.tol,x1:$scope.repeat,y1:$scope.mean-$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}}//tol lower line.
+                                                                        ]
+                                                            });
+    var count = 0;
+    for(var i=0;i<$scope.repeat;i++){
+      if((y[i]<($scope.mean+$scope.tol)) && (y[i]>($scope.mean-$scope.tol))){
+        count++;
+      }
+    }
+    $scope.count_perc = (count/$scope.repeat * 100).toFixed(1);
   }
 
   //hover event.
@@ -111,6 +131,12 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 }
 
 
+$scope.refresh_tol_singlepopulation = function(){
+  $("#tol_singlepopulation").slider({
+    step:$scope.tol_step,
+    max:$scope.tol_max
+  });
+}
 });
 
 
@@ -118,6 +144,8 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 
 
 $(document).ready(function(){
+
+
 $("#samplesize_singlepopulation").slider();
 $("#samplesize_singlepopulation").on("slide", function(slideEvt) {
 	$("#samplesize_display_singlepopulation").text(slideEvt.value);
@@ -128,6 +156,10 @@ $("#sampletimes_singlepopulation").slider({
   $("#sampletimes_singlepopulation").on("slide", function(slideEvt) {
 	$("#sampletimes_display_singlepopulation").text(slideEvt.value);
 });
+
+  $("#tol_singlepopulation").slider({});
+
+
 // save all the parameter
 $(".parameter_singlepopulation").change(function(){
   storeItemAndReset("smallestvalue_singlepopulation")

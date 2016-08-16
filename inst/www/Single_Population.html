@@ -131,7 +131,7 @@
                               <div class="form-group">
                                             <label>Standard Deviation </label><em class="text-muted pull-right">&nbsp;This means ~70% of data will be within {{mean - sd}} and {{mean + sd}}</em>
                                             <input class="form-control parameter_singlepopulation" type = 'number' placeholder = "The extent of variation of population" id = "sd_singlepopulation"
-                                            ng-model="sd" ng-change="populationplot()" min = 0>
+                                            ng-model="sd" ng-change="populationplot();sample();samplesetplot()" min = 0>
                               </div><hr/>
                               <div class="form-group">
                                             <label>Estimated Mean</label>
@@ -163,7 +163,7 @@
                       <input type="checkbox" ng-model="sampleoneatatime"> <strong>Sample One At a Time?</strong>
                     </div>-->
                     <div class="col-lg-6" align="center">
-                      <input id="sampletimes_singlepopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="1" style =
+                      <input id="sampletimes_singlepopulation" type="number" data-slider-min="1" data-slider-max="200" data-slider-step="100" data-slider-value="1" style =
                       "display:inline" ng-model='repeat'/><span><strong> Repeat Time: <span id="sampletimes_display_singlepopulation">1</span></strong></span>
                     </div>
                   </div>
@@ -196,6 +196,7 @@
                                   </div>
                                   <div class="col-lg-6">
                                     <div class="form-group">
+
                                                 <div ng-repeat="samplesd in samplesds">
                                                   <p name = "{{samplesd.name}}" ng-mouseover="setSelected(samplesd.name)"></p>
                                                     <span ng-class="{selected : samplesd.name === sampleselected}">{{samplesd.value}}</span>
@@ -203,18 +204,42 @@
                                                 </div>
                                   </div>
                                 </div>
-
-
-
-                              </div>
-
-
+                              </div><br />
                             </div>
                             <div class="col-lg-9">
                               <div id="samplesetplot_singlepopulation"></div>
                             </div>
-                          </div>
+                          </div><br/><br/>
+                          <div class="row">
+                            <div class="col-lg-3">
+                              <div ng-show = "tol_setting_show">
+                                <div class="row">
+                                  <div class="col-lg-6">
+                                    Step: <input type="number" ng-model="tol_step" ng-change= "refresh_tol_singlepopulation();"/>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    Max: <input type="number" ng-model="tol_max" ng-change= "refresh_tol_singlepopulation();"/>
+                                  </div>
+                                </div>
 
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                                  <div class="form-group" align="center">
+                                    <i class="fa fa-gear text-muted" ng-click="toggle_tol_setting_singlepopulation()"></i>
+                                            <input type = 'number' id = "tol_singlepopulation" ng-model="tol" ng-change="samplesetplot();"
+                                            data-slider-min="0" data-slider-max="{{tol_max}}" data-slider-step="{{tol_step}}" data-slider-value="3" style ="display:inline">
+                                            <span><strong> Error tolerance: <span>{{tol}}</span></strong></span>
+                                            <em class="text-muted">[{{(mean - tol).toFixed(2)}}, {{(mean + tol).toFixed(2)}}]</em>
+
+                                  </div>
+                                </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <h2  align="center">{{count_perc}}%</h2>
+                            </div>
+                          </div>
                     </div>
                   </div>
                 </div>
