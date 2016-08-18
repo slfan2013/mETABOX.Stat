@@ -16,6 +16,20 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.tol_setting_show = false;
   $scope.tol_step = 1;
   $scope.tol_max = Math.floor($scope.mean/10);
+  $scope.powersamplerangemin = 2;
+  $scope.powersamplerangemax = 100;
+  $scope.powersamplerangestep= 1;
+  $scope.powermean = 175;
+  $scope.powersdmin = 5;
+  $scope.powersdmax = 20;
+  $scope.powersdstep = 5;
+  $scope.powertol = 3
+  $scope.displaypower = false;
+
+  $scope.toggle_display_power = function(){//whether to display power analysis part?
+    $scope.displaypower = !$scope.displaypower
+    $scope.powerplot()
+  }
 
   $scope.toggle_tol_setting_singlepopulation = function(){
     $scope.tol_setting_show = !$scope.tol_setting_show
@@ -39,7 +53,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 
   $scope.populationplot = function(){
     var x = seq($scope.min, $scope.max, length=1000);
-    var y = pnorm(x,$scope.mean,$scope.sd)
+    var y = dnorm(x,$scope.mean,$scope.sd)
     x.push($scope.max);x.push($scope.mean);x.push($scope.mean);x.push($scope.mean);x.push($scope.min);
     y.push(0);y.push(0);y.push(Math.max.apply(null, y)*1.1);y.push(0);y.push(0)
     value = {x: x,y: y,type: 'scatter',name : 'density.true', fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"}
@@ -67,7 +81,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     data.push($scope.truevalue);
 
     for(ii=0;ii<$scope.repeat;ii++){
-      var y = pnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
+      var y = dnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
       data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"},
       {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#samplesize_singlepopulation").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
       "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
@@ -87,7 +101,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 
     $scope.samplesetplot()
   }
-
+  //hover event.
   $scope.samplesetplot = function(highlight_index = null){
     var x = Array.from(Array($scope.repeat).keys()); // from 0 to repeat-1
     var y = $scope.samplemeans.map(function(a) {return parseFloat(a.value);}) //get the value of same attribute from array.
@@ -98,7 +112,9 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
       data.push({x:[highlight_index],y:[parseFloat($scope.samplemeans[highlight_index].value)], type:'scatter', name:"highlighted point", marker:{color:"red",size: 12},mode: 'markers'})
     }
 
-    Plotly.newPlot('samplesetplot_singlepopulation', data,{yaxis:{range:[$scope.min, $scope.max]},
+    Plotly.newPlot('samplesetplot_singlepopulation', data,{title:'Randomly Draw ' + $scope.n + " Samples. Repeat " + $scope.repeat + " Times<br>"+
+                                                                  "true average:" +$scope.mean + ", error tolerance: " + $scope.tol,
+                                                            yaxis:{range:[$scope.min, $scope.max]},
                                                                   shapes:[
                                                                           {type:'line',x0:0,y0:$scope.mean+$scope.tol,x1:$scope.repeat,y1:$scope.mean+$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}},//tol upper line.
                                                                           {type:'line',x0:0,y0:$scope.mean-$scope.tol,x1:$scope.repeat,y1:$scope.mean-$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}}//tol lower line.
@@ -112,9 +128,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     }
     $scope.count_perc = (count/$scope.repeat * 100).toFixed(1);
   }
-
-  //hover event.
-
   $scope.setSelected = function(sampleselected) {
   $scope.sampleselected = sampleselected;
   data = $scope.sampledata[extractNumber($scope.sampleselected)+1]
@@ -130,6 +143,24 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.samplesetplot(extractNumber($scope.sampleselected))
 }
 
+  $scope.powerplot = function(){
+    var data = [];
+    console.log($scope.powersamplerangestep)
+    var x = seq($scope.powersamplerangemin,$scope.powersamplerangemax,length = (($scope.powersamplerangemax - $scope.powersamplerangemin)/$scope.powersamplerangestep)+1)
+    var sds = seq($scope.powersdmin, $scope.powersdmax, length = (($scope.powersdmax - $scope.powersdmin)/$scope.powersdstep)+1)
+
+  for(ii=0;ii<sds.length;ii++){
+    var y = [];
+
+    for(jj=0;jj<x.length;jj++){
+      y.push(pnorm([$scope.powermean+$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj])) -
+             pnorm([$scope.powermean-$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj]))) //see wiki sample size determination
+
+    }
+      data.push({x:x, y:y,  mode: 'lines+markers', name:"sd="+sds[ii]})
+    }
+    Plotly.newPlot('powerplot_singlepopulation', data);
+  }
 
 $scope.refresh_tol_singlepopulation = function(){
   $("#tol_singlepopulation").slider({
@@ -138,8 +169,6 @@ $scope.refresh_tol_singlepopulation = function(){
   });
 }
 });
-
-
 
 
 
@@ -167,6 +196,34 @@ $(".parameter_singlepopulation").change(function(){
   storeItemAndReset("mean_singlepopulation")
   storeItemAndReset("sd_singlepopulation")
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

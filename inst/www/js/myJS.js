@@ -1,15 +1,31 @@
   seq =  function(from, to, length) {
     result = [];
-    for(var i=from; i<to+((to-from)/(length-1)); i=i+((to-from)/(length-1))) {
+
+    if(from - to>0){ // from 1 to 0.
+      for(var i=to; i<from+((from-to)/(length-1)); i=i+((from-to)/(length-1))) {
          result.push(i);
       }
+      result.reverse();
+    }else{
+       for(var i=from; i<to+((to-from)/(length-1)); i=i+((to-from)/(length-1))) {
+         result.push(i);
+      }
+    }
     return(result.slice(0, length))
   }
-  pnorm = function(x,mean,sd){//require gaussian.js
+  dnorm = function(x,mean,sd){//require gaussian.js
     var distribution = gaussian(mean, Math.pow(sd, 2));
     var result = [];
     for(i=0;i<x.length;i++){
         result.push(distribution.pdf(x[i]))
+    }
+    return(result)
+  }
+  pnorm = function(q,mean,sd){//require gaussian.js
+    var distribution = gaussian(mean, Math.pow(sd, 2));
+    var result = [];
+    for(i=0;i<q.length;i++){
+        result.push(distribution.cdf(q[i]))
     }
     return(result)
   }
@@ -18,6 +34,14 @@
     var result = [];
     for(i=0;i<n;i++){
       result.push(distribution.ppf(Math.random()))
+    }
+    return(result)
+  }
+  qnorm = function(p, mean, sd){//require gaussian.js
+    var distribution = gaussian(mean, Math.pow(sd, 2));
+    var result = [];
+    for(i=0;i<p.length;i++){
+      result.push(distribution.cdf(p[i]))
     }
     return(result)
   }
