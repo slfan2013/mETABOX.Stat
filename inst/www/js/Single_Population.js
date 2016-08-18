@@ -21,15 +21,21 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.powersamplerangestep= 1;
   $scope.powermean = 175;
   $scope.powersdmin = 5;
-  $scope.powersdmax = 20;
+  $scope.powersdmax = 25;
   $scope.powersdstep = 5;
   $scope.powertol = 3
-  $scope.displaypower = false;
+  $scope.toggle_display_power_text = "How many samples do I need?"
 
-  $scope.toggle_display_power = function(){//whether to display power analysis part?
-    $scope.displaypower = !$scope.displaypower
-    $scope.powerplot()
+
+
+  $scope.toggle_display_bottom = function(){
+    if($scope.repeat>1){
+       $scope.displaybottom = true
+    }else{
+      $scope.displaybottom = false
+    }
   }
+
 
   $scope.toggle_tol_setting_singlepopulation = function(){
     $scope.tol_setting_show = !$scope.tol_setting_show
@@ -69,17 +75,11 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   };$scope.populationplot();
   // click Sample! and draw plot if repeat one time. Otherwise, need users to mouse over.
   $scope.samplepopulation = function(){
-    if($scope.repeat>1){
-      $scope.displaybottom = true;
-    }else{
-      $scope.displaybottom = false;
-    }
     $scope.sample();
     var data = [];
     var mean = [];
     var x = seq($scope.min, $scope.max, length=1000)
     data.push($scope.truevalue);
-
     for(ii=0;ii<$scope.repeat;ii++){
       var y = dnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
       data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"},
@@ -98,8 +98,10 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     $scope.samplelayout = layout;
     $scope.samplepopulationplot_singlepopulation = Plotly.newPlot('populationplot_singlepopulation',
             [data[0],data[1][0],data[1][1],data[1][2]],layout);
+    if($scope.repeat>1){
+      $scope.samplesetplot()
+    }
 
-    $scope.samplesetplot()
   }
   //hover event.
   $scope.samplesetplot = function(highlight_index = null){
@@ -113,7 +115,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     }
 
     Plotly.newPlot('samplesetplot_singlepopulation', data,{title:'Randomly Draw ' + $scope.n + " Samples. Repeat " + $scope.repeat + " Times<br>"+
-                                                                  "true average:" +$scope.mean + ", error tolerance: " + $scope.tol,
+                                                                  "true average:" +$scope.mean + ", sd:"+ $scope.sd+ ", error tolerance:" + $scope.tol,
                                                             yaxis:{range:[$scope.min, $scope.max]},
                                                                   shapes:[
                                                                           {type:'line',x0:0,y0:$scope.mean+$scope.tol,x1:$scope.repeat,y1:$scope.mean+$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}},//tol upper line.
@@ -159,7 +161,24 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     }
       data.push({x:x, y:y,  mode: 'lines+markers', name:"sd="+sds[ii]})
     }
-    Plotly.newPlot('powerplot_singlepopulation', data);
+    Plotly.newPlot('powerplot_singlepopulation', data, {title:"Power vs Sample Size <br> at Error tolerance: " + $scope.powertol,height: 500,
+                                                         xaxis: {
+                                                          title: 'Sample Size',
+                                                          titlefont: {
+                                                            family: 'Courier New, monospace',
+                                                            size: 18,
+                                                            color: '#7f7f7f'
+                                                          }
+                                                        },
+                                                        yaxis: {
+                                                          title: 'Power',
+                                                          titlefont: {
+                                                            family: 'Courier New, monospace',
+                                                            size: 18,
+                                                            color: '#7f7f7f'
+                                                          }
+                                                        }
+    });
   }
 
 $scope.refresh_tol_singlepopulation = function(){
