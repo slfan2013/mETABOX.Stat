@@ -133,7 +133,7 @@
                               <div class="form-group">
                                             <label>Standard Deviation </label><em class="text-muted pull-right">&nbsp;This means ~70% of data will be within {{mean - sd}} and {{mean + sd}}</em>
                                             <input class="form-control parameter_singlepopulation" type = 'number' placeholder = "The extent of variation of population" id = "sd_singlepopulation"
-                                            ng-model="sd" ng-change="populationplot();sample();samplesetplot()" min = 0>
+                                            ng-model="sd" ng-change="populationplot();samplesetplot()" min = 0>
                               </div><hr/>
                               <div class="form-group">
                                             <label>Estimated Mean</label>
@@ -203,7 +203,6 @@
                                         </div>
                                         <div class="col-lg-6">
                                           <div class="form-group">
-
                                                       <div ng-repeat="samplesd in samplesds">
                                                         <p name = "{{samplesd.name}}" ng-mouseover="setSelected(samplesd.name)"></p>
                                                           <span ng-class="{selected : samplesd.name === sampleselected}">{{samplesd.value}}</span>

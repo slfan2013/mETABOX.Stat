@@ -13,19 +13,18 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/opencpu-0.5.js"></script>
+    <!-- <script src="js/opencpu-0.5.js"></script> -->
+    <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
+    <script src="js/gaussian.js"></script>
 
     <!-- Bootstrap Core CSS and JS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
 
-
-
     <!-- Templates -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
 
     <!-- Side-Bar CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet"><!--making the sidebar collapsible-->
@@ -33,15 +32,19 @@
     <!-- Other -->
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
+    <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
+
+
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/Two_Population.js"></script>
-
+    <!-- My CSS -->
+     <link href="css/Two_Population.css" rel="stylesheet"><!--making the sidebar collapsible-->
 
 
 </head>
 
-<body>
+<body  ng-app="populationplot_twopopulation" ng-controller="populationplotctrl_twopopulation">
 
     <div id="wrapper">
 
@@ -90,7 +93,7 @@
                 <div class="row">
                   <div class="col-lg-12">
                       <h1>Two Populations</h1>
-                      <p class = 'text-muted'> In many cases we would like to compare two populations. For example, we may determine whether (average) salaries differed between males and females.  In statistics, student t test and Mann-Whitney U Test are two common methods of testing for difference between two populations.</p><br /><br />
+                      <p class = 'text-muted'> In many cases we would like to compare two populations. For example, we may determine whether (average) salaries differs between males and females.  In statistics, <em>student t test</em> and <em>Mann-Whitney U test</em> are two common methods of testing for difference between two populations.</p><br /><br />
                   </div>
                 </div>
                 <div class="row">
@@ -104,100 +107,148 @@
                             <div class = 'col-lg-3'>
                               <div class="form-group">
                                             <label>Minimum Value</label>
-                                            <input class="form-control" type = 'number' placeholder = "The possible smallest value of the population" id = "smallestvalue_twopopulation">
+                                            <input class="form-control" type = 'number' placeholder = "The possible smallest value of the population" id = "smallestvalue_twopopulation"
+                                            ng-model = "min" ng-change="populationplot()">
                               </div>
                               <div class="form-group">
                                             <label>Maximum Value</label>
-                                            <input class="form-control" type = 'number' placeholder = "The possible largest value of the population" id = "largestvalue_twopopulation">
+                                            <input class="form-control" type = 'number' placeholder = "The possible largest value of the population" id = "largestvalue_twopopulation"
+                                            ng-model = "max" ng-change="populationplot()">
                               </div>
                               <div class="row">
                                 <div class="col-lg-6">
                                   <div class="form-group">
                                                 <label>Mean1</label>
-                                                <input class="form-control" type = 'number' placeholder = "first population average" id = "mean1_twopopulation">
+                                                <input class="form-control" type = 'number' placeholder = "first population average" id = "mean1_twopopulation"
+                                                ng-model = "mean1" ng-change="populationplot()">
                                   </div>
                                 </div>
                                 <div class="col-lg-6">
                                   <div class="form-group">
                                                 <label>Mean2</label>
-                                                <input class="form-control" type = 'number' placeholder = "second population average" id = "mean2_twopopulation">
+                                                <input class="form-control" type = 'number' placeholder = "second population average" id = "mean2_twopopulation"
+                                                ng-model="mean2" ng-change="populationplot();">
                                   </div>
                                 </div>
                               </div>
                               <div class="row">
                                 <div class="col-lg-6">
                                   <div class="form-group">
-                                                <label>Standard Deviation1 (sd)</label>
-                                                <input class="form-control" type = 'number' placeholder = "first population variation" id = "sd1_twopopulation">
+                                                <label>Standard Deviation1</label>
+                                                <input class="form-control" type = 'number' placeholder = "first population variation" id = "sd1_twopopulation"
+                                                ng-model="sd1" ng-change="sd2equaltosd1();populationplot();">
                                   </div>
                                 </div>
                                 <div class="col-lg-6">
                                   <div class="form-group">
-                                                <label>Standard Deviation2 (sd)</label>
-                                                <input class="form-control" type = 'number' placeholder = "second population variation" id = "sd2_twopopulation">
+                                                <label>Standard Deviation2</label>
+                                                <input class="form-control" type = 'number' placeholder = "second population variation" id = "sd2_twopopulation"
+                                                ng-model="sd2" ng-change="populationplot()" ng-disabled="equal_sd">
                                   </div>
                                 </div>
                               </div>
-
+                              <div class="col-lg-12">
+                                <div class="checkbox" style="margin-top: 0px;">
+                                                <label>
+                                                    <input type="checkbox" ng-model="equal_sd" ng-init="equal_sd=true" ng-click="sd2equaltosd1();populationplot();"> Equal standard deviation?
+                                                </label>
+                                            </div>
+                              </div><hr />
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <label>Estimated Mean1</label>
+                                            <div ng-repeat="samplemean1 in samplemeans1|limitTo:1">
+                                              <p name = "{{samplemean1.name}}">{{samplemean1.value}}&nbsp;(<span class = "text-muted">{{(samplemean1.value - mean1).toFixed(2)}}</span>)</p>
+                                            </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <label>Estimated Mean2</label>
+                                            <div ng-repeat="samplemean2 in samplemeans2|limitTo:1">
+                                              <p name = "{{samplemean2.name}}">{{samplemean2.value}}&nbsp;(<span class = "text-muted">{{(samplemean2.value - mean2).toFixed(2)}}</span>)</p>
+                                            </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <label>Estimated sd1</label>
+                                            <div ng-repeat="samplesd1 in samplesds1|limitTo:1">
+                                              <p name = "{{samplesd1.name}}">{{samplesd1.value}}&nbsp;(<span class = "text-muted">{{(samplesd1.value - sd1).toFixed(2)}}</span>)</p>
+                                            </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <label>Estimated sd2</label>
+                                            <div ng-repeat="samplesd2 in samplemeans2|limitTo:1">
+                                              <p name = "{{samplesd2.name}}">{{samplesd2.value}}&nbsp;(<span class = "text-muted">{{(samplesd2.value - sd2).toFixed(2)}}</span>)</p>
+                                            </div>
+                                </div>
+                              </div>
                             </div>
+                            <div class="col-lg-9"><div id="populationplot_twopopulation"></div></div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-lg-4">
-                      <input id="samplesize_twopopulation" type="number" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="5" style =
-                      "display:inline"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
+                    <div class="col-lg-6" align="center">
+                      <input id="samplesize_twopopulation" type="number" data-slider-min="4" data-slider-max="100" data-slider-step="1" data-slider-value="5" style =
+                      "display:inline" ng-model="n"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
                     </div>
-                    <div class="col-lg-4">
-                      <input type="checkbox" checked> <strong>Sample One At a Time?</strong>
-                    </div>
-                    <div class="col-lg-4">
-                      <input id="sampletimes_twopopulation" type="number" data-slider-min="10" data-slider-max="100" data-slider-step="10" data-slider-value="20" style =
-                      "display:inline"/><span><strong>  Repeated Time: <span id="sampletimes_display_twopopulation">20</span></strong></span>
+                    <div class="col-lg-6" align="center">
+                      <input id="sampletimes_twopopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
+                      "display:inline" ng-model="repeat"/><span><strong>  Repeated Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>
                     </div>
                   </div>
                   <br /><br />
-                  <button type="button" class="btn btn-outline btn-warning btn-lg btn-block">Let's Sample!</button>
+                  <button type="button" class="btn btn-outline btn-primary btn-lg btn-block" ng-click="samplepopulation();">Let's Sample!</button>
                   <br /><br />
                   <div class="row">
                     <div class = 'col-lg-12'>
-                          <div class="row">
-                            <div class = 'col-lg-3'>
-                              <div class="form-group">
-                                            <label>Estimated Minimum Value</label>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <i class="fa fa-stack-overflow"></i> Samples
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                              <div class = 'col-lg-3'>
+                                    <div class="row">
+                                      <div class="col-lg-6">
+                                        <div class="form-group">
+                                                      <label>Estimated Mean(s)</label>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                                      <label>Estimated Standard Deviation(s) </label>
+                                        </div>
+                                      </div>
+                                    <div class="row pre-scrollable" style="overflow-y: auto;">
+Start from here!
+                                  </div><br />
                               </div>
-                              <div class="form-group">
-                                            <label>Estimated Maximum Value</label>
+                              <div class = 'col-lg-9'>
+                                <div id="samplesetplot_twopopulation"></div>
                               </div>
-                              <div class="row">
-                                <div class="col-lg-6">
-                                  <div class="form-group">
-                                                <label>Estimated Mean1</label>
-                                  </div>
-                                </div>
-                                <div class="col-lg-6">
-                                  <div class="form-group">
-                                                <label>Estimated Mean2</label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-6">
-                                  <div class="form-group">
-                                    <label>Estimated Standard Deviation (sd)</label>
-                                  </div>
-                                </div>
-                                <div class="col-lg-6">
-                                  <div class="form-group">
-                                    <label>Estimated Standard Deviation (sd)</label>
-                                  </div>
-                                </div>
-                              </div>
-
                             </div>
-                          </div>
+                            <div class="row">
+                              <div class="col-lg-4 col-lg-offset-4">
+                                        <div class="form-group" align="center">
+                                                  <input type = 'number' id = "alpha_twopopulation" ng-model="alpha" ng-change="samplesetplot();"
+                                                  data-slider-min="0.01" data-slider-max="1" data-slider-step="0.01" data-slider-value="0.05" style ="display:inline">
+                                                  <span><strong> &alpha; =  <span>{{alpha}}</span></strong></span>
+                                        </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                                  <div class="col-lg-4 col-lg-offset-4">
+                                    <h2  align="center">{{count_perc}}%</h2>
+                                  </div>
+                                  <div class="col-lg-2 col-lg-offset-2">
+                                    <button type="button" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#powermodal">How many samples do I need?</button>
+                                  </div>
+                                </div>
+                        </div>
+                      </div>
+
 
                     </div>
                   </div>

@@ -77,7 +77,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.samplepopulation = function(){
     $scope.sample();
     var data = [];
-    var mean = [];
     var x = seq($scope.min, $scope.max, length=1000)
     data.push($scope.truevalue);
     for(ii=0;ii<$scope.repeat;ii++){
@@ -95,7 +94,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
                     annotations: [{x: $scope.samplemeans[0].value,y: 0,xref: 'x',yref: 'y',text: $scope.samplemeans[0].value,showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
                   };
     $scope.sampledata = data;
-    $scope.samplelayout = layout;
     $scope.samplepopulationplot_singlepopulation = Plotly.newPlot('populationplot_singlepopulation',
             [data[0],data[1][0],data[1][1],data[1][2]],layout);
     if($scope.repeat>1){
@@ -118,8 +116,8 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
                                                                   "true average:" +$scope.mean + ", sd:"+ $scope.sd+ ", error tolerance:" + $scope.tol,
                                                             yaxis:{range:[$scope.min, $scope.max]},
                                                                   shapes:[
-                                                                          {type:'line',x0:0,y0:$scope.mean+$scope.tol,x1:$scope.repeat,y1:$scope.mean+$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}},//tol upper line.
-                                                                          {type:'line',x0:0,y0:$scope.mean-$scope.tol,x1:$scope.repeat,y1:$scope.mean-$scope.tol,line: {color: 'red',width:1,dash: 'dashdot'}}//tol lower line.
+                                                                          {type:'rect',x0:0,y0:$scope.mean-$scope.tol,x1:$scope.repeat,y1:$scope.mean+$scope.tol,
+                                                                          fillcolor:'red',line:{width:0},opacity: 0.15}
                                                                         ]
                                                             });
     var count = 0;
@@ -130,6 +128,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     }
     $scope.count_perc = (count/$scope.repeat * 100).toFixed(1);
   }
+
   $scope.setSelected = function(sampleselected) {
   $scope.sampleselected = sampleselected;
   data = $scope.sampledata[extractNumber($scope.sampleselected)+1]
