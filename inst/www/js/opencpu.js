@@ -9,20 +9,19 @@
  * You only need to use ocpu.seturl if this page is hosted outside of the OpenCPU package. For example:
  *
  * ocpu.seturl("../R") //default, use for apps
- * ocpu.seturl("//public.opencpu.org/ocpu/library/mypackage/R") //CORS
  * ocpu.seturl("/ocpu/library/mypackage/R") //hardcode path
  * ocpu.seturl("https://user:secret/my.server.com/ocpu/library/pkg/R") // basic auth
  */
 
 //Warning for the newbies
 if(!window.jQuery) {
-  alert("Could not find jQuery! The HTML must include jquery.js before opencpu.js!")
+  alert("Could not find jQuery! The HTML must include jquery.js before opencpu.js!");
 }
 
 (function ( $ ) {
 
   //global variable
-  var r_cors = false;
+  var r_cors = true;
   var r_path = document.createElement('a');
   r_path.href = "../R";
 
@@ -438,7 +437,7 @@ if(!window.jQuery) {
   //exported functions
   ocpu.call = r_fun_call;
   ocpu.rpc = rpc;
-  ocpu.seturl = seturl;
+  ocpu.seturl = seturl("http://67.164.214.67:1234/ocpu/library/metabox.stat/R") //CORS
 
   //exported constructors
   ocpu.Snippet = Snippet;

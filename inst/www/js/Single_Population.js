@@ -146,7 +146,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 
   $scope.powerplot = function(){
     var data = [];
-    console.log($scope.powersamplerangestep)
     var x = seq($scope.powersamplerangemin,$scope.powersamplerangemax,length = (($scope.powersamplerangemax - $scope.powersamplerangemin)/$scope.powersamplerangestep)+1)
     var sds = seq($scope.powersdmin, $scope.powersdmax, length = (($scope.powersdmax - $scope.powersdmin)/$scope.powersdstep)+1)
 

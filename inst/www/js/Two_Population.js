@@ -9,6 +9,21 @@ $scope.sd2=10;
 $scope.repeat = 1;
 $scope.n = 5
 $scope.alpha = 0.05;
+$scope.powerdetermine_text = "Determine"
+$scope.powershowdetermine = false
+
+$scope.powerdetermine = function(){
+  $scope.powershowdetermine=!$scope.powershowdetermine
+  if($scope.powerdetermine_text === "Determine"){
+    $scope.powerdetermine_text = "Push Result"
+  }else{
+    $scope.powerdetermine_text = "Determine"
+    globalmean = meanFunction([$scope.powermean1, $scope.powermean2])
+    sigma = Math.sqrt((Number(Math.pow($scope.powersd1,2)) + Number(Math.pow($scope.powersd2,2)))/2)
+    $scope.powereffectsize = Math.abs(($scope.powermean1 - $scope.powermean2)/sigma)
+  }
+}
+
 
 $scope.sd2equaltosd1 = function(){
   if($scope.equal_sd){
@@ -152,10 +167,88 @@ $scope.populationplot = function(){
   }
 
 
-})
+  $scope.numofeffectsizes = 1;
+  $scope.powerplot = function(){
+
+
+    var x = seq($scope.powersamplerangemin,$scope.powersamplerangemax,length =
+    (($scope.powersamplerangemax - $scope.powersamplerangemin)/$scope.powersamplerangestep)+1)//sample sizes
+
+    for(ii=0;ii<$scope.numofeffectsizes+1;ii++){
+      var req = ocpu.call("stat_t_test_power",{
+        effectsize:$("#effectsize"+ii).val(),n1:x,sig_level:$scope.poweralpha
+      },function(session){
+        console.log(session)
+      })
+    }
+
+/*
+    var data = [];
+
+    var sds = seq($scope.powersdmin, $scope.powersdmax, length = (($scope.powersdmax - $scope.powersdmin)/$scope.powersdstep)+1)
+
+    for(ii=0;ii<sds.length;ii++){
+    var y = [];
+
+    for(jj=0;jj<x.length;jj++){
+      y.push(pnorm([$scope.powermean+$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj])) -
+             pnorm([$scope.powermean-$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj]))) //see wiki sample size determination
+
+    }
+      data.push({x:x, y:y,  mode: 'lines+markers', name:"sd="+sds[ii]})
+    }
+
+
+    Plotly.newPlot('powerplot_singlepopulation', data, {title:"Power vs Sample Size <br> at Error tolerance: " + $scope.powertol,height: 500,
+                                                         xaxis: {
+                                                          title: 'Sample Size',
+                                                          titlefont: {
+                                                            family: 'Courier New, monospace',
+                                                            size: 18,
+                                                            color: '#7f7f7f'
+                                                          }
+                                                        },
+                                                        yaxis: {
+                                                          title: 'Power',
+                                                          titlefont: {
+                                                            family: 'Courier New, monospace',
+                                                            size: 18,
+                                                            color: '#7f7f7f'
+                                                          }
+                                                        }
+    });*/
+  }
 
 
 
+
+
+});
+
+
+  app.directive("addeffectsizes", function($compile){
+  	return function(scope, element, attrs){
+  		element.bind("click", function(){
+  		  scope.numofeffectsizes++;
+  			angular.element(document.getElementById('addedpowersamplesizes_towpopulation'))
+  			.append($compile("<div id=effectsizediv"+scope.numofeffectsizes+"><label>Effect size:</label><button class='pull-right btn btn-default btn-xs btn-outline' removeeffectsize><i class='fa fa-minus'></i></button><input id=effectsize"+scope.numofeffectsizes+" class='form-control' type = 'number' min = 0 step=0.05></div>")(scope));
+  		});
+  	};
+  });
+
+
+  app.directive("removeeffectsize", function($rootScope) {
+      return {
+            link:function(scope,element,attrs)
+            {
+                element.bind("click",function() {
+                  var ele = angular.element( document.querySelector( '#effectsizediv'+ scope.numofeffectsizes) );
+                    ele.remove();
+                    scope.numofeffectsizes--;
+                });
+            }
+      };
+  });
 
 $(document).ready(function(){
 
