@@ -11,7 +11,6 @@ $scope.n = 5
 $scope.alpha = 0.05;
 
 $scope.sd2equaltosd1 = function(){
-  console.log($scope.equal_sd);
   if($scope.equal_sd){
     $scope.sd2 = $scope.sd1;
   }
@@ -45,16 +44,23 @@ $scope.populationplot = function(){
     var sampleset1 = [];var sampleset2 = [];
     var samplemeans1 = [];var samplemeans2 = [];
     var samplesds1 = [];var samplesds2 = [];
+    var sampleeffectsizes = [];
+    var pvalues = [];
     var ys1 = [];var ys2 = [];
     for(ii=0;ii<$scope.repeat;ii++){
       rdm1 = rnorm($("#samplesize_twopopulation").val(),mean=$scope.mean1,sd=$scope.sd1);rdm2 = rnorm($("#samplesize_twopopulation").val(),mean=$scope.mean2,sd=$scope.sd2)
       sampleset1.push(rdm1);sampleset2.push(rdm2);
-      samplemeans1.push({value:meanFunction(rdm1), name:ii+"thsample_twopopulation1"});samplemeans2.push({value:meanFunction(rdm2), name:ii+"thsample_twopopulation2"});
-      samplesds1.push({value:sdFunction(rdm1),name:ii+"thsample_singlepopulation1"});samplesds2.push({value:sdFunction(rdm2),name:ii+"thsample_singlepopulation2"})
+      samplemeans1.push({value:meanFunction(rdm1), name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplemeans2.push({value:meanFunction(rdm2), name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"});//name2 is when user highlight means(see html).
+      samplesds1.push({value:sdFunction(rdm1),name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplesds2.push({value:sdFunction(rdm2),name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"})
+      sampleeffectsizes.push((samplemeans2[[ii]].value - samplemeans1[[ii]].value)/((Number(samplesds2[[ii]].value) + Number(samplesds1[[ii]].value))/2));
+      pvalues.push(2 * tprobability($scope.n,(samplemeans1[[ii]].value - samplemeans2[[ii]].value)/Math.sqrt(Math.pow(samplesds1[[ii]].value,2)/$scope.n + Math.pow(samplesds2[[ii]].value,2)/$scope.n)))
+
     }
     $scope.sampleset1 = sampleset1;$scope.sampleset2 = sampleset2;
     $scope.samplemeans1 = samplemeans1;$scope.samplemeans2 = samplemeans2;
     $scope.samplesds1 = samplesds1;$scope.samplesds2 = samplesds2;
+    $scope.sampleeffectsizes = sampleeffectsizes;
+    $scope.pvalues = pvalues;
   }
 
   $scope.samplepopulation = function(){
@@ -102,7 +108,8 @@ $scope.populationplot = function(){
             {x:x,y:t,type:'scatter',mode: 'lines+markers',name:"t statistic"}         //scatters of sample means.
             ]
     if(highlight_index!==null){ // red dot.
-      data.push({x:[highlight_index],y:t[highlight_index], type:'scatter', name:"highlighted point", marker:{color:"red",size: 12},mode: 'markers'})
+
+      data.push({x:[highlight_index],y:[t[highlight_index]], type:'scatter', name:"highlighted point", marker:{color:"red",size: 12},mode: 'markers'})
     }
 
     Plotly.newPlot('samplesetplot_twopopulation', data,{title:'Randomly Draw ' + $scope.n + " Samples. Repeat " + $scope.repeat + " Times<br>green area is the rejecting area",
@@ -125,6 +132,24 @@ $scope.populationplot = function(){
 
 
 
+  $scope.setSelected = function(sampleselected) {
+    $scope.sampleselected = sampleselected;
+    $scope.sampleselected2 = sampleselected.substring(0, sampleselected.length - 1);
+    data = [];
+    data.push($scope.truevalue1);data.push($scope.truevalue2);
+    data.push($scope.sampledata[(Math.floor(extractNumber(sampleselected)/10)+1)*2]); data.push($scope.sampledata[(Math.floor(extractNumber(sampleselected)/10)+1)*2+1]);
+    var layout = {"barmode": "overlay",
+                      xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
+                      "yaxis1": {"anchor": "free", "domain": [ 0.05, 1], "position": 0.0},
+                      "yaxis2": {"anchor": "x1", "domain": [0,0.1], "dtick": 1, "showticklabels": false},
+                      paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+                      annotations: [{x: $scope.samplemeans1[Math.floor(extractNumber(sampleselected)/10)].value,y: 0,xref: 'x',yref: 'y',text: $scope.samplemeans1[Math.floor(extractNumber(sampleselected)/10)].value,showarrow: true,arrowhead: 2,ax: -20,ay: -30},
+                                    {x: $scope.samplemeans2[Math.floor(extractNumber(sampleselected)/10)].value,y: 0,xref: 'x',yref: 'y',text: $scope.samplemeans2[Math.floor(extractNumber(sampleselected)/10)].value,showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
+                    };
+  $scope.samplepopulationplot_twopopulation = Plotly.newPlot('populationplot_twopopulation',
+              [data[0],data[1],data[2][0],data[2][1],data[2][2],data[3][0],data[3][1],data[3][2]],layout);
+  $scope.samplesetplot(Math.floor(extractNumber(sampleselected)/10))
+  }
 
 
 })
@@ -132,9 +157,9 @@ $scope.populationplot = function(){
 
 
 
-
-
 $(document).ready(function(){
+
+
   $("#samplesize_twopopulation").slider();
   $("#samplesize_twopopulation").on("slide", function(slideEvt) {
   	$("#samplesize_display_twopopulation").text(slideEvt.value);
