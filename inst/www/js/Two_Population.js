@@ -1,5 +1,6 @@
 var app = angular.module('populationplot_twopopulation', []);
 app.controller('populationplotctrl_twopopulation', function($scope) {
+$scope.Math = window.Math;// enable using Math functions in html.
 $scope.min = 140;
 $scope.max = 200;
 $scope.mean1=165;
@@ -169,13 +170,11 @@ $scope.populationplot = function(){
 
   $scope.numofeffectsizes = 1;
   $scope.powerplot = function(){
-
-
     var x = seq($scope.powersamplerangemin,$scope.powersamplerangemax,length =
     (($scope.powersamplerangemax - $scope.powersamplerangemin)/$scope.powersamplerangestep)+1)//sample sizes
 
     for(ii=0;ii<$scope.numofeffectsizes+1;ii++){
-      var req = ocpu.call("stat_t_test_power",{
+      var req = ocpu.call("two_population_power_plot",{
         effectsize:$("#effectsize"+ii).val(),n1:x,sig_level:$scope.poweralpha
       },function(session){
         console.log(session)
