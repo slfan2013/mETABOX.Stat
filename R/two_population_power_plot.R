@@ -1,19 +1,12 @@
-#' two_population_power_plot
+#' samplesize_onefactortwogroupspower
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' cat_function()
+#' samplesize_onefactortwogroupspower()
 
-two_population_power_plot <- function(effectsize,n1,n2 = n1,sig_level = 0.05){
-  df = n1+n2-2
-
-  result = sapply(n1,function(x){
-    ncp = effectsize*sqrt(n1*n2/(n1+n2))
-    return(pt(qt(sig_level,df,lower.tail = F),df,ncp,lower.tail = F))
-  })
-
-  return(result)
+samplesize_onefactortwogroupspower <- function(effectsize=0.8,sig_level = 0.05,power=0.8){
+  return(ceiling(power.t.test(delta = effectsize,power = power, sig.level = sig_level)$n))
 }

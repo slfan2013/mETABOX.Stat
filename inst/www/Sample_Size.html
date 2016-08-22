@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!--<script src="js/opencpu-0.5.js"></script>
-    <script src="js/opencpu.js"></script>-->
+    <!--<script src="js/opencpu-0.5.js"></script>-->
+    <script src="js/opencpu.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -121,16 +121,16 @@
                                 <div ng-switch-when="one factor">
                                   <form><label>Groups</label>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="two independent groups">two independent groups</label>
+                                        <label><input type="radio" ng-model="test.groups" value="two independent groups" ng-change = "calculatesamplesize();" >two independent groups</label>
                                         </div>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="two paired groups">two paired groups</label>
+                                        <label><input type="radio" ng-model="test.groups" value="two paired groups" ng-change = "calculatesamplesize();" >two paired groups</label>
                                         </div>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="multiple independent groups">multiple independent groups</label>
+                                        <label><input type="radio" ng-model="test.groups" value="multiple independent groups" ng-change = "calculatesamplesize();" >multiple independent groups</label>
                                         </div>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="multiple paired groups">multiple paired groups</label>
+                                        <label><input type="radio" ng-model="test.groups" value="multiple paired groups" ng-change = "calculatesamplesize();" >multiple paired groups</label>
                                         </div>
                                     </form>
                                 </div>
@@ -186,12 +186,12 @@
                             <div class="col-lg-4 col-lg-offset-4">
                               <div class="form-group">
                                 <label>Effect Size: </label>
-                                <input class="form-control" id = 'effectsize_samplesize' type = 'number' ng-model = "effectsizevalue">
+                                <input class="form-control" id = 'effectsize_samplesize' type = 'number' ng-model = "effectsizevalue"  ng-change = "calculatesamplesize();">
                               </div>
                             </div>
                             <div class="col-lg-4">
                               <div class="form-group">
-                                <label><font color="white">Click to determine the effect size</font></label><br />
+                                <label><font color="white">&nbsp;</font></label><br />
                                 <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#effectsizemodal">
                                   <i class = "fa fa-angle-double-left"></i> Determine!</button>
                               </div>
@@ -417,47 +417,47 @@
                           <div class="row">
                             <div class="col-lg-2 col-lg-offset-4">
                               <label class="col-md-4 control-label">α:</label>
-                              <input id="alpha_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model="alpha" step = 0.005 max = 1>
+                              <input id="alpha_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model="alpha" step = 0.005 max = 1 ng-change = "calculatesamplesize();">
                             </div>
                             <div class="col-lg-2">
                               <label class="col-md-4 control-label">Power:</label>
-                              <input id="power_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model = "power" step = "0.005" max=1>
+                              <input id="power_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model = "power" step = "0.005" max=1  ng-change = "calculatesamplesize();">
                             </div>
                           </div><hr />
                              <div ng-switch="test.groups">
                                <div ng-switch-when="multiple independent groups">
-                                 <div class="row col-lg-4 col-lg-offset-4">
-                                   <label>Number of groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{numofeffectsizes}}"/>
+                                 <div class="row">
+                                   <div class="col-lg-4 col-lg-offset-4">
+                                     <label>Number of groups:</label>
+                                     <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{numofeffectsizes}}" ng-change = "calculatesamplesize();" />
+                                   </div>
                                  </div>
                                </div>
                                <div ng-switch-when="multiple paired groups">
-                                 <hr />
                                  <div class="row">
                                    <div class="col-lg-2 col-lg-offset-3">
                                    <label>Number of paired groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{Math.min(numofeffectsizes,3)}}"/>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{Math.min(numofeffectsizes,3)}}" ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
                                    <label>Correlation among groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
                                    <label>Nonsphericity Correction(&epsilon;):</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 ng-change = "calculatesamplesize();" />
                                  </div>
                                  </div>
                                </div>
                                <div ng-switch-when="independent*independent">
-                                 <hr />
                                  <div class="row">
                                    <div class="col-lg-2 col-lg-offset-4">
-                                   <label>Number of groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2 />
+                                   <label>Number of groups1:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2  ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
-                                   <label>Number of groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2 />
+                                   <label>Number of groups2:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2  ng-change = "calculatesamplesize();" />
                                  </div>
                                  </div>
                                </div>
@@ -465,27 +465,28 @@
                                  <div class="row">
                                    <div class="col-lg-2 col-lg-offset-2">
                                    <label>Number of independent groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
                                    <label>Number of paired groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
                                    <label>Correlation among groups:</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
                                    <label>Nonsphericity Correction(&epsilon;):</label>
-                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 />
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01   ng-change = "calculatesamplesize();" />
                                  </div>
                                  </div>
                                </div>
                              </div>
                         </div>
                         <hr />
-                        <center><h3><strong>Based on the information you provided, the sample size must be at least:</strong></h3></center>
-                        <center><h2><strong>8</strong></h2></center>
+                        <center><h3><strong>Based on the information you provided, the sample size for each group must be at least:</strong></h3></center>
+
+                        <center><h1><strong id="samplesize"></strong></h1></center>
                         <button type="button" class="btn btn-outline btn-info pull-right">Power-Sample plot</button>
                     </div>
                 </div>

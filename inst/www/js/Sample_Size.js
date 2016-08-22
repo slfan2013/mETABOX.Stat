@@ -11,7 +11,8 @@ app.controller('samplesizectrl', function($scope) {
   $scope.numofeffectsizes = 3;
   $scope.alpha=0.05;
   $scope.power = 0.8;
-
+  $scope.otherpara.numgroups1 = 3;
+  $scope.otherpara.numgroups2 = 3;
 
   $scope.calculateeffectsize = function(){
    if($scope.test.groups == "two independent groups"){
@@ -40,6 +41,71 @@ app.controller('samplesizectrl', function($scope) {
      $scope.effectsizevalue = Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance))
    }
   }
+
+
+
+  $scope.calculatesamplesize=function(){
+     document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>'
+    if($scope.test.groups == "two independent groups"){
+      var req = ocpu.call("samplesize_onefactortwogroupspower",{
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+      },function(session){
+        session.getObject(function(obj){
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }else if($scope.test.groups == "two paired groups"){
+      var req = ocpu.call("samplesize_onefactortwopairedgroupspower",{
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+      },function(session){
+        session.getObject(function(obj){
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }else if($scope.test.groups == "multiple independent groups"){
+      var req = ocpu.call("samplesize_onefactormultigroupspower",{
+        k:$scope.otherpara.numgroups,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+      },function(session){
+        session.getObject(function(obj){
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }else if($scope.test.groups == "multiple paired groups"){
+      var req = ocpu.call("samplesize_onefactormultipairedgroupspower",{
+        m:$scope.otherpara.numgroups,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,
+        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon
+      },function(session){
+        session.getObject(function(obj){
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }else if($scope.test.groups == "independent*independent"){
+     var req = ocpu.call("samplesize_twofactorindindpower",{
+        k1:$scope.otherpara.numgroups1,k2:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+      },function(session){
+        session.getObject(function(obj){
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }else if($scope.test.groups == "independent*paired"){
+     console.log($scope.otherpara.numgroups1)
+     console.log($scope.otherpara.numgroups2)
+     console.log($scope.otherpara.epsilon)
+     var req = ocpu.call("samplesize_twofactorindpairedpower",{
+        k:$scope.otherpara.numgroups1,m:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,
+        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon
+      },function(session){
+        session.getObject(function(obj){
+          console.log(obj)
+          document.getElementById("samplesize").innerHTML = obj
+        })
+      })
+   }
+
+  }
+
+
+
 
 })
 
