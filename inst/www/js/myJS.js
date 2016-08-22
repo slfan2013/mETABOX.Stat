@@ -50,7 +50,7 @@
     for( var i = 0; i < x.length; i++ ){
       result += parseInt( x[i], 10 ); //don't forget to add the base
     }
-    return(result.toFixed(decimal))
+    return(Number(result.toFixed(decimal)))
   }
   meanFunction = function(x,decimal = 2){
     var result = 0;
@@ -58,7 +58,7 @@
       result += parseFloat( x[i], 10 ) //don't forget to add the base
     }
     result = result/(x.length)
-    return(result.toFixed(decimal))
+    return(Number(result.toFixed(decimal)))
   }
   sdFunction = function(x,decimal = 2){
     var avg = meanFunction(x);

@@ -34,7 +34,7 @@
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
-
+    <script src="js/math.js"></script><!--For matrix operation-->
 
     <!-- My JS -->
     <script src="js/myJS.js"></script>
@@ -143,7 +143,7 @@
                                         <label><input type="radio" ng-model="test.groups" value="independent*paired">independent*paired</label>
                                         </div>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="paired*paired">paired*paired</label>
+                                        <label><input type="radio" ng-model="test.groups" value="paired*paired" disabled>paired*paired</label>
                                         </div>
                                     </form>
                                 </div>
@@ -226,8 +226,8 @@
                                     </div>
                                   </div><hr />
                                   <div class="row">
-                                    <div class="col-lg-12" align="center" class="effectsizedetermined">
-                                      Effect size = {{effectsizevalue.value.toFixed(4)}}
+                                    <div class="col-lg-12 effectsizedetermined" align="center">
+                                      Effect size = {{effectsizevalue.toFixed(4)}}
                                     </div>
                                   </div>
                                 </div>
@@ -260,7 +260,7 @@
                                     </div>
                                   </div><hr />
                                   <div class="row">
-                                    <div class="col-lg-12" align="center" class="effectsizedetermined">
+                                    <div class="col-lg-12 effectsizedetermined" align="center">
                                       Effect size = {{effectsizevalue.toFixed(4)}}
                                     </div>
                                   </div>
@@ -301,22 +301,99 @@
                                             <br /><button addeffectsizes class="pull-right btn btn-default btn-xs btn-outline">
                           <i class="fa fa-plus"></i></button><button class='pull-right btn btn-default btn-xs btn-outline' removeeffectsize><i class='fa fa-minus'></i></button><hr />
                                             <div class="row">
-                                              <div class="col-lg-12" align="center" class="effectsizedetermined">
+                                              <div class="col-lg-12 effectsizedetermined" align="center">
                                                 Effect size = {{effectsizevalue.toFixed(4)}}
                                               </div>
                                             </div>
                                 </div>
                                 <div ng-switch-when="multiple paired groups">
                                   <h3><em>repeated ANOVA</em></h3>
+                                  <div class="row">
+                                      <div class="col-lg-6">
+                                        <label>Mean 1</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.mean1" ng-change="calculateeffectsize();">
+                                      </div>
+                                      <div class="col-lg-6">
+                                        <label>SD 1</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.sd1" ng-change="calculateeffectsize();" min=0>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-lg-6">
+                                        <label>Mean 2</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.mean2" ng-change="calculateeffectsize();">
+                                      </div>
+                                      <div class="col-lg-6">
+                                        <label>SD 2</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.sd2" ng-change="calculateeffectsize();" min=0>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-lg-6">
+                                        <label>Mean 3</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.mean3" ng-change="calculateeffectsize();">
+                                      </div>
+                                      <div class="col-lg-6">
+                                        <label>SD 3</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.sd3" ng-change="calculateeffectsize();" min=0>
+                                      </div>
+                                    </div>
+                                    <div id="addedeffectsized_samplesize"></div>
+                                    <br /><button addeffectsizes class="pull-right btn btn-default btn-xs btn-outline">
+                  <i class="fa fa-plus"></i></button><button class='pull-right btn btn-default btn-xs btn-outline' removeeffectsize><i class='fa fa-minus'></i></button><hr />
+                                    <div class="row">
+                                      <div class="col-lg-12 effectsizedetermined" align="center">
+                                        Effect size = {{effectsizevalue.toFixed(4)}}
+                                      </div>
+                                    </div>
                                 </div>
                                 <div ng-switch-when="independent*independent">
                                   <h3><em>two-way ANOVA</em></h3>
+                                  <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>Variance explained</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.varianceexplained" ng-change="calculateeffectsize();" min = 0>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Total variance</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.totalvariance" ng-change="calculateeffectsize();" min = "{{caleffectsize.varianceexplained}}">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-12 effectsizedetermined" align="center">
+                                        Effect size = {{effectsizevalue.toFixed(4)}}
+                                  </div>
                                 </div>
                                 <div ng-switch-when="independent*paired">
                                   <h3><em>mixed ANOVA</em></h3>
+                                  <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>Variance explained</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.varianceexplained" ng-change="calculateeffectsize();" min = 0>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Total variance</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.totalvariance" ng-change="calculateeffectsize();" min = "{{caleffectsize.varianceexplained}}">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-12 effectsizedetermined" align="center">
+                                        Effect size = {{effectsizevalue.toFixed(4)}}
+                                  </div>
                                 </div>
                                 <div ng-switch-when="paired*paired">
                                   <h3><em>two-way repeated ANOVA</em></h3>
+                                  <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>Variance explained</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.varianceexplained" ng-change="calculateeffectsize();" min = 0>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Total variance</label>
+                                        <input class="form-control" type = 'number' ng-model="caleffectsize.totalvariance" ng-change="calculateeffectsize();" min = "{{caleffectsize.varianceexplained}}">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-12 effectsizedetermined" align="center">
+                                        Effect size = {{effectsizevalue.toFixed(4)}}
+                                  </div>
                                 </div>
                               </div>
       </div>
@@ -340,21 +417,76 @@
                           <div class="row">
                             <div class="col-lg-2 col-lg-offset-4">
                               <label class="col-md-4 control-label">α:</label>
-                              <input id="alpha_samplesize" type="number" placeholder="" class="form-control input-md" required="">
+                              <input id="alpha_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model="alpha" step = 0.005 max = 1>
                             </div>
                             <div class="col-lg-2">
                               <label class="col-md-4 control-label">Power:</label>
-                              <input id="power_samplesize" type="number" placeholder="" class="form-control input-md" required="">
+                              <input id="power_samplesize" type="number" placeholder="" class="form-control input-md" required="" min = 0 ng-model = "power" step = "0.005" max=1>
                             </div>
-
-
-
-
-                          </div>
+                          </div><hr />
+                             <div ng-switch="test.groups">
+                               <div ng-switch-when="multiple independent groups">
+                                 <div class="row col-lg-4 col-lg-offset-4">
+                                   <label>Number of groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{numofeffectsizes}}"/>
+                                 </div>
+                               </div>
+                               <div ng-switch-when="multiple paired groups">
+                                 <hr />
+                                 <div class="row">
+                                   <div class="col-lg-2 col-lg-offset-3">
+                                   <label>Number of paired groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{Math.min(numofeffectsizes,3)}}"/>
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Correlation among groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 />
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Nonsphericity Correction(&epsilon;):</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 />
+                                 </div>
+                                 </div>
+                               </div>
+                               <div ng-switch-when="independent*independent">
+                                 <hr />
+                                 <div class="row">
+                                   <div class="col-lg-2 col-lg-offset-4">
+                                   <label>Number of groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2 />
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Number of groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2 />
+                                 </div>
+                                 </div>
+                               </div>
+                               <div ng-switch-when="independent*paired">
+                                 <div class="row">
+                                   <div class="col-lg-2 col-lg-offset-2">
+                                   <label>Number of independent groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups1" min=2 />
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Number of paired groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2 />
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Correlation among groups:</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 />
+                                 </div>
+                                 <div class="col-lg-2">
+                                   <label>Nonsphericity Correction(&epsilon;):</label>
+                                   <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 />
+                                 </div>
+                                 </div>
+                               </div>
+                             </div>
                         </div>
                         <hr />
                         <center><h3><strong>Based on the information you provided, the sample size must be at least:</strong></h3></center>
                         <center><h2><strong>8</strong></h2></center>
+                        <button type="button" class="btn btn-outline btn-info pull-right">Power-Sample plot</button>
                     </div>
                 </div>
             </div>
