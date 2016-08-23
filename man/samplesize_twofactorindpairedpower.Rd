@@ -4,7 +4,7 @@
 \alias{samplesize_twofactorindpairedpower}
 \title{samplesize_twofactorindpairedpower}
 \usage{
-samplesize_twofactorindpairedpower(m = 3, k = 3, effectsize = 0.8,
+samplesize_twofactorindpairedpower(k = 3, m = 3, effectsize = 0.8,
   sig_level = 0.05, power = 0.8, corr = 0.5, epsilon = 0.75)
 }
 \description{

@@ -491,7 +491,6 @@
                         <hr />
                         <div id="section2">
                         <center><h3><strong>Based on the information you provided, the sample size for each group must be at least:</strong></h3></center>
-
                         <center><h1><strong id="samplesize"></strong></h1></center>
                         <a href="#section2" class="btn btn-outline btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
                         </div>
@@ -501,6 +500,23 @@
 
 <div ng-show="show" style="height:1000px;">
 <center><div id="chartContainer" style="height: 700px; width: 70%;"></div></center>
+<div class="row">
+  <div class="col-lg-4 col-lg-offset-4">
+    <label>Sample Size Range</label>
+    <input class="form-control" placeholder="5-100,5" ng-model="samplerange">
+  </div>
+  </div>
+  <div class="row">
+  <div class="col-lg-4 col-lg-offset-4">
+    <label>Effect Sizes</label>
+    <input class="form-control" placeholder="0.2,0.5,0.8" ng-model="effectsizerange">
+  </div>
+</div>
+  <div class="row">
+  <div class="col-lg-1 col-lg-offset-7">
+    <button class="btn btn-info btn-block"  id="updateplot" ng-click="powersampleplot();">Update</button>
+  </div>
+</div>
 </div>
 
 

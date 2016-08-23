@@ -49,7 +49,7 @@ app.controller('samplesizectrl', function($scope) {
     document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>'
     if($scope.test.groups == "two independent groups"){
       var req = ocpu.call("samplesize_onefactortwogroupspower",{
-        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,samplerange:$scope.samplerange
       },function(session){
         session.getObject(function(obj){
           document.getElementById("samplesize").innerHTML = obj
@@ -104,13 +104,15 @@ app.controller('samplesizectrl', function($scope) {
       };
 
   $scope.powersampleplot = function(){
-document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>'
+  document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>'
+  console.log($scope.samplerange)
     if($scope.test.groups == "two independent groups"){
       var req = ocpu.call("samplesize_onefactortwogroupspower",{
-        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
-          document.getElementById("samplesize").innerHTML = obj
+          data = obj[0]
+          getchart(JSON.parse(data));
         })
       })
    }else if($scope.test.groups == "two paired groups"){
@@ -156,110 +158,8 @@ document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-sp
         })
       })
    }
-    var chart = new CanvasJS.Chart("chartContainer",
-    {
-      title:{
-        text: "Power - Sample"
-      },
-      animationEnabled: true,
-      axisY:{
-        titleFontFamily: "arial",
-        titleFontSize: 12,
-        includeZero: false
-      },
-      toolTip: {
-        shared: true
-      },
-      data: [
-      {
-        type: "spline",
-        name: "US",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 44} ,
-        {label:"Sydney 2000", y: 37} ,
-        {label: "Athens 2004", y: 34} ,
-        {label: "Beijing 2008", y: 36} ,
-        {label: "London 2012", y: 46}
-        ]
-      },
-      {
-        type: "spline",
-        name: "China",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 16} ,
-        {label:"Sydney 2000", y: 28} ,
-        {label: "Athens 2004", y: 32} ,
-        {label: "Beijing 2008", y: 51} ,
-        {label: "London 2012", y: 38}
-        ]
-      },
-      {
-        type: "spline",
-        name: "Britain",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 1} ,
-        {label:"Sydney 2000", y: 11} ,
-        {label: "Athens 2004", y: 9} ,
-        {label: "Beijing 2008", y: 19} ,
-        {label: "London 2012", y: 29}
-        ]
-      },
-      {
-        type: "spline",
-        name: "Russia",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 26} ,
-        {label:"Sydney 2000", y: 32} ,
-        {label: "Athens 2004", y: 28} ,
-        {label: "Beijing 2008", y: 23} ,
-        {label: "London 2012", y: 24}
-        ]
-      },
-      {
-        type: "spline",
-        name: "S Korea",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 7} ,
-        {label:"Sydney 2000", y: 8} ,
-        {label: "Athens 2004", y: 9} ,
-        {label: "Beijing 2008", y: 13} ,
-        {label: "London 2012", y: 13}
-        ]
-      },
-      {
-        type: "spline",
-        name: "Germany",
-        showInLegend: true,
-        dataPoints: [
-        {label: "Atlanta 1996" , y: 20} ,
-        {label:"Sydney 2000", y: 13} ,
-        {label: "Athens 2004", y: 13} ,
-        {label: "Beijing 2008", y: 16} ,
-        {label: "London 2012", y: 11}
-        ]
-      }
-      ],
-      legend:{
-        cursor:"pointer",
-        itemclick:function(e){
-          if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-          	e.dataSeries.visible = false;
-          }
-          else {
-          	e.dataSeries.visible = true;
-          }
-          chart.render();
-        }
-      }
-    });
-    setTimeout(function(){
-       chart.render();
-    }, 1000);
+
+
   }
 
 
@@ -307,5 +207,47 @@ $(document).ready(function(){
       }
     }
   });
+
+
+
+getchart = function(d,l){
+      var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+        text: "Power - Sample"
+      },
+      animationEnabled: true,
+      axisY:{
+        titleFontFamily: "arial",
+        includeZero: true,
+        maximum:1
+      },
+      toolTip: {
+        shared: true
+      },
+      data: d,
+      legend:{
+        cursor:"pointer",
+        itemclick:function(e){
+          if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+          	e.dataSeries.visible = false;
+          }
+          else {
+          	e.dataSeries.visible = true;
+          }
+          chart.render();
+        }
+      }
+    });
+    setTimeout(function(){
+       chart.render();
+    }, 1000);
+}
+
+
+
+
+
+
 });
 
