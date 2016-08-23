@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!--<script src="js/opencpu-0.5.js"></script>-->
-    <script src="js/opencpu.js"></script>
+    <!--<script src="js/opencpu-0.5.js"></script>
+    <script src="js/opencpu.js"></script>-->
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -47,7 +47,7 @@
 
 <body  style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;' ng-app="samplesize" ng-controller="samplesizectrl">
 
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" style="font-size:80%;">
@@ -102,7 +102,7 @@
                         you should choose <em>'one factor --> two independent groups --> t-test'</em>.</p>
                         <p>Sometimes people are interested in the interaction between two factors. For example, you may be interested in whether the education level, say 'school',
                         'collage' and 'university', has different influence on salary of male and female. You have two factors, one is education and the other one is
-                        sex. In this case, you should select <em>'two factor --> independent * independent --> two-way ANOVA'</em>. More explanation are given
+                        sex. In this case, you should select <em>'two factors --> independent * independent --> two-way ANOVA'</em>. More explanation are given
                         <a href="url" target="_blank">here</a>.</p>
                         <div class="well">
                           <div class="row">
@@ -186,6 +186,9 @@
                             <div class="col-lg-4 col-lg-offset-4">
                               <div class="form-group">
                                 <label>Effect Size: </label>
+                                <em ng-show="test.groups=='two independent groups'||test.groups=='two paired groups'" class="text-muted">small (0.2), medium (0.5) and large (0.8) </em>
+                                <em ng-show="test.groups=='multiple independent groups'||test.groups=='multiple paired groups'" class="text-muted">small (0.1), medium (0.25) and large (0.4) </em>
+                                <span ng-show="test.groups=='two independent groups'||test.groups=='two paired groups'" class="pull-right"><a href="http://rpsychologist.com/d3/cohend/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                 <input class="form-control" id = 'effectsize_samplesize' type = 'number' ng-model = "effectsizevalue"  ng-change = "calculatesamplesize();">
                               </div>
                             </div>
@@ -444,7 +447,7 @@
                                    <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
-                                   <label>Nonsphericity Correction(&epsilon;):</label>
+                                   <label>Nonsphericity Correction(&epsilon;):</label><span class="pull-right"><a href="http://user.qzone.qq.com/412276225/blog/1471916501" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                    <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01 ng-change = "calculatesamplesize();" />
                                  </div>
                                  </div>
@@ -476,7 +479,7 @@
                                    <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
-                                   <label>Nonsphericity Correction(&epsilon;):</label>
+                                   <label>Nonsphericity Correction(&epsilon;):</label><span class="pull-right"><a href="http://user.qzone.qq.com/412276225/blog/1471916501" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                    <input type="number" class="form-control input-md" ng-model="otherpara.epsilon" min=0 max=1 step=0.01   ng-change = "calculatesamplesize();" />
                                  </div>
                                  </div>

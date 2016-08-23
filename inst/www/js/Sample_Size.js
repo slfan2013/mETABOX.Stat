@@ -88,9 +88,13 @@ app.controller('samplesizectrl', function($scope) {
         })
       })
    }else if($scope.test.groups == "independent*paired"){
-     console.log($scope.otherpara.numgroups1)
-     console.log($scope.otherpara.numgroups2)
-     console.log($scope.otherpara.epsilon)
+     console.log("k:"+typeof($scope.otherpara.numgroups1))
+     console.log("m:"+typeof($scope.otherpara.numgroups2))
+     console.log("epsilon:"+typeof($scope.otherpara.epsilon))
+     console.log("effectsizevalue:"+typeof($scope.effectsizevalue))
+     console.log("alpha:"+typeof($scope.alpha))
+     console.log("power:"+typeof($scope.power))
+     console.log("corr:"+typeof($scope.otherpara.correlation))
      var req = ocpu.call("samplesize_twofactorindpairedpower",{
         k:$scope.otherpara.numgroups1,m:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,
         corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon

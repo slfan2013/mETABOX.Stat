@@ -15,6 +15,6 @@ samplesize_twofactorindpairedpower <- function(k=3,m=3,effectsize=0.8,sig_level 
     df2 = (N-k)*(m-1)*epsilon
     pf(qf(sig_level,df1,df2,lower.tail = F),df1,df2,ncp,lower.tail = F)
   })
-  return(ceiling(tryCatch(uniroot(function(N) eval(p.body) - power, c(k +
+  return(ceiling(tryCatch(uniroot(function(N) eval(p.body) - power, c(m +
                                                                         1e-10, 1e+05))$root*1,error = function(e){return("NA")})))
 }
