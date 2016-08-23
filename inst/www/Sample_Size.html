@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!--<script src="js/opencpu-0.5.js"></script>
-    <script src="js/opencpu.js"></script>-->
+    <!--<script src="js/opencpu-0.5.js"></script>-->
+    <script src="js/opencpu.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -35,12 +35,14 @@
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
     <script src="js/math.js"></script><!--For matrix operation-->
+    <script src="js/canvasjs.min.js"></script><!--Plot-->
+
 
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/Sample_Size.js"></script>
     <!-- My CSS -->
-     <!--<link href="css/Sample_Size.css" rel="stylesheet">making the sidebar collapsible-->
+    <link href="css/Sample_Size.css" rel="stylesheet"><!--make sample-plot plot session-->
 
 
 </head>
@@ -92,7 +94,7 @@
           <a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-navicon"></i></a>
             <div class="container-fluid">
 
-                <div class="row">
+   <div class="row">
                     <div class="col-lg-12">
                         <h1>Sample Size Calculator</h1>
                         <p style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'>Calculate the sample size for different hypothesis testing.</p><hr />
@@ -258,7 +260,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-lg-12" align="center">
-                                      <label>correlation between two groups</label>
+                                      <label>correlation between two groups</label><span class="pull-right"><a href="http://rpsychologist.com/d3/correlation/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                       <input class="form-control" type = 'number' ng-model="caleffectsize.corr" ng-change="calculateeffectsize();" min=0 max=1 step=0.05>
                                     </div>
                                   </div><hr />
@@ -443,7 +445,7 @@
                                    <input type="number" class="form-control input-md" ng-model="otherpara.numgroups" min=3 value = "{{Math.min(numofeffectsizes,3)}}" ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
-                                   <label>Correlation among groups:</label>
+                                   <label>Correlation among groups:</label><span class="pull-right"><a href="http://rpsychologist.com/d3/correlation/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                    <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01 ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
@@ -475,7 +477,7 @@
                                    <input type="number" class="form-control input-md" ng-model="otherpara.numgroups2" min=2   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
-                                   <label>Correlation among groups:</label>
+                                   <label>Correlation among groups:</label><span class="pull-right"><a href="http://rpsychologist.com/d3/correlation/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                    <input type="number" class="form-control input-md" ng-model="otherpara.correlation" min=0 max=1 step=0.01   ng-change = "calculatesamplesize();" />
                                  </div>
                                  <div class="col-lg-2">
@@ -487,12 +489,21 @@
                              </div>
                         </div>
                         <hr />
+                        <div id="section2">
                         <center><h3><strong>Based on the information you provided, the sample size for each group must be at least:</strong></h3></center>
 
                         <center><h1><strong id="samplesize"></strong></h1></center>
-                        <button type="button" class="btn btn-outline btn-info pull-right">Power-Sample plot</button>
+                        <a href="#section2" class="btn btn-outline btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
+                        </div>
+
                     </div>
                 </div>
+
+<div ng-show="show" style="height:1000px;">
+<center><div id="chartContainer" style="height: 700px; width: 70%;"></div></center>
+</div>
+
+
             </div>
         </div>
         <!-- /#page-content-wrapper -->
