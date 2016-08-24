@@ -11,18 +11,19 @@ app.controller('samplesizectrl', function($scope) {
   $scope.numofeffectsizes = 3;
   $scope.alpha=0.05;
   $scope.power = 0.8;
+  $scope.otherpara.numgroups = 3;
   $scope.otherpara.numgroups1 = 3;
   $scope.otherpara.numgroups2 = 3;
   $scope.show = false;
   $scope.samplerange = "5-100,5";
-
+  $scope.effectsizevalue = 0.2
 
 
   $scope.calculateeffectsize = function(){
    if($scope.test.groups == "two independent groups"){
-     $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)))/2)
+     $scope.effectsizevalue = Number((Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)))/2)).toFixed(4))
    }else if($scope.test.groups == "two paired groups"){
-     $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)) - 2*$scope.caleffectsize.corr*$scope.caleffectsize.sd1*$scope.caleffectsize.sd2))
+     $scope.effectsizevalue = Number((Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)) - 2*$scope.caleffectsize.corr*$scope.caleffectsize.sd1*$scope.caleffectsize.sd2))).toFixed(4))
    }else if($.inArray($scope.test.groups, ["multiple paired groups","multiple independent groups"]) > -1){
      $scope.numofeffectsizes = numofeffectsizes;
      means = [];
@@ -40,23 +41,24 @@ app.controller('samplesizectrl', function($scope) {
        sds.push($scope.caleffectsize["sd"+ii])
      }
      pooled_variance = meanFunction(sds)
-     $scope.effectsizevalue = Number(sigma_mu/pooled_variance)
+     $scope.effectsizevalue = Number(Number(sigma_mu/pooled_variance).toFixed(4))
    }else{
-     $scope.effectsizevalue = Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance))
+     $scope.effectsizevalue = Number(Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance)).toFixed(4))
    }
+   $scope.effectsizerange = [Number((Number($scope.effectsizevalue)-Number(0.1)).toFixed(2)),Number($scope.effectsizevalue.toFixed(2)),Number((Number($scope.effectsizevalue)+Number(0.1)).toFixed(2))].join()
   }
 
   $scope.visualizeeffectsize=function(){
 
       if($scope.test.groups == "two independent groups"){
-      $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)))/2)
+      $scope.effectsizevalue = Number((Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)))/2)).toFixed(4))
     setTimeout(function(){
        var req = $("#visualizeeffectsize_samplesize").rplot("samplesize_visullizeeffectsize", {
       means:[$scope.caleffectsize.mean1,$scope.caleffectsize.mean2],sds:[$scope.caleffectsize.sd1,$scope.caleffectsize.sd2],effectsizevalue : $scope.effectsizevalue
         })
     }, 1000);
    }else if($scope.test.groups == "two paired groups"){
-     $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)) - 2*$scope.caleffectsize.corr*$scope.caleffectsize.sd1*$scope.caleffectsize.sd2))
+     $scope.effectsizevalue = Number((Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)) - 2*$scope.caleffectsize.corr*$scope.caleffectsize.sd1*$scope.caleffectsize.sd2))).toFixed(4))
      setTimeout(function(){
        var req = $("#visualizeeffectsize_samplesize").rplot("samplesize_visullizeeffectsize", {
       means:[$scope.caleffectsize.mean1,$scope.caleffectsize.mean2],sds:[$scope.caleffectsize.sd1,$scope.caleffectsize.sd2],effectsizevalue : $scope.effectsizevalue,corr:$scope.caleffectsize.corr,type:"two paired groups"
@@ -79,7 +81,7 @@ app.controller('samplesizectrl', function($scope) {
        sds.push($scope.caleffectsize["sd"+ii])
      }
      pooled_variance = meanFunction(sds)
-     $scope.effectsizevalue = Number(sigma_mu/pooled_variance)
+     $scope.effectsizevalue = Number(Number(sigma_mu/pooled_variance).toFixed(4))
      setTimeout(function(){
        var req = $("#visualizeeffectsize_samplesize").rplot("samplesize_visullizeeffectsize", {
       means:means,sds:sds,effectsizevalue : $scope.effectsizevalue,type:"multiple independent groups"
@@ -102,14 +104,16 @@ app.controller('samplesizectrl', function($scope) {
        sds.push($scope.caleffectsize["sd"+ii])
      }
      pooled_variance = meanFunction(sds)
-     $scope.effectsizevalue = Number(sigma_mu/pooled_variance)
+     $scope.effectsizevalue = Number(Number(sigma_mu/pooled_variance).toFixed(4))
      setTimeout(function(){
        var req = $("#visualizeeffectsize_samplesize").rplot("samplesize_visullizeeffectsize", {
       means:means,sds:sds,effectsizevalue : $scope.effectsizevalue,corr:$scope.caleffectsize.corr,type:"multiple paired groups"
         })
     }, 1000);
    }else{
-     $scope.effectsizevalue = Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance))
+     $scope.effectsizevalue = Number((Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance))).toFixed(4))
+     document.getElementById("visualizeeffectsize_samplesize").innerHTML = 'Visualization has not been available yet for two factor design.'
+
    }
   }
 
@@ -166,6 +170,7 @@ app.controller('samplesizectrl', function($scope) {
         })
       })
    }
+   $scope.effectsizerange = [Number((Number($scope.effectsizevalue)-Number(0.1)).toFixed(2)),Number($scope.effectsizevalue.toFixed(2)),Number((Number($scope.effectsizevalue)+Number(0.1)).toFixed(2))].join()
   }
 
 
@@ -176,11 +181,11 @@ app.controller('samplesizectrl', function($scope) {
       };
 
   $scope.powersampleplot = function(){
-$scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+
  if($scope.test.groups == "two independent groups"){
-     $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+
       var req = ocpu.call("samplesize_onefactortwogroupspower",{
-        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           data = obj[0]
@@ -189,7 +194,7 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
       })
    }else if($scope.test.groups == "two paired groups"){
       var req = ocpu.call("samplesize_onefactortwopairedgroupspower",{
-        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           session.getObject(function(obj){
@@ -200,7 +205,7 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
       })
    }else if($scope.test.groups == "multiple independent groups"){
       var req = ocpu.call("samplesize_onefactormultigroupspower",{
-        k:$scope.otherpara.numgroups,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        k:$scope.otherpara.numgroups,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           data = obj[0]
@@ -210,7 +215,7 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
    }else if($scope.test.groups == "multiple paired groups"){
       var req = ocpu.call("samplesize_onefactormultipairedgroupspower",{
         m:$scope.otherpara.numgroups,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,
-        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           data = obj[0]
@@ -219,7 +224,7 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
       })
    }else if($scope.test.groups == "independent*independent"){
      var req = ocpu.call("samplesize_twofactorindindpower",{
-        k1:$scope.otherpara.numgroups1,k2:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        k1:$scope.otherpara.numgroups1,k2:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           data = obj[0]
@@ -229,7 +234,7 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
    }else if($scope.test.groups == "independent*paired"){
      var req = ocpu.call("samplesize_twofactorindpairedpower",{
         k:$scope.otherpara.numgroups1,m:$scope.otherpara.numgroups2,effectsize:$scope.effectsizevalue,sig_level:$scope.alpha,power:$scope.power,
-        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon,forplot:true,samplerange:$scope.samplerange,effectsizerange:[Number($scope.effectsizevalue)-Number(0.1),Number($scope.effectsizevalue)-Number(0.05),$scope.effectsizevalue,Number($scope.effectsizevalue)+Number(0.05),Number($scope.effectsizevalue)+Number(0.1)].join()
+        corr:$scope.otherpara.correlation,epsilon:$scope.otherpara.epsilon,forplot:true,samplerange:$scope.samplerange,effectsizerange:$scope.effectsizerange
       },function(session){
         session.getObject(function(obj){
           data = obj[0]
@@ -242,7 +247,59 @@ $scope.effectsizerange = [Number($scope.effectsizevalue)-Number(0.1),Number($sco
   }
 
 
-
+getchart = function(d,l){
+  if($scope.test.groups == "two independent groups"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha
+  }else if($scope.test.groups == "two paired groups"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha +", correlation = " + $scope.otherpara.correlation
+  }else if($scope.test.groups == "multiple independent groups"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha +", number of groups = "+$scope.otherpara.numgroups
+  }else if($scope.test.groups == "multiple paired groups"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha +", number of groups = "+$scope.otherpara.numgroups + ", correlation = " + $scope.otherpara.correlation + ", epsilon = " + $scope.otherpara.epsilon
+  }else if($scope.test.groups == "independent*independent"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha +", number of groups1 = "+$scope.otherpara.numgroups1 +
+    ", number of groups2 = "+$scope.otherpara.numgroups2
+  }else if($scope.test.groups == "independent*paired"){
+    title = $scope.test.groups+", alpha = "+$scope.alpha +", number of groups = "+$scope.otherpara.numgroups1 +
+    ", number of repeats = "+$scope.otherpara.numgroups2+ ", correlation = " + $scope.otherpara.correlation + ", epsilon = " + $scope.otherpara.epsilon
+  }
+      var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+        text:title,
+        fontSize: 30
+        },
+      animationEnabled: true,
+      axisY:{
+        title: "power",
+        titleFontFamily: "arial",
+        includeZero: false,
+        maximum:1
+      },
+      axisX:{
+        title:"sample size per group"
+      },
+      toolTip: {
+        shared: true
+      },
+      data: d,
+      legend:{
+        cursor:"pointer",
+        itemclick:function(e){
+          if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+          	e.dataSeries.visible = false;
+          }
+          else {
+          	e.dataSeries.visible = true;
+          }
+          chart.render();
+        }
+      }
+    });
+    setTimeout(function(){
+       chart.render();
+    }, 1000);
+}
 
 })
 
@@ -290,39 +347,7 @@ $(document).ready(function(){
   });
 
 
-getchart = function(d,l){
-      var chart = new CanvasJS.Chart("chartContainer",
-    {
-      title:{
-        text: "Power - Sample"
-      },
-      animationEnabled: true,
-      axisY:{
-        titleFontFamily: "arial",
-        includeZero: false,
-        maximum:1
-      },
-      toolTip: {
-        shared: true
-      },
-      data: d,
-      legend:{
-        cursor:"pointer",
-        itemclick:function(e){
-          if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-          	e.dataSeries.visible = false;
-          }
-          else {
-          	e.dataSeries.visible = true;
-          }
-          chart.render();
-        }
-      }
-    });
-    setTimeout(function(){
-       chart.render();
-    }, 1000);
-}
+
 
 
 

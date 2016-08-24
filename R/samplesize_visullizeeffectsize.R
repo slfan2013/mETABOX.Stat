@@ -18,20 +18,19 @@ samplesize_visullizeeffectsize <- function(means=c(-1,0,1),sds=c(1,2,1),corr = 0
     }
     boxplot(data,col=c("light grey", "white"),xlab="group #",ylab="values",frame=F,
             main=paste0("visualize of effect size = ",round(effectsizevalue,4)),
-            sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",globalmean,"."))
+            sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",round(globalmean,4),"."))
 
-  }else if(type == "two paired groups"){
+  }else if(type == "two paired groups" | type=="multiple paired groups"){
       Sigma = diag(x = sds)
       Sigma[Sigma==0] = corr
       data = mvrnorm(n = 100, mu = means, Sigma = Sigma, tol = 1e-6, empirical = FALSE, EISPACK = FALSE)
       boxplot(data,col=c("light grey", "white"),xlab="group #",ylab="values",frame=F,
               main=paste0("visualize of effect size = ",round(effectsizevalue,4)),
-              sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",globalmean,". Corr = ",corr,"."))
+              sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",round(globalmean,4),". Corr = ",corr,"."))
       for(i in 1:nrow(data)){
         lines(data[i,],col='grey')
       }
   }
-
 
 }
 

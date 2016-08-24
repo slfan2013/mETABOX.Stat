@@ -345,7 +345,13 @@
                                     </div>
                                     <div id="addedeffectsized_samplesize"></div>
                                     <br /><button addeffectsizes class="pull-right btn btn-default btn-xs btn-outline">
-                  <i class="fa fa-plus"></i></button><button class='pull-right btn btn-default btn-xs btn-outline' removeeffectsize><i class='fa fa-minus'></i></button><hr />
+                  <i class="fa fa-plus"></i></button><button class='pull-right btn btn-default btn-xs btn-outline' removeeffectsize><i class='fa fa-minus'></i></button>
+                                    <div class="row">
+                                      <div class="col-lg-12" align="center">
+                                      <label>correlation between two groups</label><span class="pull-right"><a href="http://rpsychologist.com/d3/correlation/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
+                                      <input class="form-control" type = 'number' ng-model="caleffectsize.corr" ng-change="calculateeffectsize();" min=0 max=1 step=0.05>
+                                    </div>
+                                    </div><hr />
                                     <div class="row">
                                       <div class="col-lg-12 effectsizedetermined" align="center">
                                         Effect size = {{effectsizevalue.toFixed(4)}}
@@ -511,7 +517,7 @@
                         <div id="section2">
                         <center><h3><strong>Based on the information you provided, the sample size for each group must be at least:</strong></h3></center>
                         <center><h1><strong><span id="samplesize" ng-click="calculatesamplesize();"></span></strong></h1></center>
-                        <a href="#section2" class="btn btn-outline btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
+                        <a href="#section2" class="btn btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
                         </div>
                     </div>
                 </div>

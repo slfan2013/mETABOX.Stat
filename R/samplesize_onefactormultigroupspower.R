@@ -10,7 +10,9 @@
 samplesize_onefactormultigroupspower <- function(k = 3,effectsize=0.8,sig_level = 0.05,power=0.8,forplot=FALSE,samplerange=NULL,effectsizerange=NULL){
   library(pwr);library(jsonlite)
   if(!forplot){
-    return(ceiling(pwr.anova.test(k = k, f = effectsize, sig.level = sig_level, power = power)$n))
+    return(tryCatch(ceiling(pwr.anova.test(k = k, f = effectsize, sig.level = sig_level, power = power)$n),error=function(e){
+      "Error: Effect Size too BIG. In this case, 2 samples for each group is enough."
+    }))
   }else{
     if(is.null(effectsizerange)){
       effectsizes = c(0.2,0.5,0.8)
