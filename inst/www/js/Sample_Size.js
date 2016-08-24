@@ -46,10 +46,43 @@ app.controller('samplesizectrl', function($scope) {
    }
   }
 
+  $scope.visualizeeffectsize=function(){
 
+      if($scope.test.groups == "two independent groups"){
+      $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)))/2)
+    setTimeout(function(){
+       var req = $("#visualizeeffectsize_samplesize").rplot("samplesize_visullizeeffectsize", {
+          means:[$scope.caleffectsize.mean1,$scope.caleffectsize.mean2],sds:[$scope.caleffectsize.sd1,$scope.caleffectsize.sd2],effectsizevalue : $scope.effectsizevalue
+        })
+    }, 1000);
+
+
+   }else if($scope.test.groups == "two paired groups"){
+     $scope.effectsizevalue = Math.abs($scope.caleffectsize.mean1 - $scope.caleffectsize.mean2)/Math.sqrt((Number(Math.pow($scope.caleffectsize.sd1,2)) + Number(Math.pow($scope.caleffectsize.sd2,2)) - 2*$scope.caleffectsize.corr*$scope.caleffectsize.sd1*$scope.caleffectsize.sd2))
+   }else if($.inArray($scope.test.groups, ["multiple paired groups","multiple independent groups"]) > -1){
+     $scope.numofeffectsizes = numofeffectsizes;
+     means = [];
+     for(ii=1;ii<numofeffectsizes+1;ii++){
+       means.push($scope.caleffectsize["mean"+ii])
+     }
+     globalmean = meanFunction(means)
+     meandiffssq = [];
+     for(ii=1;ii<numofeffectsizes+1;ii++){
+       meandiffssq.push(Math.pow($scope.caleffectsize["mean"+ii] - globalmean,2))
+     }
+     sigma_mu = Math.sqrt(meanFunction(meandiffssq))
+     sds = [];
+     for(ii=1;ii<numofeffectsizes+1;ii++){
+       sds.push($scope.caleffectsize["sd"+ii])
+     }
+     pooled_variance = meanFunction(sds)
+     $scope.effectsizevalue = Number(sigma_mu/pooled_variance)
+   }else{
+     $scope.effectsizevalue = Number(Math.sqrt($scope.caleffectsize.varianceexplained/$scope.caleffectsize.totalvariance))
+   }
+  }
 
   $scope.calculatesamplesize=function(){
-    console.log("!")
     document.getElementById("samplesize").innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>'
     if($scope.test.groups == "two independent groups"){
       var req = ocpu.call("samplesize_onefactortwogroupspower",{
@@ -103,6 +136,10 @@ app.controller('samplesizectrl', function($scope) {
       })
    }
   }
+
+
+
+
   $scope.toggleplot = function() {
           $scope.show = !$scope.show;
       };
@@ -171,6 +208,8 @@ app.controller('samplesizectrl', function($scope) {
 
 
   }
+
+
 
 
 })

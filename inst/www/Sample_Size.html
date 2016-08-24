@@ -404,11 +404,34 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" data-dismiss="modal">Push it!</button>
+        <button type="button" class="btn btn-warning" ng-click="visualizeeffectsize();" data-toggle="modal" data-target="#visualizeeffectsizemodal" >Visualize it!</button>
       </div>
     </div>
   </div>
 </div>
 
+
+<div class="modal fade" id="visualizeeffectsizemodal" tabindex="-1" role="dialog" aria-labelledby="visualizepowerlabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="visualizepowerlabel"><i class="fa fa-lightbulb-o"></i> Visualization of Effect Size</h4>
+      </div>
+      <div class="modal-body">
+        <div id="visualizeeffectsize_samplesize">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-Warning" data-dismiss="modal">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="visualizeeffectsize_samplesize">
+                                  </div>
                             </div>
                           </div>
                         </div>
@@ -494,10 +517,8 @@
                         <center><h1><strong><span id="samplesize" ng-click="calculatesamplesize();"></span></strong></h1></center>
                         <a href="#section2" class="btn btn-outline btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
                         </div>
-
                     </div>
                 </div>
-
 <div ng-show="show" style="height:1000px;">
 <center><div id="chartContainer" style="height: 700px; width: 70%;"></div></center>
 <div class="row">
