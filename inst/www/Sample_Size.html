@@ -403,7 +403,7 @@
                               </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" data-dismiss="modal">Push it!</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="calculatesamplesize();">Push it!</button>
         <button type="button" class="btn btn-warning" ng-click="visualizeeffectsize();" data-toggle="modal" data-target="#visualizeeffectsizemodal" >Visualize it!</button>
       </div>
     </div>
@@ -418,7 +418,7 @@
         <h4 class="modal-title" id="visualizepowerlabel"><i class="fa fa-lightbulb-o"></i> Visualization of Effect Size</h4>
       </div>
       <div class="modal-body">
-        <div id="visualizeeffectsize_samplesize">
+        <div id="visualizeeffectsize_samplesize" style="width800px;height:600px">
         </div>
       </div>
       <div class="modal-footer">
@@ -428,10 +428,6 @@
   </div>
 </div>
 
-
-
-<div id="visualizeeffectsize_samplesize">
-                                  </div>
                             </div>
                           </div>
                         </div>

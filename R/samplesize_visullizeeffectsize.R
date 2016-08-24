@@ -7,21 +7,31 @@
 #' @examples
 #' samplesize_visullizeeffectsize()
 
-samplesize_visullizeeffectsize <- function(means=c(-1,0,1),sds=c(1,2,1),pooled_variance = NULL,sigma_mu=NULL,effectsizevalue = NULL){
+samplesize_visullizeeffectsize <- function(means=c(-1,0,1),sds=c(1,2,1),corr = 0.5, effectsizevalue = NULL,
+                                           type = "two independent groups"){
+  library(MASS)
   globalmean=mean(means)
   data = list()
-  for(i in 1:length(means)){
-    data[[i]] = qnorm(c(0.05,.25,.5,.75,.95),mean=means[i],sd=sds[i])
-  }
-  if(!is.null(effectsizevalue)){
+  if(type == "two independent groups" |type == "multiple independent groups"){
+    for(i in 1:length(means)){
+      data[[i]] = qnorm(c(0.05,.25,.5,.75,.95),mean=means[i],sd=sds[i])
+    }
     boxplot(data,col=c("light grey", "white"),xlab="group #",ylab="values",frame=F,
-            main=paste0("visualize of effect size = ",round(sigma_mu/pooled_variance,2)),
+            main=paste0("visualize of effect size = ",round(effectsizevalue,4)),
             sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",globalmean,"."))
-  }else{
-    boxplot(data,col=c("light grey", "white"),xlab="group #",ylab="values",frame=F,
-            main=paste0("visualize of effect size = ",effectsizevalue),
-            sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",globalmean,"."))
+
+  }else if(type == "two paired groups"){
+      Sigma = diag(x = sds)
+      Sigma[Sigma==0] = corr
+      data = mvrnorm(n = 100, mu = means, Sigma = Sigma, tol = 1e-6, empirical = FALSE, EISPACK = FALSE)
+      boxplot(data,col=c("light grey", "white"),xlab="group #",ylab="values",frame=F,
+              main=paste0("visualize of effect size = ",round(effectsizevalue,4)),
+              sub=paste0(length(means)," groups. MEANs = ",paste(means,collapse = ", "),'. SDs = ',paste(sds,collapse = ", "),". Global mean = ",globalmean,". Corr = ",corr,"."))
+      for(i in 1:nrow(data)){
+        lines(data[i,],col='grey')
+      }
   }
+
 
 }
 

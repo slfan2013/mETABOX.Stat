@@ -9,5 +9,6 @@ License: What license is it under?
 LazyData: TRUE
 Imports:
     pwr,
-	jsonlite
-RoxygenNote: 5.0.1.9000
+    jsonlite,
+	MASS
+RoxygenNote: 5.0.1

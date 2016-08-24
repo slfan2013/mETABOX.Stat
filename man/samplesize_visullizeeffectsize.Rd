@@ -5,7 +5,7 @@
 \title{samplesize_visullizeeffectsize}
 \usage{
 samplesize_visullizeeffectsize(means = c(-1, 0, 1), sds = c(1, 2, 1),
-  pooled_variance = NULL, sigma_mu = NULL, effectsizevalue = NULL)
+  corr = 0.5, effectsizevalue = NULL, type = "two independent groups")
 }
 \description{
 stat

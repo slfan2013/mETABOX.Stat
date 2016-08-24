@@ -10,7 +10,7 @@
 samplesize_onefactortwopairedgroupspower <- function(effectsize=0.8,sig_level = 0.05,power=0.8,forplot=FALSE,samplerange=NULL,effectsizerange=NULL){
   library(jsonlite)
   if(!forplot){
-    return(ceiling(power.t.test(delta = effectsize,power = power, sig.level = sig_level,type="paired")$n))
+    return(ceiling(power.t.test(delta = effectsize,power = power, sig.level = sig_level,type="paired",alternative="two.sided")$n))
   }else{
     if(is.null(effectsizerange)){
       effectsizes = c(0.2,0.5,0.8)
@@ -27,8 +27,8 @@ samplesize_onefactortwopairedgroupspower <- function(effectsize=0.8,sig_level = 
     data = list()
 
     for(i in 1:length(effectsizes)){
-      df = 2*n-1
-      ncp = abs(effectsizes[i]*sqrt(2*n))
+      df = n-1
+      ncp = abs(effectsizes[i]*sqrt(n))
       power = pt(qt(p=sig_level/2,df=df,lower.tail = F),df,ncp,lower.tail = F)
       dP = list()
       for(j in 1:length(power)){
