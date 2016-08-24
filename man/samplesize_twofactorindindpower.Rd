@@ -5,7 +5,8 @@
 \title{samplesize_twofactorindindpower}
 \usage{
 samplesize_twofactorindindpower(k1 = 3, k2 = 3, effectsize = 0.8,
-  sig_level = 0.05, power = 0.8)
+  sig_level = 0.05, power = 0.8, forplot = FALSE, samplerange = NULL,
+  effectsizerange = NULL)
 }
 \description{
 stat

@@ -139,10 +139,10 @@
                                 <div ng-switch-when="two factors">
                                   <form><label>Groups</label>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="independent*independent">independent*independent</label>
+                                        <label><input type="radio" ng-model="test.groups" value="independent*independent" ng-change = "calculatesamplesize();">independent*independent</label>
                                         </div>
                                         <div class="radio">
-                                        <label><input type="radio" ng-model="test.groups" value="independent*paired">independent*paired</label>
+                                        <label><input type="radio" ng-model="test.groups" value="independent*paired" ng-change = "calculatesamplesize();">independent*paired</label>
                                         </div>
                                         <div class="radio">
                                         <label><input type="radio" ng-model="test.groups" value="paired*paired" disabled>paired*paired</label>
@@ -491,7 +491,7 @@
                         <hr />
                         <div id="section2">
                         <center><h3><strong>Based on the information you provided, the sample size for each group must be at least:</strong></h3></center>
-                        <center><h1><strong id="samplesize"></strong></h1></center>
+                        <center><h1><strong><span id="samplesize" ng-click="calculatesamplesize();"></span></strong></h1></center>
                         <a href="#section2" class="btn btn-outline btn-info pull-right"  id="requestplot" ng-click="toggleplot();powersampleplot();">Power-Sample plot</a>
                         </div>
 
@@ -503,13 +503,13 @@
 <div class="row">
   <div class="col-lg-4 col-lg-offset-4">
     <label>Sample Size Range</label>
-    <input class="form-control" placeholder="5-100,5" ng-model="samplerange">
+    <input class="form-control" placeholder="min-max,by" ng-model="samplerange">
   </div>
   </div>
   <div class="row">
   <div class="col-lg-4 col-lg-offset-4">
     <label>Effect Sizes</label>
-    <input class="form-control" placeholder="0.2,0.5,0.8" ng-model="effectsizerange">
+    <input class="form-control" placeholder="value1,value2,value3" ng-model="effectsizerange" min = 0>
   </div>
 </div>
   <div class="row">

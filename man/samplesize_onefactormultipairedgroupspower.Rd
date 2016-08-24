@@ -5,7 +5,8 @@
 \title{samplesize_onefactormultipairedgroupspower}
 \usage{
 samplesize_onefactormultipairedgroupspower(m = 3, effectsize = 0.8,
-  sig_level = 0.05, power = 0.8, corr = 0.5, epsilon = 0.75)
+  sig_level = 0.05, power = 0.8, corr = 0.5, epsilon = 0.75,
+  forplot = FALSE, samplerange = NULL, effectsizerange = NULL)
 }
 \description{
 stat

@@ -29,7 +29,7 @@ samplesize_onefactortwogroupspower <- function(effectsize=0.8,sig_level = 0.05,p
     for(i in 1:length(effectsizes)){
       df = 2*n-2
       ncp = abs(effectsizes[i]*sqrt(n/2))
-      power = pt(qt(sig_level,df,lower.tail = F),df,ncp,lower.tail = F)
+      power = pt(qt(sig_level/2,df,lower.tail = F),df,ncp,lower.tail = F)
       dP = list()
       for(j in 1:length(power)){
         dP[[j]] = list(label=n[j],y=power[j])

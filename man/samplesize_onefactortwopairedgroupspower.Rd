@@ -5,7 +5,8 @@
 \title{samplesize_onefactortwopairedgroupspower}
 \usage{
 samplesize_onefactortwopairedgroupspower(effectsize = 0.8, sig_level = 0.05,
-  power = 0.8)
+  power = 0.8, forplot = FALSE, samplerange = NULL,
+  effectsizerange = NULL)
 }
 \description{
 stat
