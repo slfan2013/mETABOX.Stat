@@ -31,8 +31,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.samplesd = [];
 	function onClicksampleset(e) {
   var data = []
-
-
     var x = seq($scope.min, $scope.max, length=1000)
 		var y = dnorm(x,meanFunction(rdmdatas[e.dataPoint.x]),sdFunction(rdmdatas[e.dataPoint.x]))
     data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1",marker:{color:'#cc6600'},"showlegend": false},
@@ -41,7 +39,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
       {x:[meanFunction(rdmdatas[e.dataPoint.x]),meanFunction(rdmdatas[e.dataPoint.x])], y:[0,Math.max.apply(null, y)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'},"showlegend": false}]);
           var layout = {"barmode": "overlay",
                     xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
-                    "yaxis1": {"anchor": "free", "domain": [ 0.05, 1], "position": 0.0},
                     "yaxis2": {"anchor": "x1", "domain": [0,0.1], "dtick": 1, "showticklabels": false},
                     paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
                     annotations: [{x: meanFunction(rdmdatas[e.dataPoint.x]),y: 0,xref: 'x',yref: 'y',text: meanFunction(rdmdatas[e.dataPoint.x]),showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
@@ -53,10 +50,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.samplesd = sdFunction(rdmdatas[e.dataPoint.x]);
   $("#samplesd").text(sdFunction(rdmdatas[e.dataPoint.x]) + " ("+(sdFunction(rdmdatas[e.dataPoint.x]) - $scope.sd).toFixed(2)+")");
 	}
-
-
-
-
 
 
 

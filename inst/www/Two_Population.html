@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!--<script src="js/opencpu-0.5.js"></script>
-    <script src="js/opencpu.js"></script>-->
+    <!--<script src="js/opencpu-0.5.js"></script>-->
+    <script src="js/opencpu.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -34,6 +34,8 @@
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
+    <script src="js/math.js"></script><!--For matrix operation-->
+    <script src="js/canvasjs.min.js"></script><!--Plot-->
 
 
     <!-- My JS -->
@@ -46,7 +48,7 @@
 </head>
 
 <body  ng-app="populationplot_twopopulation" ng-controller="populationplotctrl_twopopulation"   style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;' >
-    <div id="wrapper">
+    <div id="wrapper"  class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" style="font-size:80%;">
@@ -156,7 +158,7 @@
                               </div><hr />
                               <div class="row">
                                 <div class="col-lg-6">
-                                  <label>True Effect Size</label>
+                                  <label>True Effect Size</label><span> <a href="http://rpsychologist.com/d3/cohend/" target="_blank"><i class="fa fa-question-circle"></i></a></span>
                                   <p>{{((mean2-mean1)/((sd1+sd2)/2)).toFixed(2)}}</p>
                                 </div>
                                 <div class="col-lg-6">
@@ -173,7 +175,18 @@
                                     </div>
                               </div>
                             </div>
-                            <div class="col-lg-9"><div id="populationplot_twopopulation"></div></div>
+                            <div class="col-lg-9">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                  <div  style="height:300px;" id="populationplot_twopopulation"></div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div  style="height:300px;" id="sampleplot_twopopulation"></div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -184,77 +197,30 @@
                       <input id="samplesize_twopopulation" type="number" data-slider-min="4" data-slider-max="100" data-slider-step="1" data-slider-value="5" style =
                       "display:inline" ng-model="n"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
                     </div>
-                    <div class="col-lg-6" align="center">
+                    <div class="col-lg-6" align="center"  id="section2">
                       <input id="sampletimes_twopopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
-                      "display:inline" ng-model="repeat"/><span><strong>  Repeated Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>
+                      "display:inline" ng-model="repeat" ng-change="toggle_display_bottom()"/><span><strong>  Repeat Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>
                     </div>
                   </div>
                   <br /><br />
-                  <button type="button" class="btn btn-outline btn-primary btn-lg btn-block" ng-click="samplepopulation();">Let's Sample!</button>
+                  <a href="javascript:void(0);" class="btn btn-outline btn-primary btn-lg btn-block" ng-click="samplepopulation()" id="sampletrigger">Let's Sample!</a>
                   <br /><br />
                   <div class="row">
                     <div class = 'col-lg-12'>
+                      <div   ng-show='displaybottom' style="height:1000px;">
                       <div class="panel panel-default">
                         <div class="panel-heading">
                           <i class="fa fa-stack-overflow"></i> Samples
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                              <div class = 'col-lg-3'>
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#estmean" data-toggle="tab">Estimated Means</a>
-                                </li>
-                                <li><a href="#estsd" data-toggle="tab">Estimated SDs</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane fade in active" id="estmean">
-                                  <div class="row pre-scrollable" style="overflow-y: auto;">
-                                        <div class="col-lg-6">
-                                                      <div ng-repeat="samplemean1 in samplemeans1;">
-                                                        <p name = "{{samplemean1.name2}}" ng-mouseover="setSelected(samplemean1.name)">
-                                                          <span ng-class="{selected : samplemean1.name2 === sampleselected2}">{{samplemean1.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplemean1.name2 === sampleselected2">({{(samplemean1.value - mean1).toFixed(2)}})</span>
-                                                          </p>
-                                                      </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                                      <div ng-repeat="samplemean2 in samplemeans2;">
-                                                        <p name = "{{samplemean2.name2}}" ng-mouseover="setSelected(samplemean2.name)">
-                                                          <span ng-class="{selected : samplemean2.name2 === sampleselected2}">{{samplemean2.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplemean2.name2 === sampleselected2">({{(samplemean2.value - mean2).toFixed(2)}})</span>
-                                                          </p>
-                                                      </div>
-                                        </div>
+                              <div class="col-lg-2">
+                                    <center><button type="button" id="button_play" class="btn btn-primary btn-xl" ng-click='PlayPress()'>
+                                      <i class="fa fa-pause"></i>
+                                    </button></center>
                                   </div>
-                                </div>
-                                <div class="tab-pane fade" id="estsd">
-                                  <div class="row pre-scrollable" style="overflow-y: auto;">
-                                        <div class="col-lg-6">
-                                          <div class="form-group">
-                                                      <div ng-repeat="samplesd1 in samplesds1">
-                                                        <p name = "{{samplesd1.name2}}" ng-mouseover="setSelected(samplesd1.name)"></p>
-                                                          <span ng-class="{selected : samplesd1.name2 === sampleselected2}">{{samplesd1.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplesd1.name2 === sampleselected2">({{(samplesd1.value - sd1).toFixed(2)}})</span>
-                                                      </div>
-                                        </div>
-                                      </div>
-                                        <div class="col-lg-6">
-                                          <div class="form-group">
-                                                      <div ng-repeat="samplesd2 in samplesds2">
-                                                        <p name = "{{samplesd2.name2}}" ng-mouseover="setSelected(samplesd2.name)"></p>
-                                                          <span ng-class="{selected : samplesd2.name2 === sampleselected2}">{{samplesd2.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplesd2.name2 === sampleselected2">({{(samplesd2.value - sd2).toFixed(2)}})</span>
-                                                      </div>
-                                        </div>
-                                      </div>
-                                  </div>
-
-                                </div>
-                            </div>
-                              </div>
-                              <div class = 'col-lg-9'>
-                                <div id="samplesetplot_twopopulation"></div>
+                              <div class = 'col-lg-8'>
+                                <div id="samplesetplot_twopopulation" style="height:500px"></div>
                               </div>
                             </div>
                             <div class="row">
@@ -268,7 +234,7 @@
                             </div>
                             <div class="row">
                                   <div class="col-lg-4 col-lg-offset-4">
-                                    <h2  align="center">{{count_perc}}%</h2>
+                                    <h2  align="center" id = "count_perc"></h2>
                                   </div>
                                   <div class="col-lg-2 col-lg-offset-2">
                                     <button type="button" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#powermodal">How many samples do I need?</button>
@@ -276,6 +242,8 @@
                                 </div>
                         </div>
                       </div>
+                      </div>
+
 
 
                     </div>

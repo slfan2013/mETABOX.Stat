@@ -1,3 +1,7 @@
+paused = false;
+var rdmdatas1 = [];
+var rdmdatas2 = [];
+
 var app = angular.module('populationplot_twopopulation', []);
 app.controller('populationplotctrl_twopopulation', function($scope) {
 $scope.Math = window.Math;// enable using Math functions in html.
@@ -8,10 +12,55 @@ $scope.mean2=175;
 $scope.sd1=10;
 $scope.sd2=10;
 $scope.repeat = 1;
+$scope.displaybottom = false;
 $scope.n = 5
 $scope.alpha = 0.05;
 $scope.powerdetermine_text = "Determine"
 $scope.powershowdetermine = false
+function onClicksampleset(e) {
+      $scope.sample();
+      var data = [];
+      var x = seq($scope.min, $scope.max, length=1000)
+      var y1 = dnorm(x,meanFunction(rdmdatas1[e.dataPoint.x]),sdFunction(rdmdatas1[e.dataPoint.x]))
+      var y2 = dnorm(x,meanFunction(rdmdatas2[e.dataPoint.x]),sdFunction(rdmdatas2[e.dataPoint.x]))
+
+      var data;
+
+      data.push([{x:x,y:y1,type: 'scatter',mode: 'lines',name : 'density1.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600"}},
+      {x:x,y:rep('data1.sample'+ii,$("#samplesize_twopopulation").val()),name:'data1.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
+      "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
+      {x:[meanFunction(rdmdatas1[e.dataPoint.x]),meanFunction(rdmdatas1[e.dataPoint.x])], y:[0,Math.max.apply(null, y1)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+
+      data.push([{x:x,y:y2,type: 'scatter',mode: 'lines',name : 'density2.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600",dash:"dot"}},
+      {x:x,y:rep('data2.sample'+ii,$("#samplesize_twopopulation").val()),name:'data2.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
+      "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
+      {x:[meanFunction(rdmdatas2[e.dataPoint.x]),meanFunction(rdmdatas2[e.dataPoint.x])], y:[0,Math.max.apply(null, y2)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+
+      var layout = {"barmode": "overlay",
+                      xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
+                      "yaxis1": {"anchor": "free", "domain": [ 0.05, 1], "position": 0.0},
+                      "yaxis2": {"anchor": "x1", "domain": [0,0.1], "dtick": 1, "showticklabels": false},
+                      paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+                      annotations: [{x: meanFunction(rdmdatas1[e.dataPoint.x]),y: 0,xref: 'x',yref: 'y',text: meanFunction(rdmdatas1[e.dataPoint.x]),showarrow: true,arrowhead: 2,ax: -20,ay: -30},
+                                    {x: meanFunction(rdmdatas2[e.dataPoint.x]),y: 0,xref: 'x',yref: 'y',text: meanFunction(rdmdatas2[e.dataPoint.x]),showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
+                    };
+      $scope.sampleplot_twopopulation = Plotly.newPlot('sampleplot_twopopulation',
+              [data[0][0],data[0][1],data[0][2],data[1][0],data[1][1],data[1][2]],layout);
+
+
+  $("#samplemean").text(meanFunction(rdmdatas[e.dataPoint.x]) + " ("+(meanFunction(rdmdatas[e.dataPoint.x]) - $scope.mean).toFixed(2)+")");
+  $("#samplesd").text(sdFunction(rdmdatas[e.dataPoint.x]) + " ("+(sdFunction(rdmdatas[e.dataPoint.x]) - $scope.sd).toFixed(2)+")");
+
+}
+
+
+  $scope.toggle_display_bottom = function(){
+    if($scope.repeat>1){
+       $scope.displaybottom = true;$('#sampletrigger').attr('href','#section2');
+    }else{
+      $scope.displaybottom = false;$('#sampletrigger').attr('href',"javascript:void(0);");
+    }
+  }
 
 $scope.powerdetermine = function(){
   $scope.powershowdetermine=!$scope.powershowdetermine
@@ -50,8 +99,10 @@ $scope.populationplot = function(){
                   xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
                   "yaxis1": {"anchor": "free", "domain": [ 0.05, 1], "position": 0.0},
                   "yaxis2": {"anchor": "x1", "domain": [0,0.1], "dtick": 1, "showticklabels": false},
-                  paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)'}
-
+                  paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+                  annotations: [{x: $scope.mean1,y: 0,xref: 'x',yref: 'y',text: $scope.mean1,showarrow: true,arrowhead: 2,ax: -20,ay: -30},
+                                    {x: $scope.mean2,y: 0,xref: 'x',yref: 'y',text: $scope.mean2,showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
+      }
   $scope.populationplot_twopopulation = Plotly.newPlot('populationplot_twopopulation', data,layout);
 };$scope.populationplot();
 
@@ -105,17 +156,111 @@ $scope.populationplot = function(){
                                     {x: $scope.samplemeans2[0].value,y: 0,xref: 'x',yref: 'y',text: $scope.samplemeans2[0].value,showarrow: true,arrowhead: 2,ax: 20,ay: -30}]
                     };
       $scope.sampledata = data;
-      $scope.samplepopulationplot_twopopulation = Plotly.newPlot('populationplot_twopopulation',
-              [data[0],data[1],data[2][0],data[2][1],data[2][2],data[3][0],data[3][1],data[3][2]],layout);
+      $scope.sampleplot_twopopulation = Plotly.newPlot('sampleplot_twopopulation',
+              [data[2][0],data[2][1],data[2][2],data[3][0],data[3][1],data[3][2]],layout);
       if($scope.repeat>1){
         $scope.samplesetplot()
       }
 
     }
 
-
+  var chart;
+  var numerator = 0; var denominator = 1;
+  var dps = []; // dataPoints
+  var repeat_plot=[];
   $scope.samplesetplot = function(highlight_index = null){
-    var x = Array.from(Array($scope.repeat).keys()); // from 0 to repeat-1
+    if(repeat_plot>0){
+      clearInterval(repeat_plot);
+    }
+    if(paused){
+      $scope.PlayPress();
+    }
+    dps = []; // dataPoints
+    setTimeout(function(){
+    chart = new CanvasJS.Chart("samplesetplot_twopopulation",{
+			title :{
+				text: 'Randomly Draw ' + $scope.n + " Samples. Repeat " + 1 + " Times"
+			},
+			subtitles:[{
+			  text:"true average:" +$scope.mean1 + ", sd:"+$scope.sd1+ ", error tolerance:" + $scope.alpha
+			}],
+			axisY:{
+        title: "estimated mean",
+        titleFontFamily: "arial",
+        includeZero: false,
+			   stripLines:[
+			     {
+    				startValue:tdistr($scope.n,$scope.alpha/2),
+    				endValue:100,
+    				color:"#d8d8d8"
+    			},
+    			{
+    				startValue:-100,
+    				endValue:tdistr($scope.n,1-$scope.alpha/2),
+    				color:"#d8d8d8"
+    			}
+			   ]
+      },
+			data: [{
+				type: "line",
+				markerType: "square",
+				color: "#778899",
+				dataPoints: dps,
+				click: onClicksampleset
+			}]
+		});
+		var xVal = 0;
+		var yVal = 100;
+		var updateInterval = 100;
+    var dataLength = 200; // number of dataPoints visible at any point
+    rdmdatas1 = [];
+    rdmdatas2 = [];
+    denominator = 1
+    numerator = 0
+    var updateChart = function (cnt) {
+			cnt = cnt || 1;
+      denominator++;
+			// cnt is number of times loop runs to generate random dataPoints.
+			for (var j = 0; j < cnt; j++) {
+			  var random1 = rnorm($scope.n,mean=$scope.mean1,sd=$scope.sd1)
+			  var random2 = rnorm($scope.n,mean=$scope.mean2,sd=$scope.sd2)
+			  rdmdatas1.push(random1);rdmdatas2.push(random2)
+			  mean1 = meanFunction(random1);mean2= meanFunction(random2);
+			  sd1=sdFunction(random1);sd2=sdFunction(random2);
+				yVal = (mean1 - mean2)/Math.sqrt(Math.pow(sd1,2)/$scope.n + Math.pow(sd2,2)/$scope.n);
+				if(yVal<tdistr($scope.n,1-$scope.alpha/2) || yVal>tdistr($scope.n,$scope.alpha/2)){
+				  numerator++;
+				}
+				dps.push({
+					x: xVal,
+					y: yVal
+				});
+				xVal++;
+			};
+			if (dps.length > dataLength)
+			{
+				dps.shift();
+			}
+			console.log(tdistr($scope.n,$scope.alpha/2))
+    $("#count_perc").html((Number((numerator/denominator).toFixed(5))*100).toFixed(3)+"%");
+			chart.render();
+			chart.options.title.text = 'Randomly Draw ' + $scope.n + " Samples. Repeat " + denominator + " Times"
+			chart.options.subtitles[0].text = "true average:" +$scope.mean1 + ", sd:"+
+				      $scope.sd1+ ", error rate:" + $scope.alpha
+		};
+
+
+    updateChart(1);// generates first set of dataPoints
+    repeat_plot = setInterval(function(){
+      if(!paused){
+        updateChart(1)// update chart after specified time.
+      }
+    }, updateInterval);
+  },1200)
+
+
+
+    /*var x = Array.from(Array($scope.repeat).keys()); // from 0 to repeat-1
     var t = [];
     for(ii=0;ii<x.length;ii++){
       t.push(($scope.samplemeans1[[ii]].value - $scope.samplemeans2[[ii]].value)/Math.sqrt(Math.pow($scope.samplesds1[[ii]].value,2)/$scope.n + Math.pow($scope.samplesds2[[ii]].value,2)/$scope.n))
@@ -143,10 +288,19 @@ $scope.populationplot = function(){
         count++;
       }
     }
-    $scope.count_perc = (count/$scope.repeat * 100).toFixed(1);
+    $scope.count_perc = (count/$scope.repeat * 100).toFixed(1);*/
+
   }
 
-
+$scope.PlayPress = function(){
+  if(paused){
+      paused = !paused;
+      $("#button_play>i").attr("class", "fa fa-pause");
+    }else{
+      paused = !paused;
+      $("#button_play>i").attr("class", "fa fa-play");
+    }
+}
 
   $scope.setSelected = function(sampleselected) {
     $scope.sampleselected = sampleselected;
@@ -263,6 +417,19 @@ $(document).ready(function(){
   });
     $("#sampletimes_twopopulation").on("slide", function(slideEvt) {
   	$("#sampletimes_display_twopopulation").text(slideEvt.value);
+  });
+
+   $("#sampletrigger").click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html, body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
+    }
   });
 })
 
