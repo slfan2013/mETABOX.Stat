@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>WCMC Course</title>
+
+    <!-- JQuery and Opencpu JS -->
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <!--<script src="js/opencpu-0.5.js"></script>
+    <script src="js/opencpu.js"></script>-->
+    <script src="js/angular.js"></script>
+    <script src="js/plotly-latest.min.js"></script>
+    <script src="js/gaussian.js"></script>
+
+    <!-- Bootstrap Core CSS and JS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Templates -->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Side-Bar CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet"><!--making the sidebar collapsible-->
+
+    <!-- Other -->
+    <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
+    <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
+    <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
+    <script src="js/math.js"></script><!--For matrix operation-->
+    <script src="js/canvasjs.min.js"></script><!--Plot-->
+
+
+    <!-- My JS -->
+    <script src="js/myJS.js"></script>
+    <script src="js/Univariate_Analysis.js"></script>
+    <!-- My CSS -->
+    <link href="css/Univariate_Analysis.css" rel="stylesheet"><!--make sample-plot plot session-->
+
+    <!-- Scrolling Nav JavaScript&CSS -->
+    <link href="css/scrolling-nav.css" rel="stylesheet">
+
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" data-gr-c-s-loaded = "true" style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'>
+    <div id="wrapper" class="toggled" style="height:100%">
+      <!-- Sidebar -->
+      <!-- /#sidebar-wrapper -->
+    <div id="sidebar-wrapper" style="font-size:80%;">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        WCMC Statistics Course
+                    </a>
+                </li>
+                <li>
+                  <a ha href="javascript:;" data-toggle="collapse" data-target="#bionw"> How Many Samples Do We Need? </a>
+                  <ul id="bionw" class="collapse">
+                    <li><a href="Single_Population.html"><i class="fa fa-angle-double-right"></i> Single Population</a></li>
+                    <li><a href="Two_Population.html"><i class="fa fa-angle-double-right"></i> Two Populations</a></li>
+                    <li><a href="Sample_Size.html"><i class="fa fa-key"></i> Sample Size Calculator</a></li>
+                  </ul>
+                </li>
+                <li>
+                    <a href="Univariate_Analysis.html">Univariate Analysis</a>
+                </li>
+                <li>
+                    <a href="#">Overview</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper" style="height:100%">
+<div class="container-fluid" style="height:100%">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container" >
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Start Bootstrap</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a class="page-scroll" href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Scrolling Nav</h1>
+                    <p><strong>Usage Instructions:</strong> Make sure to include the <code>scrolling-nav.js</code>, <code>jquery.easing.min.js</code>, and <code>scrolling-nav.css</code> files. To make a link smooth scroll to another section on the page, give the link the <code>.page-scroll</code> class and set the link target to a corresponding ID on the page.</p>
+                    <a class="btn btn-default page-scroll" href="#about">Click Me to Scroll Down!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>About Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Services Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Contact Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-navicon"></i></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/scrolling-nav.js"></script>
+</body>
+
+</html>
