@@ -7,7 +7,10 @@
 
 @media (min-width: 768px) {
   .modal-xl {
-    width: 100%;
+    width: 90%;
    max-width:1400px;
   }
 }
+
+
+

@@ -13,7 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!-- <script src="js/opencpu-0.5.js"></script> -->
+    <!--<script src="js/opencpu-0.5.js"></script>
+    <script src="js/opencpu.js"></script>-->
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -32,14 +33,16 @@
     <!-- Other -->
     <script src="js/bootstrap-slider.min.js"></script><!--http://seiyria.com/bootstrap-slider/-->
     <link href="css/bootstrap-slider.min.css" rel="stylesheet"><!--http://seiyria.com/bootstrap-slider/-->
-
+    <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
+    <script src="js/math.js"></script><!--For matrix operation-->
+    <script src="js/canvasjs.min.js"></script><!--Plot-->
 
 
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/Single_Population.js"></script>
     <!-- My CSS -->
-     <link href="css/Single_Population.css" rel="stylesheet"><!--making the sidebar collapsible-->
+    <link href="css/Single_Population.css" rel="stylesheet"><!--make sample-plot plot session-->
 
 
 </head>
@@ -47,7 +50,7 @@
 <body   style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'  ng-app="populationplot_singlepopulation" ng-controller="populationplotctrl_singlepopulation">
 
 
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" style="font-size:80%;">
@@ -133,23 +136,29 @@
                               <div class="form-group">
                                             <label>Standard Deviation </label><em class="text-muted pull-right">&nbsp;This means ~70% of data will be within {{mean - sd}} and {{mean + sd}}</em>
                                             <input class="form-control parameter_singlepopulation" type = 'number' placeholder = "The extent of variation of population" id = "sd_singlepopulation"
-                                            ng-model="sd" ng-change="populationplot();samplesetplot()" min = 0>
+                                            ng-model="sd" ng-change="populationplot();" min = 0>
                               </div><hr/>
                               <div class="form-group">
                                             <label>Estimated Mean</label>
-                                            <div ng-repeat="samplemean in samplemeans|limitTo:1">
-                                              <p name = "{{samplemean.name}}">{{samplemean.value}}&nbsp;(<span class = "text-muted">{{(samplemean.value - mean).toFixed(2)}}</span>)</p>
-                                            </div>
+                                              <p id="samplemean">{{samplemean}}&nbsp;(<span class = "text-muted">{{(samplemean - mean).toFixed(2)}}</span>)</p>
                               </div>
                               <div class="form-group">
                                             <label>Estimated Standard Deviation </label>
-                                            <div ng-repeat="samplesd in samplesds|limitTo:1">
-                                              <p name = "{{samplesd.name}}">{{samplesd.value}}&nbsp;(<span class = "text-muted">{{(samplesd.value - sd).toFixed(2)}}</span>)</p>
-                                            </div>
+                                              <p id="samplesd">{{samplesd}}&nbsp;(<span class = "text-muted">{{(samplesd - sd).toFixed(2)}}</span>)</p>
+
                               </div>
                             </div>
                             <div class = 'col-lg-9'>
-                              <div id="populationplot_singlepopulation"></div>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div  style="height:300px;" id="populationplot_singlepopulation"></div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div  style="height:300px;" id="sampleplot_singlepopulation"></div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -164,15 +173,16 @@
                     <!--<div class="col-lg-4">
                       <input type="checkbox" ng-model="sampleoneatatime"> <strong>Sample One At a Time?</strong>
                     </div>-->
-                    <div class="col-lg-6" align="center">
+                    <div class="col-lg-6" align="center"  id="section2">
                       <input id="sampletimes_singlepopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
                       "display:inline" ng-model='repeat' ng-change="toggle_display_bottom()"/><span><strong> Repeat Time: <span id="sampletimes_display_singlepopulation">1</span></strong></span>
                     </div>
                   </div>
                   <br /><br />
-                  <button type="button" class="btn btn-outline btn-primary btn-lg btn-block" ng-click="samplepopulation()">Let's Sample!</button>
+                  <a href="javascript:void(0);" class="btn btn-outline btn-primary btn-lg btn-block" ng-click="samplepopulation()" id="sampletrigger">Let's Sample!</a>
+
                   <br /><br />
-                  <div  ng-show='displaybottom'>
+                  <div  ng-show='displaybottom' style="height:1000px;">
                     <div class="panel panel-default">
                       <div class="panel-heading">
                       <i class="fa fa-stack-overflow"></i> Samples
@@ -181,39 +191,13 @@
                         <div class="row">
                           <div class = 'col-lg-12'>
                                 <div class="row">
-                                  <div class = 'col-lg-3'>
-                                    <div class="row">
-                                      <div class="col-lg-6">
-                                        <div class="form-group">
-                                                      <label>Estimated Mean(s)</label>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-6">
-                                                      <label>Estimated Standard Deviation(s) </label>
-                                        </div>
-                                      </div>
-                                      <div class="row pre-scrollable" style="overflow-y: auto;">
-                                        <div class="col-lg-6">
-                                                      <div ng-repeat="samplemean in samplemeans">
-                                                        <p name = "{{samplemean.name}}" ng-mouseover="setSelected(samplemean.name)">
-                                                          <span ng-class="{selected : samplemean.name === sampleselected}">{{samplemean.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplemean.name === sampleselected">({{(samplemean.value - mean).toFixed(2)}})</span>
-                                                          </p>
-                                                      </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <div class="form-group">
-                                                      <div ng-repeat="samplesd in samplesds">
-                                                        <p name = "{{samplesd.name}}" ng-mouseover="setSelected(samplesd.name)"></p>
-                                                          <span ng-class="{selected : samplesd.name === sampleselected}">{{samplesd.value}}</span>
-                                                          &nbsp;<span class = "text-muted" ng-show="samplesd.name === sampleselected">({{(samplesd.value - sd).toFixed(2)}})</span>
-                                                      </div>
-                                        </div>
-                                      </div>
-                                    </div><br />
+                                  <div class="col-lg-2">
+                                    <center><button type="button" id="button_play" class="btn btn-primary btn-xl" ng-click='PlayPress()'>
+                                      <i class="fa fa-pause"></i>
+                                    </button></center>
                                   </div>
-                                  <div class="col-lg-9">
-                                    <div id="samplesetplot_singlepopulation"></div>
+                                  <div class="col-lg-8">
+                                    <div id="samplesetplot_singlepopulation" style="height:500px"></div>
                                   </div>
                                 </div><br/><br/>
                                 <div class="row">
@@ -233,7 +217,7 @@
                                   <div class="col-lg-6">
                                         <div class="form-group" align="center">
                                           <i class="fa fa-gear text-muted" ng-click="toggle_tol_setting_singlepopulation()"></i>
-                                                  <input type = 'number' id = "tol_singlepopulation" ng-model="tol" ng-change="samplesetplot();"
+                                                  <input type = 'number' id = "tol_singlepopulation" ng-model="tol" ng-change="updatetolrangeonplot();"
                                                   data-slider-min="0" data-slider-max="{{tol_max}}" data-slider-step="{{tol_step}}" data-slider-value="3" style ="display:inline">
                                                   <span><strong> Error tolerance: <span>{{tol}}</span></strong></span>
                                                   <em class="text-muted">[{{(mean - tol).toFixed(2)}}, {{(mean + tol).toFixed(2)}}]</em>
@@ -242,7 +226,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-lg-4 col-lg-offset-4">
-                                    <h2  align="center">{{count_perc}}%</h2>
+                                    <h2  align="center" id="count_perc">{{count_perc}}%</h2>
                                   </div>
                                   <div class="col-lg-2 col-lg-offset-2">
                                     <button type="button" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#powermodal">{{toggle_display_power_text}}</button>
@@ -279,7 +263,7 @@
                                       </div>
                                       <label>Mean: </label>
                                       <input class="form-control" type = "number" placeholder="Average of population" ng-model="powermean">
-                                      <label>Standard Deviation (range): </label>
+                                      <label style="color:red;">Standard Deviation (range): </label>
                                       <div class="row">
                                         <div class="col-lg-4">
                                           <input class="form-control" type = "number" placeholder="Minimum sd" ng-model="powersdmin" min = 0>
@@ -291,7 +275,7 @@
                                           <input class="form-control" type = "number" placeholder="step" ng-model="powersdstep" min = 0 max="{{powersdmax - powersdmin}}">
                                         </div>
                                       </div>
-                                      <label>Error Tolerance: </label>
+                                      <label style="color:red;">Error Tolerance: </label>
                                       <input class="form-control" type = "number" placeholder="Tolerable error" ng-model="powertol" min = 0>
                                       <br />
 
@@ -308,55 +292,7 @@
     </div>
   </div>
 </div>
-                 <!-- <div>
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            How many samples do I need?
-                        </div>
-                        <div class="panel-body">
-                          <div class="row">
-                            <div class="col-lg-3">
-                              <br />
-                              <label>Sample size range: </label>
-                              <div class="row">
-                                <div class="col-lg-4">
-                                  <input class="form-control" placeholder="from"  type = "number" ng-model="powersamplerangemin" min = 2>
-                                </div>
-                                <div class="col-lg-4">
-                                  <input class="form-control" placeholder="to"  type = "number" ng-model="powersamplerangemax" min = "{{powersamplerangemin}}">
-                                </div>
-                                <div class="col-lg-4">
-                                  <input class="form-control" placeholder="step"  type = "number" ng-model="powersamplerangestep"
-                                  min = 0 max = "{{powersamplerangemax-powersamplerangemin}}">
-                                </div>
-                              </div>
-                              <label>Mean: </label>
-                              <input class="form-control" type = "number" placeholder="Average of population" ng-model="powermean">
-                              <label>Standard Deviation (range): </label>
-                              <div class="row">
-                                <div class="col-lg-4">
-                                  <input class="form-control" type = "number" placeholder="Minimum sd" ng-model="powersdmin" min = 0>
-                                </div>
-                                <div class="col-lg-4">
-                                  <input class="form-control" type = "number" placeholder="Maximum sd" ng-model="powersdmax" min = "{{powersamplesdmin}}">
-                                </div>
-                                <div class="col-lg-4">
-                                  <input class="form-control" type = "number" placeholder="step" ng-model="powersdstep" min = 0 max="{{powersdmax - powersdmin}}">
-                                </div>
-                              </div>
-                              <label>Error Tolerance: </label>
-                              <input class="form-control" type = "number" placeholder="Tolerable error" ng-model="powertol" min = 0>
-                              <br />
 
-                                <button type="button" class="btn btn-outline btn-success btn-sm btn-block" ng-click="powerplot();">Draw plot</button>
-                            </div>
-                            <div class="col-lg-9">
-                              <div id="powerplot_singlepopulation"></div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>-->
                 </div>
             </div>
         </div>
