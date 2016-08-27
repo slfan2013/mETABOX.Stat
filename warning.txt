@@ -1,1 +1,2 @@
-Warning: Duplicated ' treatment ' found in phenotype set. The first ' treatment ' is kept and others are removed.
+
+'ID' not found in phenotype set. This means there is no repeated measure in the data. 'ID' automatically added.

@@ -11,7 +11,5 @@ Imports:
     pwr,
     jsonlite,
 	  MASS,
-	  data.table,
-	  openxlsx,
-	  reshape2
+	  openxlsx
 RoxygenNote: 5.0.1

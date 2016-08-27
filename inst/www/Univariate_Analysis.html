@@ -36,8 +36,10 @@
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
     <script src="js/math.js"></script><!--For matrix operation-->
     <script src="js/canvasjs.min.js"></script><!--Plot-->
-
-
+    <link href="css/bootstrap-editable.css" rel="stylesheet"><!--Bootstrap Editable-->
+    <script src="js/bootstrap-editable.min.js"></script><!--Bootstrap Editable-->
+    <link href="css/select2.css" rel="stylesheet" />
+    <script src="js/select2.full.js"></script>
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/Univariate_Analysis.js"></script>
@@ -100,7 +102,7 @@
       <ul class="nav nav-pills">
           <li class="active"><a href="#upload-pills" data-toggle="tab">Upload Data</a>
           </li>
-          <li><a href="#Preprocessing-pills" data-toggle="tab">Data Preprocessing</a>
+          <li><a href="#preprocessing-pills" data-toggle="tab">Data Preprocessing</a>
           </li>
           <li><a href="#normalization-pills" data-toggle="tab">Data Normalization</a>
           </li>
@@ -111,15 +113,41 @@
       <div class="tab-content">
           <div class="tab-pane fade in active" id="upload-pills">
               <h4>Upload File</h4>
-              <input type="file" accept=".xlsx,.csv" id="upload_univariateanalysis">
+              <input type="file" id="upload_univariateanalysis" accept=".xlsx,.csv">
           </div>
-          <div class="tab-pane fade" id="Preprocessing-pills">
-              <h4>Profile Tab</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <div class="tab-pane fade" id="preprocessing-pills">
+            <div class="row">
+              <div class="col-lg-3">
+                <h4>Missing Value</h4>
+                <div class="form-group">
+                    <label>Who are missing values?</label><em class="pull-right text-info">For example: &lt;500, 0, missing</em>
+                    <input class="form-control" placeholder="By default, empty cells are missing value." ng-model="missindex" ng-change="calnumberofmiss();">
+                </div>
+                <p id="misstext" class="text-danger">We found <span id="numofmiss"></span>(<span id="percofmiss"></span>%) missing values in the data.</p>
+                <div class="form-group">
+                  <label>How to deal with missing value?</label>
+                  <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checked id="missstep1" ng-model="missstep1">Remove features with &gt; <a href="#" id="missingPerc_univariateanalysis" data-type="text" data-pk="1" title='tolerable missing percent' class="editable" ng-model="tolmissingperc">{{tolmissingperc}}</a>% missing values.
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checked id="missimpute_univariateanalysis" ng-model="missimpute">
+                        <span style="font-weight:normal;">Replace missing values by column (feature)</span>
+                        </label> <a href="#" id="missingreplacemethod_univariateanalysis" data-type="select" data-pk="1" data-title="Select a method" ng-model="missingreplacemethod">{{missingreplacemethod}}</a> for each of the <a href="#" id="missingreplacemethodgroup_univariateanalysis" data-type="select2" data-pk="1"  data-title="Select country" ng-model="missingreplacemethodgroup"></a> group.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+              <h4>Outliers</h4>
           </div>
           <div class="tab-pane fade" id="normalization-pills">
-              <h4>Messages Tab</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <h4>Samplewise Normalization</h4>
+              <p class='text-muted'>Samplewise normalization normalize data between samples. For example, if samples are ran in different machines, then different machine may have different effect on samples. Another exmaple is that if samples are ran over a long period of time, then the samples may drift. Samplewise normalization share a common formula: after = before * radio, where ratio depends on different samplewise normalization method.</p>
           </div>
           <div class="tab-pane fade" id="UnivariateAnalysis-pills">
               <h4>Settings Tab</h4>
