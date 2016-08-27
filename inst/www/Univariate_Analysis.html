@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/opencpu-0.5.js"></script>
-    <!--<script src="js/opencpu.js"></script>-->
+    <!--<script src="js/opencpu-0.5.js"></script>-->
+    <script src="js/opencpu.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -50,7 +50,7 @@
 
 </head>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" data-gr-c-s-loaded = "true" style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" data-gr-c-s-loaded = "true" style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'   ng-app="app_univariateanalysis" ng-controller="ctrl_univariateanalysis">
     <div id="wrapper" class="toggled" style="height:100%">
       <!-- Sidebar -->
       <!-- /#sidebar-wrapper -->
@@ -92,6 +92,8 @@
     <!-- Page Content -->
     <div id="page-content-wrapper" style="height:100%">
     <a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-navicon"></i></a>
+    <h1>Univariate Analysis</h1>
+    <p class="text-muted">Univariate analysis is intuitive and is most helpful of making discoveries. "Uni" means "one", so we take a look at each compound and see what's going on with everyone.</p>
       <div class="container-fluid" style="height:100%">
       <div class="panel-body">
       <!-- Nav tabs -->
@@ -109,7 +111,7 @@
       <div class="tab-content">
           <div class="tab-pane fade in active" id="upload-pills">
               <h4>Upload File</h4>
-              <input type="file" accept=".xlsx,.csv" >
+              <input type="file" accept=".xlsx,.csv" id="upload_univariateanalysis">
           </div>
           <div class="tab-pane fade" id="Preprocessing-pills">
               <h4>Profile Tab</h4>
