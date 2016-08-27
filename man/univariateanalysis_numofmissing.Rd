@@ -4,7 +4,8 @@
 \alias{univariateanalysis_numofmissing}
 \title{univariateanalysis_numofmissing}
 \usage{
-univariateanalysis_numofmissing(e, f, p, missindex = NA)
+univariateanalysis_numofmissing(e, f, p, missindex = NA,
+  compoundName = "Binbase name", tolmissingperc = 50)
 }
 \description{
 stat

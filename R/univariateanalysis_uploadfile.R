@@ -41,9 +41,12 @@ univariateanalysis_uploadfile <- function(file){
   #get expression
   e = d[-c(1:(length(p)+1)),]
   e = e[,-c(1:length(f))]
-  e = e[,sapply(e,function(x){sum(!is.na(x))})!=0]
-  e = e[apply(e,1,FUN=function(x){sum(!is.na(x))})!=0,]
+  # e = e[,sapply(e,function(x){sum(!is.na(x))})!=0]
+  # e = e[apply(e,1,FUN=function(x){sum(!is.na(x))})!=0,]
   e = e[1:nrow(f),1:nrow(p)]
+  e = sapply(e, as.numeric)
+
+
 
   #warning when data doesn't have ID.
   if(!"ID"%in%names(p)){
@@ -57,10 +60,13 @@ univariateanalysis_uploadfile <- function(file){
   p = cbind(phenotypeindex = 1:nrow(p),p);
   f = cbind(featureindex=1:nrow(f),f);
 
-
-
+  if("compound_name" %in% colnames(p)){#compound name is required for missing value plot.
+    compound_name = "compound_name";
+  }else{
+    compound_name = FALSE;
+  }
 
   return(list(expression = e, phenotype = p, feature = f,
-              phenotypenames = colnames(p)))
+              phenotypenames = colnames(p),featurenames = colnames(f),compound_name=compound_name))
 }
 

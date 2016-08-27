@@ -38,6 +38,8 @@
     <script src="js/canvasjs.min.js"></script><!--Plot-->
     <link href="css/bootstrap-editable.css" rel="stylesheet"><!--Bootstrap Editable-->
     <script src="js/bootstrap-editable.min.js"></script><!--Bootstrap Editable-->
+    <link href="css/xeditable.css" rel="stylesheet"><!--X Editable AngularJS-->
+    <script src="js/xeditable.js"></script><!--X Editable AngularJS-->
     <link href="css/select2.css" rel="stylesheet" />
     <script src="js/select2.full.js"></script>
     <!-- My JS -->
@@ -99,10 +101,11 @@
       <div class="container-fluid" style="height:100%">
       <div class="panel-body">
       <!-- Nav tabs -->
+      <div id="tabs">
       <ul class="nav nav-pills">
           <li class="active"><a href="#upload-pills" data-toggle="tab">Upload Data</a>
           </li>
-          <li><a href="#preprocessing-pills" data-toggle="tab">Data Preprocessing</a>
+          <li><a href="#dealwithmissingvalue-pills" data-toggle="tab">Deal with Missing Value</a>
           </li>
           <li><a href="#normalization-pills" data-toggle="tab">Data Normalization</a>
           </li>
@@ -113,37 +116,73 @@
       <div class="tab-content">
           <div class="tab-pane fade in active" id="upload-pills">
               <h4>Upload File</h4>
-              <input type="file" id="upload_univariateanalysis" accept=".xlsx,.csv">
+              <input type="file" id="upload_univariateanalysis" accept=".xlsx,.csv"><br /><br /><hr />
+              <div class="row">
+                <div class="col-lg-8 col-lg-offset-2" ng-hide="compoundName=='sudo'">
+                  <div ng-switch="compoundName">
+                    <div ng-switch-when="false">
+                      <div class="form-group has-error">
+                          <label class="control-label">compound name:</label>
+                            <select  class="form-control"  ng-model="compound.name">
+                              <option ng-repeat="featurename in featurenames">{{featurename}}</option>
+                            </select>
+                      </div>
+                    </div>
+                    <div ng-switch-when="compound_name">
+                      <div class="form-group has-success">
+                          <label class="control-label">compound_name found!</label>
+                            <select  class="form-control" disabled ng-model="compound.name">
+                              <option ng-selected="true">compound_name</option>
+                              <option ng-repeat="featurename in featurenames">{{featurename}}</option>
+                            </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2 col-lg-offset-5">
+                  <button type="button" ng-click="submitupload();" class="btn btn-success btn-block">Continue</button>
+                </div>
+              </div>
           </div>
-          <div class="tab-pane fade" id="preprocessing-pills">
-            <div class="row">
+          <div class="tab-pane fade" id="dealwithmissingvalue-pills">
+            <div class="row" style="height:400px;">
               <div class="col-lg-3">
                 <h4>Missing Value</h4>
                 <div class="form-group">
                     <label>Who are missing values?</label><em class="pull-right text-info">For example: &lt;500, 0, missing</em>
-                    <input class="form-control" placeholder="By default, empty cells are missing value." ng-model="missindex" ng-change="calnumberofmiss();">
+                    <input class="form-control" placeholder="By default, empty cells are missing value." ng-model="missindex">
                 </div>
                 <p id="misstext" class="text-danger">We found <span id="numofmiss"></span>(<span id="percofmiss"></span>%) missing values in the data.</p>
                 <div class="form-group">
                   <label>How to deal with missing value?</label>
                   <div class="checkbox">
                     <label>
-                        <input type="checkbox" checked id="missstep1" ng-model="missstep1">Remove features with &gt; <a href="#" id="missingPerc_univariateanalysis" data-type="text" data-pk="1" title='tolerable missing percent' class="editable" ng-model="tolmissingperc">{{tolmissingperc}}</a>% missing values.
+                        <input type="checkbox" ng-model='removemiss'>Remove features with &gt;
+                        <a href="#" id="missingPerc_univariateanalysis" editable-text="tolmissingperc" class="editable" ng-model="tolmissingperc" >{{tolmissingperc||'empty'}}</a>% missing values.
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                        <input type="checkbox" checked id="missimpute_univariateanalysis" ng-model="missimpute">
+                        <input type="checkbox" id="missimpute_univariateanalysis" ng-model="missimpute" disabled>
                         <span style="font-weight:normal;">Replace missing values by column (feature)</span>
-                        </label> <a href="#" id="missingreplacemethod_univariateanalysis" data-type="select" data-pk="1" data-title="Select a method" ng-model="missingreplacemethod">{{missingreplacemethod}}</a> for each of the <a href="#" id="missingreplacemethodgroup_univariateanalysis" data-type="select2" data-pk="1"  data-title="Select country" ng-model="missingreplacemethodgroup"></a> group.
+                        </label> <a href="#" id="missingreplacemethod_univariateanalysis" data-type="select" data-pk="1" data-title="Select a method" ng-model="missingreplacemethod">{{missingreplacemethod}}</a> for each of the <a href="#" id="missingreplacemethodgroup_univariateanalysis" data-type="select2" data-pk="1"  data-title="Select country"></a> group.
                   </div>
                 </div>
+                <div id="missinginfo">
+                </div>
+                <button type="button" class="btn btn-outline btn-primary" ng-click="calnumberofmiss();">Submit</button>
+              </div>
+              <div class="col-lg-9">
+                <div id="misingplot"></div>
+              </div>
+            </div><br /><br /><hr />
+            <div class="row">
+              <div class="col-lg-2 col-lg-offset-5">
+                <button type="button" class="btn btn-success btn-block" ng-click="dealwithmissing();">Continue</button>
               </div>
             </div>
-
-
-
-              <h4>Outliers</h4>
           </div>
           <div class="tab-pane fade" id="normalization-pills">
               <h4>Samplewise Normalization</h4>
@@ -154,6 +193,8 @@
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           </div>
       </div>
+      </div>
+
   </div>
 
 
