@@ -17,6 +17,14 @@ app.controller('ctrl_univariateanalysis', function($scope) {
   $scope.numofmiss = [];
   $scope.percofmiss = [];
   $scope.miss_rate = [];
+  $scope.samplewisenorm = 'none';
+  $scope.transformation = {value:'none'};
+  $scope.scaling = 'none';
+  $scope.loga = {value:1};
+  $scope.logbase = {value:2};
+  $scope.power = {value:1/2};
+  $scope.samplewisenormindex = {value:'none'};
+  $scope.scaling = {value:'none'};
 
   $scope.submitupload = function(){
     $('#missingreplacemethodgroup_univariateanalysis').editable({
@@ -108,15 +116,29 @@ app.controller('ctrl_univariateanalysis', function($scope) {
     })
   }
   $scope.dealwithmissing = function(){
-    console.log(missgroup);
     var req = ocpu.call("univariateanalysis_dealwithmissing",{
       e:e0,f:f0,p:p0,missindex:$scope.missindex,removemiss:$scope.removemiss,
       miss_rate:$scope.miss_rate,tolmissingperc:$scope.tolmissingperc,
       missingreplacemethod:$scope.missingreplacemethod,missgroup:missgroup
     },function(sess){
-      console.log(sess.getLoc())///!!!!
+      sess.getObject(function(obj){
+        e1 = obj.e1;p1=obj.p1;f1=obj.f1;
+      })
     })
   }
+
+  $scope.applynormalization = function(){
+    console.log($scope.samplewisenormindex.value)
+    var req=ocpu.call("univariateanalysis_normalization",{
+      e1:e1,f1:f1,p1:p1,
+     samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
+     transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
+     scaling : $scope.scaling.value
+    },function(sess){
+      console.log(sess.getLoc())
+    })
+  }
+
 
 
 
