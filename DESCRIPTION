@@ -11,5 +11,6 @@ Imports:
     pwr,
     jsonlite,
 	  MASS,
-	  openxlsx
+	  openxlsx,
+	  cluster
 RoxygenNote: 5.0.1

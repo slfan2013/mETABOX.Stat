@@ -128,19 +128,29 @@ app.controller('ctrl_univariateanalysis', function($scope) {
   }
 
   $scope.applynormalization = function(){
-    console.log($scope.samplewisenormindex.value)
     var req=ocpu.call("univariateanalysis_normalization",{
       e1:e1,f1:f1,p1:p1,
      samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
      transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
      scaling : $scope.scaling.value
     },function(sess){
-      console.log(sess.getLoc())
+      sess.getObject(function(obj){
+        e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
+        $scope.drawPCA()
+        })
     })
   }
 
+  $scope.drawPCA = function(){
+    var req = ocpu.call("univariateanalysis_PCA",{
+      e2:e2,f2:f2,p2:p2
+    },function(sess){
+      sess.getObject(function(obj){
+        Plotly.newPlot('PCAplot', JSON.parse(obj.data[0]), JSON.parse(obj.layout[0]));
+      })
+    })
 
-
+  }
 
 
 
