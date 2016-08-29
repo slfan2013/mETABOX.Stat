@@ -1,6 +1,10 @@
 var missgroup = "no";
-
+var event = [];
 var app = angular.module('app_univariateanalysis', ["xeditable"]);
+var subsetlevelscount = [];
+var levelscount = [];
+var continueuploadshow = false;
+
 app.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
@@ -11,9 +15,11 @@ app.controller('ctrl_univariateanalysis', function($scope) {
   $scope.removemiss = true;
   $scope.missimpute = true;
   $scope.compoundName = "sudo";
+  $scope.sampleName = "sudo";
   $scope.phenotypenames = [];
   $scope.featurenames = [];
-  $scope.compound = {name:null};;
+  $scope.compound = {name:null};
+  $scope.sample = {name:null};
   $scope.numofmiss = [];
   $scope.percofmiss = [];
   $scope.miss_rate = [];
@@ -26,6 +32,13 @@ app.controller('ctrl_univariateanalysis', function($scope) {
   $scope.samplewisenormindex = {value:'none'};
   $scope.scaling = {value:'none'};
 
+  $scope.enablecontinueupload = function(){
+    console.log($scope.compound.name);
+    console.log($scope.sample.name)
+    if($scope.compound.name&&$scope.sample.name){
+      $scope.continueuploadshow = true
+    }
+  }
   $scope.submitupload = function(){
     $('#missingreplacemethodgroup_univariateanalysis').editable({
       source: $scope.phenotypenames,
@@ -36,7 +49,6 @@ app.controller('ctrl_univariateanalysis', function($scope) {
         }else{
           missgroup = value;
           $(this).html("<span style='font-weight:normal;'>"+value+"</span>");
-
         }
       },
       select2: {
@@ -45,12 +57,12 @@ app.controller('ctrl_univariateanalysis', function($scope) {
     });
     $scope.calnumberofmiss();
   }
+
   $scope.calnumberofmiss = function(){
     var req=ocpu.call("univariateanalysis_numofmissing",{
       e:e0,f:f0,p:p0,missindex:$scope.missindex,compoundName:$scope.compound.name,tolmissingperc:$scope.tolmissingperc
     },function(sess){
       sess.getObject(function(obj){
-
         document.getElementById("numofmiss").innerHTML = obj.numofmiss[0];
         $scope.$apply(function(){$scope.numofmiss = obj.numofmiss[0]})
         document.getElementById("percofmiss").innerHTML = obj.percofmiss[0];
@@ -61,59 +73,86 @@ app.controller('ctrl_univariateanalysis', function($scope) {
         }else{
           $("#misstext").attr('class', 'text-danger');
         }
-        var chart = new CanvasJS.Chart("misingplot",{
-			title:{
-				text: "Missing Rate of each compound",
-				fontSize: 20
-			},
-      animationEnabled: true,
-			axisX: {
-				title:"Compound Name",
-				titleFontSize: 18
-			},
-			axisY:{
-				title: "Missing Rate",
-				titleFontSize: 16
-			},
-			legend: {
-				verticalAlign: 'bottom',
-				horizontalAlign: "center"
-			},
-			data: [
-			{
-				type: "scatter",
-				name: "Not to be removed",
-				markerType: "triangle",
-				showInLegend: true,
-                toolTipContent: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span><br/><strong> Compound:</strong> {label} <br/><strong> Missing Rate</strong></span> {y}%",
 
-				dataPoints: JSON.parse(obj.untolerable[0])
-			},
-			{
-				type: "scatter",
-				markerType: "square",
-        toolTipContent: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span><br/><strong> Compound:</strong> {label} <br/><strong> Missing Rate</strong></span> {y}%",
-				name: "To be removed",
-				showInLegend: true,
-				dataPoints:JSON.parse(obj.tolerable[0])
-			}
-			],
-      legend:{
-            cursor:"pointer",
-            itemclick : function(e) {
-              if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-              }
-              else {
-                e.dataSeries.visible = true;
-              }
-              chart.render();
-            }
-          }
+        var all = new CanvasJS.Chart("misingallplot",{
+      			title:{
+      				text: "Missing Rate of each compound",
+      				fontSize: 20
+      			},
+            animationEnabled: true,
+      			axisX: {
+      				title:"Compound Name",
+      				titleFontSize: 18
+      			},
+      			axisY:{
+      				title: "Missing Rate",
+      				titleFontSize: 16
+      			},
+      			legend: {
+      				verticalAlign: 'bottom',
+      				horizontalAlign: "center"
+      			},
+      			data: [
+      			{
+      				type: "scatter",
+      				name: "Not to be removed",
+      				markerType: "triangle",
+      				showInLegend: true,
+                      toolTipContent: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span><br/><strong> Compound:</strong> {label} <br/><strong> Missing Rate</strong></span> {y}%",
+
+      				dataPoints: JSON.parse(obj.untolerable[0])
+      			},
+      			{
+      				type: "scatter",
+      				markerType: "square",
+              toolTipContent: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span><br/><strong> Compound:</strong> {label} <br/><strong> Missing Rate</strong></span> {y}%",
+      				name: "To be removed",
+      				showInLegend: true,
+      				dataPoints:JSON.parse(obj.tolerable[0])
+      			}
+      			],
+            legend:{
+                  cursor:"pointer",
+                  itemclick : function(e) {
+                    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                      e.dataSeries.visible = false;
+                    }
+                    else {
+                      e.dataSeries.visible = true;
+                    }
+                    chart.render();
+                  }
+                }
 		});
-            chart.render();
+          all.render();
+    		var missing = new CanvasJS.Chart("misingonlymissingplot", {
+            	title:{
+            		text:"Compounds with missing value"
+            	},
+              animationEnabled: true,
+            	axisX:{
+            		interval: 1,
+            		gridThickness: 0,
+            		labelFontSize: 10,
+            		labelFontStyle: "normal",
+            		labelFontWeight: "normal",
+            		labelFontFamily: "Lucida Sans Unicode"
+            	},
+            	axisY2:{
+            		interlacedColor: "rgba(1,77,101,.2)",
+            		gridColor: "rgba(1,77,101,.1)"
+            	},
+            	data: [
+              	{
+              		type: "bar",name: "compounds",axisYType: "secondary",color: "#014D65",
+              		dataPoints: JSON.parse(obj.missing[0])
+              	}
+            	]
+          });
+          missing.render();
       })
-    })
+
+    }).always(function(){$('#mytabs a[href="#dealwithmissingvalue-pills"]').tab('show');})
   }
   $scope.dealwithmissing = function(){
     var req = ocpu.call("univariateanalysis_dealwithmissing",{
@@ -124,7 +163,7 @@ app.controller('ctrl_univariateanalysis', function($scope) {
       sess.getObject(function(obj){
         e1 = obj.e1;p1=obj.p1;f1=obj.f1;
       })
-    })
+    }).always(function(){$('#mytabs a[href="#normalization-pills"]').tab('show');})
   }
 
   $scope.applynormalization = function(){
@@ -136,7 +175,8 @@ app.controller('ctrl_univariateanalysis', function($scope) {
     },function(sess){
       sess.getObject(function(obj){
         e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
-        $scope.drawPCA()
+        $scope.drawPCA();
+        $scope.drawboxplots();
         })
     })
   }
@@ -146,13 +186,69 @@ app.controller('ctrl_univariateanalysis', function($scope) {
       e2:e2,f2:f2,p2:p2
     },function(sess){
       sess.getObject(function(obj){
-        Plotly.newPlot('PCAplot', JSON.parse(obj.data[0]), JSON.parse(obj.layout[0]));
+      PCAplot = document.getElementById('PCAplot');
+      Plotly.newPlot(PCAplot, JSON.parse(obj.data[0]), JSON.parse(obj.layout[0]));
+
+      PCAplot.on('plotly_selected',function(eventData){
+        total = p2.map(function(ind){return ind['treatment']});
+        temp1 = countunique(total);
+        levelsnames = temp1[0];
+        levelscount = temp1[1];
+
+        selects = eventData.points;
+        subsetofp2 = [];
+        for(ii=0;ii < selects.length;ii++){
+          if(selects[ii]["curveNumber"]==0){
+            subsetofp2.push(p2[selects[ii]["pointNumber"]]);
+          }else{
+            subsetofp2.push(p2[Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
+           Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1]);
+          }
+        }
+
+
+        subset = subsetofp2.map(function(ind){return ind['treatment']});
+        temp2 = countunique(subset);
+        subsetlevelsnames = temp2[0];
+        subsetlevelscount = []
+        for(ii=0;ii<levelscount.length;ii++){
+          subsetlevelscount.push(levelscount[ii])
+        }
+        oo = 0
+        for(ii=0;ii<subsetlevelscount.length;ii++){
+          if($.inArray(levelsnames[ii], subsetlevelsnames)===-1){
+            subsetlevelscount[ii] = 0;
+          }else{
+            subsetlevelscount[ii] = temp2[1][oo];oo++
+          }
+        }
+        infodata = [];
+        infodata.push({
+          x:levelsnames,y:subsetlevelscount,name:"selected",type:'bar'
+        })
+        diff = [];for(ii=0;ii<levelscount.length;ii++){diff.push(levelscount[ii]-subsetlevelscount[ii])}
+        infodata.push({
+          x:levelsnames,y:diff,name:"total",type:"bar"
+        })
+        Plotly.newPlot('myDiv', infodata, {barmode: 'relative'});
+
+      })
       })
     })
 
   }
+  $scope.drawboxplots = function(){
+    var req = ocpu.call("univariateanalysis_boxplots",{
+      e2:e2,f2:f2,p2:p2,
+      sampleName:$scope.sample.name
+    },function(sess){
+      sess.getObject(function(obj){
+        BOXplots = Plotly.newPlot('BOXplots', JSON.parse(obj.data[0]), JSON.parse(obj.layout[0]));
+      })
+    })
+  }
 
-
+//dps.map(function(a) {return parseFloat(a.y);});
 
 
   $('#upload_univariateanalysis').change(upload);
@@ -166,6 +262,9 @@ app.controller('ctrl_univariateanalysis', function($scope) {
       p0=obj.phenotype;
       $scope.$apply(function(){
         $scope.compoundName = obj.compound_name[0];
+        $scope.compound.name = obj.compound_name[0];
+        $scope.sampleName = obj.sample_name[0];
+        $scope.sample.name = obj.sample_name[0];
         $scope.phenotypenames = obj.phenotypenames;
         $scope.featurenames = obj.featurenames;
       });
@@ -177,7 +276,6 @@ app.controller('ctrl_univariateanalysis', function($scope) {
 
 
 $(document).ready(function(){
-
 
 
 

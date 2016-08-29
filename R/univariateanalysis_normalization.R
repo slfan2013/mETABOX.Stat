@@ -52,9 +52,9 @@ univariateanalysis_normalization <- function(e1,f1,p1,
   }else if(scaling == "autoscaling"){
     e1.3 = t(scale(t(e1.2),scale=TRUE))
   }else if(scaling == "paretoscaling"){
-    e1.3 = (t(scale(t(e1.2),scale=FALSE)) / sqrt(apply(e1.2,1,sd)))
+    e1.3 = t(scale(t(e1.2),scale=FALSE))/sqrt(apply(e1.2,1,sd))
   }else if(scaling == "rangescaling"){
-    e1.3 = (t(scale(t(e1.2),scale=FALSE)) / apply(e1.2,1,function(x){diff(range(x))}))
+    e1.3 = t(scale(t(e1.2),scale=FALSE)) / apply(e1.2,1,function(x){diff(range(x))})
   }
 
   return(list(e2=e1.3,f2=f1,p2=p1))

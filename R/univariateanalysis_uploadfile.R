@@ -10,6 +10,7 @@
 univariateanalysis_uploadfile <- function(file){
   message = NULL
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\A\\mx 131933_tomatillo vs pumpkin_summer course_08-2015_submit.xlsx"
+  # file = "C:\\Users\\fansi\\Desktop\\mx_274941_Francisco Portell_human cells_06-2016_submit.xlsx"
   d <- openxlsx::read.xlsx(file, sheet = 1,colNames = FALSE)
 
   #get phenotype
@@ -60,13 +61,18 @@ univariateanalysis_uploadfile <- function(file){
   p = cbind(phenotypeindex = 1:nrow(p),p);
   f = cbind(featureindex=1:nrow(f),f);
 
-  if("compound_name" %in% colnames(p)){#compound name is required for missing value plot.
+  if("compound_name" %in% colnames(f)){#compound name is required for missing value plot.
     compound_name = "compound_name";
   }else{
     compound_name = FALSE;
   }
 
+  if("sample_name" %in% colnames(p)){#compound name is required for missing value plot.
+    sample_name = "sample_name";
+  }else{
+    sample_name = FALSE;
+  }
   return(list(expression = e, phenotype = p, feature = f,
-              phenotypenames = colnames(p),featurenames = colnames(f),compound_name=compound_name))
+              phenotypenames = colnames(p),featurenames = colnames(f),compound_name=compound_name,sample_name=sample_name))
 }
 

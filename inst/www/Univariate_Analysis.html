@@ -101,8 +101,7 @@
       <div class="container-fluid" style="height:100%">
       <div class="panel-body">
       <!-- Nav tabs -->
-      <div id="tabs">
-      <ul class="nav nav-pills">
+      <ul class="nav nav-pills" id="mytabs">
           <li class="active"><a href="#upload-pills" data-toggle="tab">Upload Data</a>
           </li>
           <li><a href="#dealwithmissingvalue-pills" data-toggle="tab">Deal with Missing Value</a>
@@ -114,7 +113,7 @@
       </ul>
       <!-- Tab panes -->
       <div class="tab-content">
-          <div class="tab-pane fade in active" id="upload-pills">
+          <div class="tab-pane fade in active" id="upload-pills" ng-click="enablecontinueupload();">
               <h4>Upload File</h4>
               <input type="file" id="upload_univariateanalysis" accept=".xlsx,.csv"><br /><br /><hr />
               <div class="row">
@@ -141,8 +140,31 @@
                 </div>
               </div>
               <div class="row">
+                <div class="col-lg-8 col-lg-offset-2" ng-hide="sampleName=='sudo'">
+                  <div ng-switch="sampleName">
+                    <div ng-switch-when="false">
+                      <div class="form-group has-error">
+                          <label class="control-label">sample name:</label>
+                            <select  class="form-control"  ng-model="sample.name">
+                              <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
+                            </select>
+                      </div>
+                    </div>
+                    <div ng-switch-when="sample_name">
+                      <div class="form-group has-success">
+                          <label class="control-label">sample_name found!</label>
+                            <select  class="form-control" disabled ng-model="sample.name">
+                              <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
+                            </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
                 <div class="col-lg-2 col-lg-offset-5">
-                  <button type="button" ng-click="submitupload();" class="btn btn-success btn-block">Continue</button>
+                  <a ng-click="submitupload();" class="btn btn-success btn-block" id="continueupload" ng-show="continueuploadshow">Continue</a>
                 </div>
               </div>
           </div>
@@ -175,12 +197,27 @@
                 <button type="button" class="btn btn-outline btn-primary" ng-click="calnumberofmiss();">Submit</button>
               </div>
               <div class="col-lg-9">
-                <div id="misingplot"></div>
+                  <ul class="nav nav-pills">
+                          <li class="active"><a href="#missingonlymissingcompounds-pills" data-toggle="tab">Missing Value Compounds</a>
+                          </li>
+                          <li><a href="#missingallcompounds-pills" data-toggle="tab">All Compounds</a>
+                          </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane fade in active" id="missingonlymissingcompounds-pills">
+                      missingonlymissingcompounds
+                      <div id="misingonlymissingplot"></div>
+                    </div>
+                    <div class="tab-pane fade" id="missingallcompounds-pills">
+                      missingallcompounds
+                      <div id="misingallplot"></div>
+                    </div>
+                  </div>
               </div>
             </div><br /><br /><hr />
             <div class="row">
               <div class="col-lg-2 col-lg-offset-5">
-                <button type="button" class="btn btn-success btn-block" ng-click="dealwithmissing();">Continue</button>
+                <button type="button" class="btn btn-success btn-block" ng-click="dealwithmissing();" id="dealwithmissingcontinue">Continue</button>
               </div>
             </div>
           </div>
@@ -291,9 +328,9 @@
               </div>
               <div class="panel-body">
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                  <div id="PCAplot">
-
-                  </div>
+                  <div id="PCAplot"></div>
+                  <div id="BOXplots"></div>
+                  <div id="myDiv"></div>
               </div>
           </div>
           </div>
@@ -301,7 +338,6 @@
               <h4>Settings Tab</h4>
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           </div>
-      </div>
       </div>
 
   </div>

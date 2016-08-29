@@ -33,22 +33,35 @@ univariateanalysis_numofmissing <- function(e,f,p,missindex=NA,compoundName = "B
     numofmiss = sum(miss)
   }
   miss_rate = round(miss/ncol(e)*100,3)
-  tolerable = list();
-  untolerable = list();
+
+
+  tolerable = list();# all compounds
+  untolerable = list();# all compounds
+  missing = list();
   for(i in 1:nrow(e)){
     if(miss_rate[i]>as.numeric(tolmissingperc)){
       tolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = miss_rate[i]);
       untolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = NULL);
+      missing[[i]] = list(y=miss_rate[i],label=f[[compoundName]][i]);
+    }else if(miss_rate[i]>0){
+      tolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = NULL);
+      untolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = miss_rate[i]);
+      missing[[i]] = list(y=miss_rate[i],label= f[[compoundName]][i]);
     }else{
       tolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = NULL);
       untolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = miss_rate[i]);
     }
   }
-
-
   percofmiss=numofmiss/ncol(e)
 
+  missing = missing[!sapply(missing,is.null)]
+
+  missing = missing[order(as.numeric(unlist(missing)[seq(1,length(unlist(missing)),by=2)]))]
+
+
+
   return(list(numofmiss=numofmiss,percofmiss=percofmiss,miss_rate= miss_rate,
-              tolerable = toJSON(tolerable,auto_unbox=T),untolerable=toJSON(untolerable,auto_unbox=T)))
+              tolerable = toJSON(tolerable,auto_unbox=T),untolerable=toJSON(untolerable,auto_unbox=T),
+              missing = toJSON(missing,auto_unbox = T)))
 }
 

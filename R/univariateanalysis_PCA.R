@@ -21,6 +21,11 @@ univariateanalysis_PCA <- function(e2,f2,p2,
   }else{
     score$shape = 0
   }
+  if(color%in%colnames(p2)){
+    score$color = cols[as.numeric(as.factor(p2[[color]]))]
+  }else{
+    score$color = 'light grey'
+  }
 
   # rownames(score) = rownames(e)
   variance = pca$sdev^2/sum(pca$sdev^2)
@@ -51,7 +56,7 @@ univariateanalysis_PCA <- function(e2,f2,p2,
               ,text = text.temp,showlegend=FALSE,
               marker=list(
                 symbol = x$shape,
-                color=x[[color]][1],
+                color=x$color[1],
                 size = 15,
                 opacity=0.5)
     ),
@@ -59,8 +64,10 @@ univariateanalysis_PCA <- function(e2,f2,p2,
          ,mode = 'lines',
          line= list(dash='solid',width=1)
          ,hoverinfo='none'
-         ,name = x[[color]][1]
-         ,showlegend=FALSE,opacity=0.5
+         ,name = x$color[1]
+         ,showlegend=FALSE
+         ,opacity=0.5
+         ,marker=list(color=x$color[1])
     ))
   },simplify =F)
 
@@ -69,7 +76,7 @@ univariateanalysis_PCA <- function(e2,f2,p2,
     data[[i]] = scatter[[i]][[1]]
     # data[[i]]$marker =  list(color = cols[i] , size = 18)
     data[[i+length(scatter)]] = scatter[[i]][[2]] # these are for the ellipse.
-    data[[i+length(scatter)]]$marker =  list(color = cols[i])
+    # data[[i+length(scatter)]]$marker =  list(color = cols[i])
   }
 
   layout = list(paper_bgcolor = "rgba(245,246,249,1)",
