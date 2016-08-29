@@ -323,7 +323,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
 
   $scope.summarygroup = function(){
         total = p2.map(function(ind){return ind['treatment']});
-        temp1 = countunique(total);
+        temp1 = countunique(total);!!
   }
 
 
