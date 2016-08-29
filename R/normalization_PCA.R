@@ -1,17 +1,17 @@
-#' univariateanalysis_PCA
+#' normalization_PCA
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_PCA()
+#' normalization_PCA()
 
-univariateanalysis_PCA <- function(e2,f2,p2,
+normalization_PCA <- function(e2,f2,p2,
                                    color = "treatment",
                                    shape = "mx class id"){
   library(jsonlite)
-  cols = univariateanalysis_gg_color_hue(length(unique(p2[[color]])))
+  cols = normalization_gg_color_hue(length(unique(p2[[color]])))
 
   pca = prcomp(t(e2), center = F, scale. = F)
   score = pca$x

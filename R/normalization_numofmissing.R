@@ -1,13 +1,13 @@
-#' univariateanalysis_numofmissing
+#' normalization_numofmissing
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_numofmissing()
+#' normalization_numofmissing()
 
-univariateanalysis_numofmissing <- function(e,f,p,missindex=NA,compoundName = "Binbase name",tolmissingperc=50){
+normalization_numofmissing <- function(e,f,p,missindex=NA,compoundName = "Binbase name",tolmissingperc=50){
   library(jsonlite)
 
   if(is.na(missindex)){

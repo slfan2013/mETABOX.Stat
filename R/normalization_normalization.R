@@ -1,13 +1,13 @@
-#' univariateanalysis_normalization
+#' normalization_normalization
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_normalization()
+#' normalization_normalization()
 
-univariateanalysis_normalization <- function(e1,f1,p1,
+normalization_normalization <- function(e1,f1,p1,
                                              samplewisenorm = 'mTIC',samplewisenormindex='knownornotknown',
                                              transformation = 'log', loga = 1, logbase = 2, power = 1/2,
                                              scaling = 'autoscaling'

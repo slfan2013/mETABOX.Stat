@@ -1,15 +1,30 @@
 var missgroup = "no";
 var event = [];
-var appNorm = angular.module('app_norm', ["xeditable"]);
+var appNorm = angular.module('app_norm', ["xeditable",'ngRoute']);
 var subsetlevelscount = [];
 var levelscount = [];
 var continueuploadshow = false;
 
-appNorm.run(function(editableOptions) {
+appNorm.run(function(editableOptions) {//MIGHT NOT BE USEFUL.
   editableOptions.theme = 'bs3';
 });
-appNorm.controller('ctrl_univariateanalysis', function($scope) {
-  $scope.tolmissingperc = 10;
+
+appNorm.config(["$routeProvider","$locationProvider",function($routeProvider,$locationProvider){
+  $routeProvider
+		.when("/", {
+			templateUrl: "Normalization.html",
+			controller: "ctrl_norm"
+		})
+		.when("/Univariate_Analysis", {
+			templateUrl: "Univariate_Analysis.html",
+			controller: "ctrl_univariateanalysis"
+		})
+		;
+}])
+
+appNorm.controller('ctrl_norm', function($scope,srvShareData,$location) {
+  {
+    $scope.tolmissingperc = 10;
   $scope.missingreplacemethod = "half minimum";
   $scope.missingreplacemethodgroup = "no";
   $scope.removemiss = true;
@@ -31,6 +46,15 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
   $scope.power = {value:1/2};
   $scope.samplewisenormindex = {value:'none'};
   $scope.scaling = {value:'none'};
+  }
+
+$scope.dataToShare = [];
+$scope.shareMyData = function (myValue) {
+  $scope.dataToShare = myValue;
+  srvShareData.addData($scope.dataToShare);
+  window.location.href = "Univariate_Analysis.html";
+}
+
 
   $scope.enablecontinueupload = function(){
     console.log($scope.compound.name);
@@ -40,7 +64,7 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
     }
   }
   $scope.submitupload = function(){
-    $('#missingreplacemethodgroup_univariateanalysis').editable({
+    $('#missingreplacemethodgroup_norm').editable({
       source: $scope.phenotypenames,
       display: function(value) {
         if(value===null || value.length===0){
@@ -59,7 +83,7 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
   }
 
   $scope.calnumberofmiss = function(){
-    var req=ocpu.call("univariateanalysis_numofmissing",{
+    var req=ocpu.call("normalization_numofmissing",{
       e:e0,f:f0,p:p0,missindex:$scope.missindex,compoundName:$scope.compound.name,tolmissingperc:$scope.tolmissingperc
     },function(sess){
       sess.getObject(function(obj){
@@ -155,7 +179,7 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
     }).always(function(){$('#mytabs a[href="#dealwithmissingvalue-pills"]').tab('show');})
   }
   $scope.dealwithmissing = function(){
-    var req = ocpu.call("univariateanalysis_dealwithmissing",{
+    var req = ocpu.call("normalization_dealwithmissing",{
       e:e0,f:f0,p:p0,missindex:$scope.missindex,removemiss:$scope.removemiss,
       miss_rate:$scope.miss_rate,tolmissingperc:$scope.tolmissingperc,
       missingreplacemethod:$scope.missingreplacemethod,missgroup:missgroup
@@ -166,8 +190,8 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
     }).always(function(){$('#mytabs a[href="#normalization-pills"]').tab('show');})
   }
 
-  $scope.applynormalization = function(){
-    var req=ocpu.call("univariateanalysis_normalization",{
+  $scope.visualizenormalization = function(){
+    var req=ocpu.call("normalization_normalization",{
       e1:e1,f1:f1,p1:p1,
      samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
      transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
@@ -180,9 +204,22 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
         })
     })
   }
+  $scope.applynormalizationtoUni = function(){
+    var req=ocpu.call("normalization_normalization",{
+      e1:e1,f1:f1,p1:p1,
+     samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
+     transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
+     scaling : $scope.scaling.value
+    },function(sess){
+      sess.getObject(function(obj){
+        e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
+        $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames})
+        })
+    })
+  }
 
   $scope.drawPCA = function(){
-    var req = ocpu.call("univariateanalysis_PCA",{
+    var req = ocpu.call("normalization_PCA",{
       e2:e2,f2:f2,p2:p2
     },function(sess){
       sess.getObject(function(obj){
@@ -194,7 +231,6 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
         temp1 = countunique(total);
         levelsnames = temp1[0];
         levelscount = temp1[1];
-
         selects = eventData.points;
         subsetofp2 = [];
         for(ii=0;ii < selects.length;ii++){
@@ -205,8 +241,6 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
            Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1]);
           }
         }
-
-
         subset = subsetofp2.map(function(ind){return ind['treatment']});
         temp2 = countunique(subset);
         subsetlevelsnames = temp2[0];
@@ -238,7 +272,7 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
 
   }
   $scope.drawboxplots = function(){
-    var req = ocpu.call("univariateanalysis_boxplots",{
+    var req = ocpu.call("normalization_boxplots",{
       e2:e2,f2:f2,p2:p2,
       sampleName:$scope.sample.name
     },function(sess){
@@ -251,10 +285,10 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
 //dps.map(function(a) {return parseFloat(a.y);});
 
 
-  $('#upload_univariateanalysis').change(upload);
+  $('#upload_norm').change(upload);
   function upload(){
-  var req=ocpu.call("univariateanalysis_uploadfile",{
-    file:$("#upload_univariateanalysis")[0].files[0]
+  var req=ocpu.call("normalization_uploadfile",{
+    file:$("#upload_norm")[0].files[0]
   },function(session){
     session.getObject(function(obj){
       e0=obj.expression;
@@ -274,14 +308,66 @@ appNorm.controller('ctrl_univariateanalysis', function($scope) {
 
 })
 
+appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
+  $scope.dataexist = true;
+  $scope.test = {groups :null}
+  $scope.group = {first:null,second:null,
+                  firstlength:null,secondlength:null,
+                  firstmember:null,secondmember:null}
+  $scope.sharedData = srvShareData.getData()[0];
+  if($scope.sharedData.length === 0){
+    $scope.dataexist = false
+  }
+
+  p2 = $scope.sharedData.p2
+
+  $scope.summarygroup = function(){
+        total = p2.map(function(ind){return ind['treatment']});
+        temp1 = countunique(total);
+  }
+
+
+  console.log($scope.sharedData);
+})
+
+
+
+appNorm.service('srvShareData', function($window) {
+        var KEY = 'appNorm.SelectedValue';
+        var addData = function(newObj) {
+            var mydata = $window.sessionStorage.getItem(KEY);
+            if (mydata) {
+                mydata = JSON.parse(mydata);
+            } else {
+                mydata = [];
+            }
+            mydata.push(newObj);
+            $window.sessionStorage.setItem(KEY, JSON.stringify(mydata));
+        };
+        var getData = function(){
+            var mydata = $window.sessionStorage.getItem(KEY);
+            if (mydata) {
+                mydata = JSON.parse(mydata);
+            }
+            return mydata || [];
+        };
+        return {
+            addData: addData,
+            getData: getData
+        };
+    });
+
+
+
+
 
 $(document).ready(function(){
 
 
 
 
-$('#missingPerc_univariateanalysis').editable();
-$('#missingreplacemethod_univariateanalysis').editable({
+$('#missingPerc_norm').editable();
+$('#missingreplacemethod_norm').editable({
         value: 'half minimum',
         source: [
               {value: 'half minimum', text: 'half minimum'},

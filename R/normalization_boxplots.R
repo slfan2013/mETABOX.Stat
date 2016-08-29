@@ -1,19 +1,19 @@
-#' univariateanalysis_boxplots
+#' normalization_boxplots
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_boxplots()
+#' normalization_boxplots()
 
-univariateanalysis_boxplots <- function(e2,f2,p2,
+normalization_boxplots <- function(e2,f2,p2,
                                    color1 = "treatment",
                                    color2 = "mx class",
                                    sampleName = "phenotypeindex"){
   library(jsonlite)
   library(grDevices)
-  cols1 = univariateanalysis_gg_color_hue(length(unique(p2[[color1]])))
+  cols1 = normalization_gg_color_hue(length(unique(p2[[color1]])))
   cols2 = gray.colors(length(unique(p2[[color2]])))
 
 

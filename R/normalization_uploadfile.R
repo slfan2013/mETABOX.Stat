@@ -1,13 +1,13 @@
-#' univariateanalysis_uploadfile
+#' normalization_uploadfile
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_uploadfile()
+#' normalization_uploadfile()
 
-univariateanalysis_uploadfile <- function(file){
+normalization_uploadfile <- function(file){
   message = NULL
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\A\\mx 131933_tomatillo vs pumpkin_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\mx_274941_Francisco Portell_human cells_06-2016_submit.xlsx"

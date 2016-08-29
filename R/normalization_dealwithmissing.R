@@ -1,13 +1,13 @@
-#' univariateanalysis_dealwithmissing
+#' normalization_dealwithmissing
 #'
 #' stat
 #' @param
 #' @keywords
 #' @export
 #' @examples
-#' univariateanalysis_dealwithmissing()
+#' normalization_dealwithmissing()
 
-univariateanalysis_dealwithmissing <- function(e,f,p,missindex=NA,
+normalization_dealwithmissing <- function(e,f,p,missindex=NA,
                                                removemiss = TRUE,miss_rate ,tolmissingperc=50,
                                                missingreplacemethod = 'half minimum',
                                                missgroup = "organ,treatment"){
