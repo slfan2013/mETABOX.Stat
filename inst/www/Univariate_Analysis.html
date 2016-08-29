@@ -54,7 +54,7 @@
 
 </head>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" data-gr-c-s-loaded = "true" style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'   ng-app="app_univariateanalysis" ng-controller="ctrl_univariateanalysis">
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" data-gr-c-s-loaded = "true" style = 'font-family: "Trebuchet MS", Arial, Helvetica, Tahoma, sans-serif;'   ng-app="app_norm" ng-controller="ctrl_univariateanalysis">
     <div id="wrapper" class="toggled" style="height:100%">
       <!-- Sidebar -->
       <!-- /#sidebar-wrapper -->
@@ -205,11 +205,9 @@
                   </ul>
                   <div class="tab-content">
                     <div class="tab-pane fade in active" id="missingonlymissingcompounds-pills">
-                      missingonlymissingcompounds
                       <div id="misingonlymissingplot"></div>
                     </div>
                     <div class="tab-pane fade" id="missingallcompounds-pills">
-                      missingallcompounds
                       <div id="misingallplot"></div>
                     </div>
                   </div>
@@ -318,8 +316,14 @@
                   </label>
                 </form></center>
           <div class="row">
-            <div class="col-lg-2 col-lg-offset-10">
-              <button type="button" class="btn btn-success btn-block btn-outline" ng-click="applynormalization();">Submit!</button>
+            <div class="col-lg-2 col-lg-offset-5">
+              <button type="button" class="btn btn-warning btn-block btn-outline" ng-click="applynormalization();"><strong>Visualize</strong></button>
+            </div>
+            <div class="col-lg-2 col-lg-offset-1">
+              <button type="button" class="btn btn-success btn-block">Univariate Analysis</button>
+            </div>
+            <div class="col-lg-2">
+              <button type="button" class="btn btn-success btn-block">Multivariate Analysis</button>
             </div>
           </div><br />
           <div class="panel panel-default">
@@ -327,7 +331,6 @@
                   <i class="glyphicon glyphicon-indent-left"></i> Visualization
               </div>
               <div class="panel-body">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
                   <div id="PCAplot"></div>
                   <div id="BOXplots"></div>
                   <div id="myDiv"></div>

@@ -1,14 +1,14 @@
 var missgroup = "no";
 var event = [];
-var app = angular.module('app_univariateanalysis', ["xeditable"]);
+var appNorm = angular.module('app_norm', ["xeditable"]);
 var subsetlevelscount = [];
 var levelscount = [];
 var continueuploadshow = false;
 
-app.run(function(editableOptions) {
+appNorm.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
-app.controller('ctrl_univariateanalysis', function($scope) {
+appNorm.controller('ctrl_univariateanalysis', function($scope) {
   $scope.tolmissingperc = 10;
   $scope.missingreplacemethod = "half minimum";
   $scope.missingreplacemethodgroup = "no";
