@@ -185,7 +185,42 @@
 
 
 
+function formatTableHeader(jsonData){
+  var keyls = Object.keys(jsonData);//get list of keys
+  var colnames = [];
+  for (var i = 0; i < keyls.length; i++) {//table header = json keys
+    colnames.push({title: keyls[i], data: keyls[i]});
+  }
+  return colnames;
+}
+function drawTable(id, data, filename,idSrc,tableheight="450px") {
+  if(id === '#Statistics_Result'){
+      table.destroy();
+  }
+$(id).empty();
+	 table = $(id).DataTable( {
+	   dom: 'Blfrtip',
+		destroy: true,
+		"scrollX": true,
+		"scrollY": tableheight,
+		"paging": false,
+		fixedColumns: true,
+		scrollCollapse: true,
+    data: data,
+		columns: formatTableHeader(data[0]),
 
+		lengthChange: false,
+		select:true,
+       buttons: [
+        {
+            extend: 'csv',
+            text: 'download',
+			title: filename
+        }
+    ]
+    } );
+    return(table)
+}
 
 
 

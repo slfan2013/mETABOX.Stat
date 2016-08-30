@@ -43,6 +43,26 @@
     <script src="js/xeditable.js"></script><!--X Editable AngularJS-->
     <link href="css/select2.css" rel="stylesheet" />
     <script src="js/select2.full.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script><!--dataTables-->
+
+    <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/editor.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/select.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/dataTables.tableTools.css">
+    <script type="text/javascript" src="js/datatables.min.js"></script>
+    <script type="text/javascript" src="js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="js/dataTables.tableTools.js"></script>
+    <script type="text/javascript" src="js/dataTables.select.js"></script>
+    <script type="text/javascript" src="js/dataTables.select.js"></script>
+
+
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/NormalizationToUnivariateToMultivariate.js"></script>
@@ -228,10 +248,44 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="univariateanalysis();">Submit!</button>
+      </div>
+      <div class="row">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#viewresult-pills" data-toggle="tab">View Result Table</a>
+            </li>
+            <li><a href="#viewcompound-pills" data-toggle="tab">View Compound</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="viewresult-pills">
+            <div class="row">
+              <div class="col-lg-3">
+                <label ng-repeat="fruitName in fruits">
+                    <input
+                    type="checkbox"
+                    value="{{fruitName}}"
+                    ng-checked="selection.indexOf(fruitName) > -1"
+                    ng-click="toggleSelection(fruitName)"
+                    > {{fruitName}}
+                </label>
+              </div>
+              <div class="col-lg-9">
+                <table id="univariatetable_univariateanalysis" class="table table-striped table-bordered display" cellspacing="0" width="100%"></table>
+              </div>
+            </div>
+
+          </div>
+          <div class="tab-pane fade" id="viewcompound-pills">
+           fa
+          </div>
+        </div>
+
+      </div>
     </div>
-    <div class="row">
-      <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="univariateanalysis();">Submit!</button>
-    </div>
+
+
 
     </div>
         <!-- /#page-content-wrapper -->

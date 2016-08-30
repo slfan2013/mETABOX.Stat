@@ -34,7 +34,7 @@ appNorm.controller('ctrl_norm', function($scope,srvShareData,$location) {
   $scope.phenotypenames = [];
   $scope.featurenames = [];
   $scope.compound = {name:null};
-  $scope.sample = {name:null};
+  $scope.sample = {name:'ID'};
   $scope.numofmiss = [];
   $scope.percofmiss = [];
   $scope.miss_rate = [];
@@ -213,7 +213,7 @@ $scope.shareMyData = function (myValue) {
     },function(sess){
       sess.getObject(function(obj){
         e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
-        $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames})
+        $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames,featurenames:$scope.featurenames})
         })
     })
   }
@@ -291,6 +291,7 @@ $scope.shareMyData = function (myValue) {
     file:$("#upload_norm")[0].files[0]
   },function(session){
     session.getObject(function(obj){
+      console.log(obj)
       e0=obj.expression;
       f0=obj.feature;
       p0=obj.phenotype;
@@ -298,6 +299,7 @@ $scope.shareMyData = function (myValue) {
         $scope.compoundName = obj.compound_name[0];
         $scope.compound.name = obj.compound_name[0];
         $scope.sampleName = obj.sample_name[0];
+
         $scope.sample.name = obj.sample_name[0];
         $scope.phenotypenames = obj.phenotypenames;
         $scope.featurenames = obj.featurenames;
@@ -356,14 +358,16 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
     if($scope.test['groups'] == "independent*independent"){
       var req=ocpu.call("univariateanalysis_twowayIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
-        console.log(sess)
+        sess.getObject(function(obj){
+          a = obj;
+          univaraitetable = drawTable('#univariatetable_univariateanalysis',obj, "Univariate Statistical Result");
       })
-    }
+    })
   }
 
+}
+
 })
-
-
 appNorm.service('srvShareData', function($window) {
         var KEY = 'appNorm.SelectedValue';
         var addData = function(newObj) {
@@ -397,7 +401,6 @@ $(document).ready(function(){
 
 
 
-
 $('#missingPerc_norm').editable();
 $('#missingreplacemethod_norm').editable({
         value: 'half minimum',
@@ -409,7 +412,11 @@ $('#missingreplacemethod_norm').editable({
            ]
     });
 
-
+   $('#univariatetable_univariateanalysis tbody').on('click', 'tr', function () {
+     console.log("!")
+        var data = univaraitetable.row( this ).data();
+        alert( 'You clicked on '+data[0]+'\'s row' );
+    } );
 
 })
 //$.fn.editable.defaults.mode = 'popup';

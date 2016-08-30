@@ -53,6 +53,7 @@ normalization_uploadfile <- function(file){
   if(!"ID"%in%names(p)){
     message = paste0(message,"\n",
                     "'ID' not found in phenotype set. This means there is no repeated measure in the data. 'ID' automatically added.")
+    p$ID = 1:nrow(p)
   }
 
   writeLines(message,"warning.txt")

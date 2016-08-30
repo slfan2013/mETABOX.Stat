@@ -15,5 +15,6 @@ Imports:
 	  cluster,
 	  parallel,
 	  userfriendlyscience,
-	  ggplot2
+	  ggplot2,
+	  ez
 RoxygenNote: 5.0.1

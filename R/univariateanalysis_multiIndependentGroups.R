@@ -8,7 +8,7 @@
 #' univariateanalysis_multiIndependentGroups()
 
 univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
-                                                    group1 = "treatment1",group2 = "treatment2"
+                                                    group1 = "treatment",
                                                     para = T,
 
                                                     paraposthoc = 'games.howell',equalvariance = F,nonpara = T,nonpposthoc = 't test',nonpposthocadj='bonferroni',
@@ -20,16 +20,6 @@ univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
   }else{
     cl = makeCluster(1)
   }
-
-
-
-
-
-
-
-
-
-
 
 
   if(para){

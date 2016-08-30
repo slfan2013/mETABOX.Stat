@@ -141,9 +141,9 @@
                 <div class="col-lg-8 col-lg-offset-2" ng-hide="sampleName=='sudo'">
                   <div ng-switch="sampleName">
                     <div ng-switch-when="false">
-                      <div class="form-group has-error">
-                          <label class="control-label">sample name:</label>
-                            <select  class="form-control"  ng-model="sample.name">
+                      <div class="form-group has-warning">
+                          <label class="control-label">sample name:</label><span class='text-warning pull-right'>'ID' is added</span>
+                            <select  class="form-control"  ng-model="sample.name" ng-init="sample.name = 'ID'">
                               <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
                             </select>
                       </div>
