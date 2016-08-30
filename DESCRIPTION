@@ -12,5 +12,8 @@ Imports:
     jsonlite,
 	  MASS,
 	  openxlsx,
-	  cluster
+	  cluster,
+	  parallel,
+	  userfriendlyscience,
+	  ggplot2
 RoxygenNote: 5.0.1

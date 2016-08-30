@@ -313,23 +313,55 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   $scope.test = {groups :null}
   $scope.group = {first:null,second:null,
                   firstlength:null,secondlength:null,
-                  firstmember:null,secondmember:null}
+                  firstmember:null,secondmember:null,
+                  firstmemberlength:[],secondmemberlength:[]
+  }
   $scope.sharedData = srvShareData.getData()[0];
   if($scope.sharedData.length === 0){
     $scope.dataexist = false
   }
 
   p2 = $scope.sharedData.p2
+  e2 = $scope.sharedData.e2
+  f2 = $scope.sharedData.f2
 
   $scope.summarygroup = function(){
-        total = p2.map(function(ind){return ind['treatment']});
-        temp1 = countunique(total);!!
+    $scope.group['firstmemberlength']=[]
+      tempfirst= countunique(p2.map(function(ind){return ind[$scope.group.first]}))
+      $scope.group['firstmember'] = tempfirst[0];$scope.group['firstlength'] = tempfirst[1];
+      for(ii=0;ii<$scope.group['firstmember'].length;ii++){ $scope.group['firstmemberlength'].push($scope.group['firstmember'][ii]+"("+$scope.group['firstlength'][ii]+")")}
+      tempsecond= countunique(p2.map(function(ind){return ind[$scope.group.second]}))
+      $scope.group['secondmember'] = tempsecond[0];$scope.group['secondlength'] = tempsecond[1];
+      for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}
+  }
+  $scope.univariateanalysis = function(){
+    if($scope.test['groups'] == "two independent groups"){
+      var req=ocpu.call("univariateanalysis_twoIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
+      function(sess){
+        console.log(sess)
+      })
+    }
+    if($scope.test['groups'] == "two paired groups"){
+
+    }
+    if($scope.test['groups'] == "multiple independent groups"){
+      var req=ocpu.call("univariateanalysis_multiIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
+      function(sess){
+        console.log(sess)
+      })
+    }
+    if($scope.test['groups'] == "multiple paired groups"){
+
+    }
+    if($scope.test['groups'] == "independent*independent"){
+      var req=ocpu.call("univariateanalysis_twowayIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
+      function(sess){
+        console.log(sess)
+      })
+    }
   }
 
-
-  console.log($scope.sharedData);
 })
-
 
 
 appNorm.service('srvShareData', function($window) {
