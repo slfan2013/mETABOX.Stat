@@ -185,7 +185,7 @@ $scope.populationplot = function(){
 			  text:"true average:" +$scope.mean1 + ", sd:"+$scope.sd1+ ", error tolerance:" + $scope.alpha
 			}],
 			axisY:{
-        title: "estimated mean",
+        title: "t statistic",
         titleFontFamily: "arial",
         includeZero: false,
 			   stripLines:[
