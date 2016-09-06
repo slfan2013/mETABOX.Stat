@@ -356,7 +356,10 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
 
     }
     if($scope.test['groups'] == "independent*independent"){
-      var req=ocpu.call("univariateanalysis_twowayIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
+      console.log("!")
+      var req=ocpu.call("univariateanalysis_twowayIndependentGroups",{
+        e2:e2,f2:f2,p2:p2,group1:$scope.group.first,group2:$scope.group.second
+      },
       function(sess){
         sess.getObject(function(obj){
           a = obj;
@@ -399,8 +402,6 @@ appNorm.service('srvShareData', function($window) {
 
 $(document).ready(function(){
 
-
-
 $('#missingPerc_norm').editable();
 $('#missingreplacemethod_norm').editable({
         value: 'half minimum',
@@ -413,7 +414,6 @@ $('#missingreplacemethod_norm').editable({
     });
 
    $('#univariatetable_univariateanalysis tbody').on('click', 'tr', function () {
-     console.log("!")
         var data = univaraitetable.row( this ).data();
         alert( 'You clicked on '+data[0]+'\'s row' );
     } );

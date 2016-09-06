@@ -8,7 +8,7 @@
 #" univariateanalysis_twowayIndependentGroups()
 
 univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
-                                                      group1 = "treatment1",group2 = "treatment2",
+                                                      group1 = "species",group2 = "treatment",
                                                       para = T,
                                                       parainteraction = T,
                                                       paramaineffect = T,paramaineffectvariance=F,paramaineffectadj = "fdr",paramaineffectpost = "games.howell",
@@ -31,7 +31,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
     cl = makeCluster(1)
   }
 
-
+  #parametric
   if(para){
     #interaction
     if(parainteraction){
@@ -48,7 +48,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
           oneway.test(e2[j,] ~ as.factor(p2[[group1]]), var.equal = paramaineffectvariance)$p.value
         },e2,p2,group1,group2,paramaineffectvariance)
         paravar1main = rbind(paravar1main,adj = p.adjust(paravar1main,paramaineffectadj))
-        rownames(paravar2main) = c(paste0("pvalue_para_ttest(",group1,")"),paste0("pvalue_para_ttest_adj(",group1,")"))
+        rownames(paravar1main) = c(paste0("pvalue_para_ttest(",group1,")"),paste0("pvalue_para_ttest_adj(",group1,")"))
       }else{
         paravar1main = parSapply(cl,1:nrow(e2),function(j,e2,p2,group1,group2,paramaineffectvariance,posthocTGH,paramaineffectpost){
           paraANOVAposthoc = posthocTGH(e2[j,],as.factor(p2[[group1]]),digits = 4)$output[[paramaineffectpost]][,3]
