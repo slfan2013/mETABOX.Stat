@@ -18,6 +18,12 @@ $scope.alpha = 0.05;
 $scope.powerdetermine_text = "Determine";
 $scope.powershowdetermine = false;
 $scope.perfectsample = false;
+$scope.powersamplerangemin = 2;
+$scope.powersamplerangemax = 100;
+$scope.powersamplerangestep = 2;
+$scope.powereffectsize = 0.8;
+$scope.poweralpha = 0.05;
+
 
 function onClicksampleset(e) {
       $scope.sample();
@@ -362,33 +368,14 @@ $scope.PlayPress = function(){
   $scope.powerplot = function(){
     var x = seq($scope.powersamplerangemin,$scope.powersamplerangemax,length =
     (($scope.powersamplerangemax - $scope.powersamplerangemin)/$scope.powersamplerangestep)+1)//sample sizes
-
-    for(ii=0;ii<$scope.numofeffectsizes+1;ii++){
+console.log($scope.powereffectsize);
       var req = ocpu.call("two_population_power_plot",{
-        effectsize:$("#effectsize"+ii).val(),n1:x,sig_level:$scope.poweralpha
+        effectsize:$scope.powereffectsize,n:x,sig_level:$scope.poweralpha
       },function(session){
-        console.log(session)
-      })
-    }
-
-/*
-    var data = [];
-
-    var sds = seq($scope.powersdmin, $scope.powersdmax, length = (($scope.powersdmax - $scope.powersdmin)/$scope.powersdstep)+1)
-
-    for(ii=0;ii<sds.length;ii++){
-    var y = [];
-
-    for(jj=0;jj<x.length;jj++){
-      y.push(pnorm([$scope.powermean+$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj])) -
-             pnorm([$scope.powermean-$scope.powertol],$scope.powermean, sds[ii]/Math.sqrt(x[jj]))) //see wiki sample size determination
-
-    }
-      data.push({x:x, y:y,  mode: 'lines+markers', name:"sd="+sds[ii]})
-    }
-
-
-    Plotly.newPlot('powerplot_singlepopulation', data, {title:"Power vs Sample Size <br> at Error tolerance: " + $scope.powertol,height: 500,
+        session.getObject(function(obj){
+          console.log(obj[0])
+          Plotly.newPlot("powerplot_twopopulation",data = JSON.parse(obj[0]),{
+            title:"Power vs Sample Size <br> at Significant Level: " + $scope.poweralpha,height: 500,
                                                          xaxis: {
                                                           title: 'Sample Size',
                                                           titlefont: {
@@ -405,12 +392,13 @@ $scope.PlayPress = function(){
                                                             color: '#7f7f7f'
                                                           }
                                                         }
-    });*/
+          })
+        })
+
+      })
+
+
   }
-
-
-
-
 
 });
 

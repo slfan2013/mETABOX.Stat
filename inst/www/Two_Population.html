@@ -13,8 +13,8 @@
 
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/opencpu-0.5.js"></script>
-    <!--<script src="js/opencpu.js"></script>-->
+    <!--<script src="js/opencpu-0.5.js"></script>-->
+    <script src="js/opencpu.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/plotly-latest.min.js"></script>
     <script src="js/gaussian.js"></script>
@@ -205,8 +205,6 @@
                       "display:inline" ng-model="n"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
                     </div>
                     <div class="col-lg-6" align="center"  id="section2">
-                      <!--<input id="sampletimes_twopopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
-                      "display:inline" ng-model="repeat" ng-change="toggle_display_bottom()"/><span><strong>  Repeat Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>-->
                    <input bs-switch ng-model='repeat' type="checkbox" checked data-on-text="Sample Multiple Time" data-off-text="Sample One Time" ng-click="falseperfectsample"/>
                     </div>
                   </div>
@@ -279,11 +277,12 @@
                             min = 0 max = "{{powersamplerangemax-powersamplerangemin}}">
                           </div>
                         </div>
-                        <label style='display:"inline"'>Effect size: </label><button addeffectsizes class="pull-right btn btn-default btn-xs btn-outline">
-                          <i class="fa fa-plus"></i></button>
+                        <label style='display:"inline"'>Effect size: </label>
+                        <!--<button addeffectsizes class="pull-right btn btn-default btn-xs btn-outline">
+                          <i class="fa fa-plus"></i></button>-->
                         <div class="row">
                           <div class="col-lg-8">
-                            <input class="form-control" type = "number" placeholder="" ng-model="powereffectsize" min = 0 step=0.05 id="effectsize0">
+                            <input class="form-control"  placeholder="" ng-model="powereffectsize" min = 0 step=0.05 id="effectsize0">
                           </div>
                           <div class="col-lg-3">
                             <button type="button" class="btn btn-primary btn-xs" ng-click = "powerdetermine();">
