@@ -2,7 +2,7 @@ paused = false;
 var rdmdatas1 = [];
 var rdmdatas2 = [];
 
-var app = angular.module('populationplot_twopopulation', []);
+var app = angular.module('populationplot_twopopulation', ['frapontillo.bootstrap-switch']);
 app.controller('populationplotctrl_twopopulation', function($scope) {
 $scope.Math = window.Math;// enable using Math functions in html.
 $scope.min = 140;
@@ -11,30 +11,40 @@ $scope.mean1=165;
 $scope.mean2=175;
 $scope.sd1=10;
 $scope.sd2=10;
-$scope.repeat = 1;
+$scope.repeat = false;
 $scope.displaybottom = false;
 $scope.n = 5
 $scope.alpha = 0.05;
-$scope.powerdetermine_text = "Determine"
-$scope.powershowdetermine = false
+$scope.powerdetermine_text = "Determine";
+$scope.powershowdetermine = false;
+$scope.perfectsample = false;
+
 function onClicksampleset(e) {
       $scope.sample();
       var data = [];
       var x = seq($scope.min, $scope.max, length=1000)
       var y1 = dnorm(x,meanFunction(rdmdatas1[e.dataPoint.x]),sdFunction(rdmdatas1[e.dataPoint.x]))
       var y2 = dnorm(x,meanFunction(rdmdatas2[e.dataPoint.x]),sdFunction(rdmdatas2[e.dataPoint.x]))
-
       var data;
 
-      data.push([{x:x,y:y1,type: 'scatter',mode: 'lines',name : 'density1.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600"}},
+      data.push([{x:x,y:y1,type: 'scatter',mode: 'lines',name : 'density1.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"
+      //, line: {color:"#cc6600"}
+      },
       {x:x,y:rep('data1.sample'+ii,$("#samplesize_twopopulation").val()),name:'data1.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
-      "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
-      {x:[meanFunction(rdmdatas1[e.dataPoint.x]),meanFunction(rdmdatas1[e.dataPoint.x])], y:[0,Math.max.apply(null, y1)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+      "marker": {
+        //"color": "rgb(255, 127, 14)",
+        "symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
+      {x:[meanFunction(rdmdatas1[e.dataPoint.x]),meanFunction(rdmdatas1[e.dataPoint.x])], y:[0,Math.max.apply(null, y1)*1.1],mode: 'lines',name :'sample.average'
+      ,marker:{color:'#0261fd'}
+      }]);
 
-      data.push([{x:x,y:y2,type: 'scatter',mode: 'lines',name : 'density2.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600",dash:"dot"}},
+      data.push([{x:x,y:y2,type: 'scatter',mode: 'lines',name : 'density2.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600"
+      //,dash:"dot"
+      }},
       {x:x,y:rep('data2.sample'+ii,$("#samplesize_twopopulation").val()),name:'data2.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
       "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
-      {x:[meanFunction(rdmdatas2[e.dataPoint.x]),meanFunction(rdmdatas2[e.dataPoint.x])], y:[0,Math.max.apply(null, y2)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+      {x:[meanFunction(rdmdatas2[e.dataPoint.x]),meanFunction(rdmdatas2[e.dataPoint.x])], y:[0,Math.max.apply(null, y2)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}
+      }]);
 
       var layout = {"barmode": "overlay",
                       xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
@@ -54,12 +64,9 @@ function onClicksampleset(e) {
 }
 
 
-  $scope.toggle_display_bottom = function(){
-    if($scope.repeat>1){
-       $scope.displaybottom = true;$('#sampletrigger').attr('href','#section2');
-    }else{
-      $scope.displaybottom = false;$('#sampletrigger').attr('href',"javascript:void(0);");
-    }
+  $scope.falseperfectsample = function(){
+    console.log("!")
+    $scope.perfectsample = false
   }
 
 $scope.powerdetermine = function(){
@@ -90,8 +97,12 @@ $scope.populationplot = function(){
   x2.push($scope.max);x2.push($scope.mean2);x2.push($scope.mean2);x2.push($scope.mean2);x2.push($scope.min);
   y1.push(0);y1.push(0);y1.push(Math.max.apply(null, y1)*1.1);y1.push(0);y1.push(0)
   y2.push(0);y2.push(0);y2.push(Math.max.apply(null, y2)*1.1);y2.push(0);y2.push(0)
-  value1 = {x: x1,y: y1,type: 'scatter',mode: 'lines',name : 'density1.true', fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#0047b3"}}
-  value2 = {x: x2,y: y2,type: 'scatter',mode: 'lines',name : 'density2.true', fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#0047b3",dash: 'dot'}}
+  value1 = {x: x1,y: y1,type: 'scatter',mode: 'lines',name : 'density1.true', fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"
+  //, line: {color:"#0047b3"}
+  }
+  value2 = {x: x2,y: y2,type: 'scatter',mode: 'lines',name : 'density2.true', fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"
+  //, line: {color:"#0047b3",dash: 'dot'}
+  }
   var data = [value1,value2];
   $scope.truevalue1 = value1;
   $scope.truevalue2 = value2;
@@ -114,15 +125,30 @@ $scope.populationplot = function(){
     var sampleeffectsizes = [];
     var pvalues = [];
     var ys1 = [];var ys2 = [];
-    for(ii=0;ii<$scope.repeat;ii++){
+
+    if($scope.perfectsample){//this means the sample should be perfect.
+    for(ii=0;ii<1;ii++){
+
+      rdm1 = [$scope.mean1-Math.sqrt(3/2)*$scope.sd1,$scope.mean1,$scope.mean1+Math.sqrt(3/2)*$scope.sd1]
+      rdm2 = [$scope.mean2-Math.sqrt(3/2)*$scope.sd2,$scope.mean2,$scope.mean2+Math.sqrt(3/2)*$scope.sd2]
+      sampleset1.push(rdm1);sampleset2.push(rdm2);
+      samplemeans1.push({value:meanFunction(rdm1), name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplemeans2.push({value:meanFunction(rdm2), name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"});//name2 is when user highlight means(see html).
+      samplesds1.push({value:sdFunction(rdm1),name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplesds2.push({value:sdFunction(rdm2),name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"})
+      sampleeffectsizes.push((samplemeans2[[ii]].value - samplemeans1[[ii]].value)/((Number(samplesds2[[ii]].value) + Number(samplesds1[[ii]].value))/2));
+      pvalues.push(2 * tprobability($scope.n,(samplemeans1[[ii]].value - samplemeans2[[ii]].value)/Math.sqrt(Math.pow(samplesds1[[ii]].value,2)/$scope.n + Math.pow(samplesds2[[ii]].value,2)/$scope.n)))
+    }
+    }else{
+    for(ii=0;ii<1;ii++){
       rdm1 = rnorm($("#samplesize_twopopulation").val(),mean=$scope.mean1,sd=$scope.sd1);rdm2 = rnorm($("#samplesize_twopopulation").val(),mean=$scope.mean2,sd=$scope.sd2)
       sampleset1.push(rdm1);sampleset2.push(rdm2);
       samplemeans1.push({value:meanFunction(rdm1), name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplemeans2.push({value:meanFunction(rdm2), name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"});//name2 is when user highlight means(see html).
       samplesds1.push({value:sdFunction(rdm1),name:ii+"thsample_twopopulation1",name2:ii+"thsample_twopopulation"});samplesds2.push({value:sdFunction(rdm2),name:ii+"thsample_twopopulation2",name2:ii+"thsample_twopopulation"})
       sampleeffectsizes.push((samplemeans2[[ii]].value - samplemeans1[[ii]].value)/((Number(samplesds2[[ii]].value) + Number(samplesds1[[ii]].value))/2));
       pvalues.push(2 * tprobability($scope.n,(samplemeans1[[ii]].value - samplemeans2[[ii]].value)/Math.sqrt(Math.pow(samplesds1[[ii]].value,2)/$scope.n + Math.pow(samplesds2[[ii]].value,2)/$scope.n)))
+    }
 
     }
+
     $scope.sampleset1 = sampleset1;$scope.sampleset2 = sampleset2;
     $scope.samplemeans1 = samplemeans1;$scope.samplemeans2 = samplemeans2;
     $scope.samplesds1 = samplesds1;$scope.samplesds2 = samplesds2;
@@ -135,17 +161,26 @@ $scope.populationplot = function(){
       var data = [];
       var x = seq($scope.min, $scope.max, length=1000)
       data.push($scope.truevalue1);data.push($scope.truevalue2);
-      for(ii=0;ii<$scope.repeat;ii++){
+      for(ii=0;ii<1;ii++){
         var y1 = dnorm(x,$scope.samplemeans1[[ii]].value,$scope.samplesds1[[ii]].value);var y2 = dnorm(x,$scope.samplemeans2[[ii]].value,$scope.samplesds2[[ii]].value)
-        data.push([{x:x,y:y1,type: 'scatter',mode: 'lines',name : 'density1.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600"}},
+        data.push([{x:x,y:y1,type: 'scatter',mode: 'lines',name : 'density1.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1"
+        //, line: {color:"#cc6600"}
+        },
         {x:$scope.sampleset1[[ii]],y:rep('data1.sample'+ii,$("#samplesize_twopopulation").val()),name:'data1.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
-        "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
-        {x:[$scope.samplemeans1[ii].value,$scope.samplemeans1[ii].value], y:[0,Math.max.apply(null, y1)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+        "marker": {
+          //,"color": "rgb(255, 127, 14)",
+          "symbol": "line-ns-open",size:12},"xaxis": "x1","yaxis": "y2"},
+        {x:[$scope.samplemeans1[ii].value,$scope.samplemeans1[ii].value], y:[0,Math.max.apply(null, y1)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#0261fd'}
+        }]);
 
-        data.push([{x:x,y:y2,type: 'scatter',mode: 'lines',name : 'density2.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {color:"#cc6600",dash:"dot"}},
+        data.push([{x:x,y:y2,type: 'scatter',mode: 'lines',name : 'density2.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1", line: {
+         color:"#cc6600"}},
         {x:$scope.sampleset2[[ii]],y:rep('data2.sample'+ii,$("#samplesize_twopopulation").val()),name:'data2.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
-        "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
-        {x:[$scope.samplemeans2[ii].value,$scope.samplemeans2[ii].value], y:[0,Math.max.apply(null, y2)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}}]);
+        "marker": {
+          //"color": "rgb(255, 127, 14)",
+          "symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
+        {x:[$scope.samplemeans2[ii].value,$scope.samplemeans2[ii].value], y:[0,Math.max.apply(null, y2)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'}
+        }]);
       }
       var layout = {"barmode": "overlay",
                       xaxis1: {range: [$scope.min, $scope.max],"anchor": "y2","domain": [0.0, 1.0],"zeroline": false},
@@ -158,8 +193,11 @@ $scope.populationplot = function(){
       $scope.sampledata = data;
       $scope.sampleplot_twopopulation = Plotly.newPlot('sampleplot_twopopulation',
               [data[2][0],data[2][1],data[2][2],data[3][0],data[3][1],data[3][2]],layout);
-      if($scope.repeat>1){
+      if($scope.repeat){
+        $scope.displaybottom = true;$('#sampletrigger').attr('href','#section2');
         $scope.samplesetplot()
+      }else{
+        $scope.displaybottom = false;$('#sampletrigger').attr('href',"javascript:void(0);");
       }
 
     }
@@ -202,9 +240,8 @@ $scope.populationplot = function(){
 			   ]
       },
 			data: [{
-				type: "line",
+				type: "spline",
 				markerType: "square",
-				color: "#778899",
 				dataPoints: dps,
 				click: onClicksampleset
 			}]
@@ -241,7 +278,6 @@ $scope.populationplot = function(){
 			{
 				dps.shift();
 			}
-			console.log(tdistr($scope.n,$scope.alpha/2))
     $("#count_perc").html((Number((numerator/denominator).toFixed(5))*100).toFixed(3)+"%");
 			chart.render();
 			chart.options.title.text = 'Randomly Draw ' + $scope.n + " Samples. Repeat " + denominator + " Times"

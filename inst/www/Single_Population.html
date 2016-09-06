@@ -36,6 +36,10 @@
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
     <script src="js/math.js"></script><!--For matrix operation-->
     <script src="js/canvasjs.min.js"></script><!--Plot-->
+    <link href="css/bootstrap-switch.css" rel="stylesheet"><!--switch/-->
+    <script src="js/bootstrap-switch.js"></script><!--switch/-->
+    <script src="js/module.js"></script>
+    <script src="js/bsSwitch.js"></script><!--switch/-->
 
 
     <!-- My JS -->
@@ -174,8 +178,11 @@
                       <input type="checkbox" ng-model="sampleoneatatime"> <strong>Sample One At a Time?</strong>
                     </div>-->
                     <div class="col-lg-6" align="center"  id="section2">
-                      <input id="sampletimes_singlepopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
-                      "display:inline" ng-model='repeat' ng-change="toggle_display_bottom()"/><span><strong> Repeat Time: <span id="sampletimes_display_singlepopulation">1</span></strong></span>
+                      <!--<input id="sampletimes_singlepopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
+                      "display:inline" ng-model='repeat' ng-change="toggle_display_bottom()"/><span><strong> Repeat Time: <span id="sampletimes_display_singlepopulation">1</span></strong></span>-->
+                    <!--<input id="sampletimes_singlepopulation" type="checkbox" ng-model='repeat' ng-change="toggle_display_bottom()" checked name="my-checkbox" data-on-text="Sample One Time" data-off-text="Sample Multiple Times"/>-->
+                    <input bs-switch ng-model='repeat' type="checkbox" checked data-on-text="Sample Multiple Time" data-off-text="Sample One Time"/>
+
                     </div>
                   </div>
                   <br /><br />

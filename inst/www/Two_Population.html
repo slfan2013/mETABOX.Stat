@@ -36,6 +36,10 @@
     <script src="js/statistics-distributions.js"></script><!--Statistical Distribion-->
     <script src="js/math.js"></script><!--For matrix operation-->
     <script src="js/canvasjs.min.js"></script><!--Plot-->
+    <link href="css/bootstrap-switch.css" rel="stylesheet"><!--switch/-->
+    <script src="js/bootstrap-switch.js"></script><!--switch/-->
+    <script src="js/module.js"></script>
+    <script src="js/bsSwitch.js"></script><!--switch/-->
 
 
     <!-- My JS -->
@@ -173,6 +177,9 @@
                                     <div ng-repeat="pvalue in pvalues|limitTo:1">
                                       <p>{{(pvalue).toFixed(5)}}</p>
                                     </div>
+                              </div><br /><br /><br /><br />
+                              <div class="row col-lg-12" align="left" style="position: absolute;bottom:0;">
+                                <label>Perfect Sample? <input type="checkbox" ng-model="perfectsample"/></label>
                               </div>
                             </div>
                             <div class="col-lg-9">
@@ -198,8 +205,9 @@
                       "display:inline" ng-model="n"/><span><strong> Sample Size: <span id="samplesize_display_twopopulation">5</span></strong></span>
                     </div>
                     <div class="col-lg-6" align="center"  id="section2">
-                      <input id="sampletimes_twopopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
-                      "display:inline" ng-model="repeat" ng-change="toggle_display_bottom()"/><span><strong>  Repeat Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>
+                      <!--<input id="sampletimes_twopopulation" type="number" data-slider-min="1" data-slider-max="100" data-slider-step="99" data-slider-value="1" style =
+                      "display:inline" ng-model="repeat" ng-change="toggle_display_bottom()"/><span><strong>  Repeat Time: <span id="sampletimes_display_twopopulation">1</span></strong></span>-->
+                   <input bs-switch ng-model='repeat' type="checkbox" checked data-on-text="Sample Multiple Time" data-off-text="Sample One Time" ng-click="falseperfectsample"/>
                     </div>
                   </div>
                   <br /><br />

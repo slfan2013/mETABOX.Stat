@@ -1,7 +1,7 @@
 paused = false;
 
 var rdmdatas = [];
-var app = angular.module('populationplot_singlepopulation', []);
+var app = angular.module('populationplot_singlepopulation', ['frapontillo.bootstrap-switch']);
 app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.Math = window.Math;// enable using Math functions in html.
   //Retrieve all the parameters;
@@ -11,7 +11,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
   $scope.sd = parseInt(localStorage.getItem("sd_singlepopulation"),10);
   $scope.displaybottom = false;
   $scope.n = 5;
-  $scope.repeat = 1;
+  $scope.repeat = false;
   $scope.sampleselected = null;
   $scope.samplemeans = [1];
   $scope.tol = 3;
@@ -53,13 +53,6 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
 
 
 
-  $scope.toggle_display_bottom = function(){
-    if($scope.repeat>1){
-       $scope.displaybottom = true;$('#sampletrigger').attr('href','#section2');
-    }else{
-      $scope.displaybottom = false;$('#sampletrigger').attr('href',"javascript:void(0);");
-    }
-  }
 
 
   $scope.toggle_tol_setting_singlepopulation = function(){
@@ -71,7 +64,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     var samplemeans = [];
     var samplesds = [];
     var ys = [];
-    for(ii=0;ii<$scope.repeat;ii++){
+    for(ii=0;ii<1;ii++){
       rdm = rnorm($("#samplesize_singlepopulation").val(),mean=$scope.mean,sd=$scope.sd)
       sampleset.push(rdm)
       samplemeans.push({value:meanFunction(rdm), name:ii+"thsample_singlepopulation"});
@@ -106,11 +99,12 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     var data = [];
     var x = seq($scope.min, $scope.max, length=1000)
     data.push($scope.truevalue);
-    for(ii=0;ii<$scope.repeat;ii++){
+    for(ii=0;ii<1;ii++){
       var y = dnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
       data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1",marker:{color:'#cc6600'},"showlegend": false},
       {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#samplesize_singlepopulation").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
-      "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
+      "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open",size:12},"xaxis": "x1","yaxis": "y2"},
+
       {x:[$scope.samplemeans[ii].value,$scope.samplemeans[ii].value], y:[0,Math.max.apply(null, y)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'},"showlegend": false}]);
     }
     var layout = {"barmode": "overlay",
@@ -125,8 +119,14 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
             [data[1][0],data[1][1],data[1][2]],layout);
   $("#samplemean").text($scope.samplemeans[[0]].value + " ("+($scope.samplemeans[[0]].value - $scope.mean).toFixed(2)+")");
   $("#samplesd").text($scope.samplesds[[0]].value + " ("+($scope.samplesds[[0]].value - $scope.sd).toFixed(2)+")");
-    if($scope.repeat>1){
+    if($scope.repeat){
+
+      $scope.displaybottom = true;$('#sampletrigger').attr('href','#section2');
+
       $scope.samplesetplot()
+
+    }else{
+      $scope.displaybottom = false;$('#sampletrigger').attr('href',"javascript:void(0);");
     }
   }
 
@@ -316,11 +316,13 @@ $("#samplesize_singlepopulation").on("slide", function(slideEvt) {
 	$("#samplesize_display_singlepopulation").text(slideEvt.value);
 });
 
-$("#sampletimes_singlepopulation").slider({
+/*$("#sampletimes_singlepopulation").slider({
 });
   $("#sampletimes_singlepopulation").on("slide", function(slideEvt) {
 	$("#sampletimes_display_singlepopulation").text(slideEvt.value);
 });
+$("[name='my-checkbox']").bootstrapSwitch();
+*/
 
   $("#tol_singlepopulation").slider({});
 
