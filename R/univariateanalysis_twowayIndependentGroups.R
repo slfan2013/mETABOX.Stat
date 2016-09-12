@@ -135,5 +135,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
 
   # result = data.frame(f2,result,check.names = FALSE)
   # return(list(hypo_test_result=result,hypo_test_result_json=toJSON(result)))
-  return(data.frame(f2,result,check.names = F))
+  result = data.frame(f2,result,check.names = F);
+  result[is.na(result)] = ""
+  return(result)
 }

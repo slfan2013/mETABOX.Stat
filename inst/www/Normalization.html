@@ -43,6 +43,11 @@
     <script src="js/xeditable.js"></script><!--X Editable AngularJS-->
     <link href="css/select2.css" rel="stylesheet" />
     <script src="js/select2.full.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <link href="css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <script src="js/multiple-select.min.js"></script><!--multiple selection angularJS-->
+    <link href="css/multiple-select.min.css" rel="stylesheet"><!--multiple selection angularJS-->
+
     <!-- My JS -->
     <script src="js/myJS.js"></script>
     <script src="js/NormalizationToUnivariateToMultivariate.js"></script>
@@ -312,7 +317,7 @@
                   <label class="radio-inline">
                   <input type="radio" ng-model="scaling.value" value="rangescaling">Range Scaling
                   </label>
-                </form></center>
+                </form></center><br /><br />
           <div class="row">
             <div class="col-lg-2 col-lg-offset-5">
               <button type="button" class="btn btn-warning btn-block btn-outline" ng-click="visualizenormalization();"><strong>Visualize</strong></button>
@@ -329,9 +334,104 @@
                   <i class="glyphicon glyphicon-indent-left"></i> Visualization
               </div>
               <div class="panel-body">
-                  <div id="PCAplot"></div>
-                  <div id="BOXplots"></div>
-                  <div id="myDiv"></div>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <label class="control-label">Coloring:</label>
+                      <select  class="form-control"  ng-model="PCA.color" ng-init="PCA.color = 'species'">
+                        <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
+                      </select>
+                    <label class="control-label">Opacity:</label><br />
+                      <input id="pca_opacity" type="number" data-slider-min="0" data-slider-max="1" data-slider-step="0.05" data-slider-value="0.8" ng-model="PCA.opacity"/><br />
+                    <label>Ellipse Needed?
+                      <input type="checkbox" ng-model="PCA.ellipseNeeded">
+                    </label><br />
+
+
+                      <label> Line Type for Ellipses: </label><br>
+                      <select class="form-control" id="EllipseLineType_normalization" ng-model="PCA.ellipseLineType">
+                        <option value="solid">solid</option>
+                        <option value="dot">dot</option>
+                        <option value="dash">dash</option>
+                        <option value="longdash">longdash</option>
+                        <option value="dashdot">dashdot</option>
+                        <option value="longdashdot">longdashdot</option>
+                      </select><br>
+
+
+                    <label>Show Legend?
+                      <input type="checkbox" ng-model="PCA.showlegend">
+                    </label><br />
+                    <label class="control-label">Dots Size:</label><br />
+                      <input id="pca_dotsize" type="number" data-slider-min="5" data-slider-max="30" data-slider-step="1" data-slider-value="15" ng-model="PCA.dotsize"/><br />
+                    <label class="control-label">Ellipse Line Size:</label><br />
+                      <input id="pca_ellipse_line_width" type="number" data-slider-min="0.1" data-slider-max="5" data-slider-step="0.1" data-slider-value="1" ng-model="PCA.ellipseLineWidth"/><br />
+                      <label class="control-label">Ellipse Confidence Level:</label><br />
+                      <input id="pca_ellipse_confidenceLevel" type="number" data-slider-min="0.1" data-slider-max="1" data-slider-step="0.01" data-slider-value="0.95" ng-model="PCA.ellipseConfidenceLevel"/><br />
+                      <label class="control-label">Paper Color:</label><br />
+                      <div id="pca_paper_bgcolor" class="input-group colorpicker-component">
+                          <input id="pca_paper_bgcolor_value" type="text" value="#ffffff" class="form-control" />
+                          <span class="input-group-addon"><i></i></span>
+                      </div>
+                       <label class="control-label">Plot Color:</label><br />
+                      <div id="pca_plot_bgcolor" class="input-group colorpicker-component">
+                          <input id="pca_plot_bgcolor_value" type="text" value="#ffffff" class="form-control" />
+                          <span class="input-group-addon"><i></i></span>
+                      </div><br />
+                      <label>Title:<br />
+                        <input class="form-control" ng-model="PCA.title">
+                      </label>
+                      <div class="row">
+                        <div class="col-lg-6">
+                            <label>Plot Height:
+                                <input class="form-control" type="number" ng-model="PCA.height"
+                                       min="200" max="1000">
+                             </label>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Plot Width:
+                                <input class="form-control" type="number" ng-model="PCA.width"
+                                       min="200" max="1000">
+                             </label>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="drawPCA();">Submit Changes</button>
+                  </div>
+                  <div class="col-lg-6">
+                    <div id="PCAplot"></div>
+                  </div>
+                  <div class="col-lg-3">
+                    <label class="control-label">Select Factor:</label>
+                      <select  class="form-control"  ng-model="Selected.factor" ng-init="Selected.factor = 'treatment'" ng-change="updateSelectedPlot();">
+                        <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
+                      </select>
+                    <div id="Selectedplot"></div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <label>Plot Height:
+                                <input class="form-control" type="number" ng-model="Selected.height"
+                                       min="200" max="1000">
+                             </label>
+                      </div>
+                      <div class="col-lg-6">
+                        <label>Plot Width:
+                                <input class="form-control" type="number" ng-model="Selected.width"
+                                       min="200" max="1000">
+                             </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <label>xAxis text size:
+                          <input class="form-control" type="number" ng-model="Selected.xAxisTextSize"
+                                 min="2" max="20">
+                       </label>
+                    </div>
+                  </div>
+                </div><hr />
+                <div class="row">
+                    <div id="BOXplots"></div>
+                </div>
+
+
               </div>
           </div>
           </div>

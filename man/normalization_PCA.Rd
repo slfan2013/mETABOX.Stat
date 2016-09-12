@@ -4,7 +4,12 @@
 \alias{normalization_PCA}
 \title{normalization_PCA}
 \usage{
-normalization_PCA(e2, f2, p2, color = "treatment", shape = "mx class id")
+normalization_PCA(e2, f2, p2, color = "species", shape = "no_shape",
+  opacity = 0.5, ellipse_needed = TRUE, ellipseLineType = "solid",
+  showlegend = TRUE, dotsize = 15, ellipse_line_width = 1,
+  confidence_level = 0.95, paper_bgcolor = "rgba(245,246,249,1)",
+  plot_bgcolor = "rgba(245,246,249,1)", width = 1000, height = 1000,
+  title = NULL)
 }
 \description{
 stat

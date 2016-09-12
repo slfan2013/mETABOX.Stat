@@ -8,8 +8,17 @@
 #' normalization_PCA()
 
 normalization_PCA <- function(e2,f2,p2,
-                                   color = "treatment",
-                                   shape = "mx class id"){
+                                   color = "species",
+                                   shape = 'no_shape',
+                              opacity = 0.5,ellipse_needed = TRUE,ellipseLineType='solid',
+                              showlegend = TRUE,dotsize=15,ellipse_line_width = 1,
+                              confidence_level = 0.95,
+                              paper_bgcolor = "rgba(245,246,249,1)",
+                              plot_bgcolor = "rgba(245,246,249,1)",
+
+                              width=1000,height=1000,
+                              title = NULL
+                              ){
   library(jsonlite)
   cols = normalization_gg_color_hue(length(unique(p2[[color]])))
 
@@ -36,37 +45,42 @@ normalization_PCA <- function(e2,f2,p2,
       paste(paste(colnames(p2),o, sep=": "),collapse = "</br>")
     })
 
-    ellipse = tryCatch({
-      ell.info <- cov.wt(cbind(x[,1], x[,2]))
-      eigen.info <- eigen(ell.info$cov)
-      lengths <- sqrt(eigen.info$values * 2 * qf(.95, 2, length(x[,1])-1))
-      d = rbind(ell.info$center + lengths[1] * eigen.info$vectors[,1],
-                ell.info$center - lengths[1] * eigen.info$vectors[,1],
-                ell.info$center + lengths[2] * eigen.info$vectors[,2],
-                ell.info$center - lengths[2] * eigen.info$vectors[,2])
-      r <- cluster::ellipsoidhull(d)
-      predict(r,100)
-    },error = function(e){
-      NULL
-    })
+    if(ellipse_needed){
+      ellipse = tryCatch({
+        ell.info <- cov.wt(cbind(x[,1], x[,2]))
+        eigen.info <- eigen(ell.info$cov)
+        lengths <- sqrt(eigen.info$values * 2 * qf(as.numeric(confidence_level), 2, length(x[,1])-1))
+        d = rbind(ell.info$center + lengths[1] * eigen.info$vectors[,1],
+                  ell.info$center - lengths[1] * eigen.info$vectors[,1],
+                  ell.info$center + lengths[2] * eigen.info$vectors[,2],
+                  ell.info$center - lengths[2] * eigen.info$vectors[,2])
+        r <- cluster::ellipsoidhull(d)
+        predict(r,100)
+      },error = function(e){
+        NULL
+      })
+    }else{
+      ellipse = NULL
+    }
+
 
     list(list(x = x[,1], y = x[,2]
               ,mode = 'markers',type='scatter'
               ,name = x[[color]][1]
-              ,text = text.temp,showlegend=FALSE,
+              ,text = text.temp,showlegend=showlegend,
               marker=list(
                 symbol = x$shape,
                 color=x$color[1],
-                size = 15,
-                opacity=0.5)
+                size = dotsize,
+                opacity=opacity)
     ),
     list(x = ellipse[,1], y = ellipse[,2] # this is for the ellipse.
          ,mode = 'lines',
-         line= list(dash='solid',width=1)
+         line= list(dash=ellipseLineType,width=ellipse_line_width)
          ,hoverinfo='none'
          ,name = x$color[1]
          ,showlegend=FALSE
-         ,opacity=0.5
+         ,opacity=opacity
          ,marker=list(color=x$color[1])
     ))
   },simplify =F)
@@ -79,8 +93,11 @@ normalization_PCA <- function(e2,f2,p2,
     # data[[i+length(scatter)]]$marker =  list(color = cols[i])
   }
 
-  layout = list(paper_bgcolor = "rgba(245,246,249,1)",
-                 plot_bgcolor = "rgba(245,246,249,1)",
+  layout = list(paper_bgcolor = paper_bgcolor,
+                 plot_bgcolor = plot_bgcolor,
+                width=as.numeric(width),
+                height=as.numeric(height),
+                title= title,
                  xaxis = list(
                    title = paste0("PC 1 (",round(variance[1],4) * 100,"%)"),
                    titlefont = list(

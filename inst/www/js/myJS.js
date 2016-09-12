@@ -193,10 +193,8 @@ function formatTableHeader(jsonData){
   }
   return colnames;
 }
-function drawTable(id, data, filename,idSrc,tableheight="450px") {
-  if(id === '#Statistics_Result'){
-      table.destroy();
-  }
+function drawTable(id, data, filename,idSrc,tableheight="600px") {
+
 $(id).empty();
 	 table = $(id).DataTable( {
 	   dom: 'Blfrtip',
