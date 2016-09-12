@@ -34,7 +34,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     var x = seq($scope.min, $scope.max, length=1000)
 		var y = dnorm(x,meanFunction(rdmdatas[e.dataPoint.x]),sdFunction(rdmdatas[e.dataPoint.x]))
     data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1",marker:{color:'#cc6600'},"showlegend": false},
-      {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
+      {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#samplesize_singlepopulation").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
       "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open"},"xaxis": "x1","yaxis": "y2"},
       {x:[meanFunction(rdmdatas[e.dataPoint.x]),meanFunction(rdmdatas[e.dataPoint.x])], y:[0,Math.max.apply(null, y)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'},"showlegend": false}]);
           var layout = {"barmode": "overlay",
@@ -65,7 +65,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     var samplesds = [];
     var ys = [];
     for(ii=0;ii<1;ii++){
-      rdm = rnorm($("#").val(),mean=$scope.mean,sd=$scope.sd)
+      rdm = rnorm($("#samplesize_singlepopulation").val(),mean=$scope.mean,sd=$scope.sd)
       sampleset.push(rdm)
       samplemeans.push({value:meanFunction(rdm), name:ii+"thsample_singlepopulation"});
       samplesds.push({value:sdFunction(rdm),name:ii+"thsample_singlepopulation"})
@@ -102,7 +102,7 @@ app.controller('populationplotctrl_singlepopulation', function($scope) {
     for(ii=0;ii<1;ii++){
       var y = dnorm(x,$scope.samplemeans[[ii]].value,$scope.samplesds[[ii]].value)
       data.push([{x:x,y:y,type: 'scatter',name : 'density.sample'+ii,fill: 'tozeroy',"xaxis": "x1","yaxis": "y1",marker:{color:'#cc6600'},"showlegend": false},
-      {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
+      {x:$scope.sampleset[[ii]],y:rep('data.sample'+ii,$("#samplesize_singlepopulation").val()),name:'data.sample'+ii,"showlegend": false,"type": "scatter","mode": "markers",
       "marker": {"color": "rgb(255, 127, 14)","symbol": "line-ns-open",size:12},"xaxis": "x1","yaxis": "y2"},
 
       {x:[$scope.samplemeans[ii].value,$scope.samplemeans[ii].value], y:[0,Math.max.apply(null, y)*1.1],mode: 'lines',name :'sample.average',marker:{color:'#cc6600'},"showlegend": false}]);
