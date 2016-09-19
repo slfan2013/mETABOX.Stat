@@ -27,7 +27,9 @@ normalization_numofmissing <- function(e,f,p,missindex=NA,compoundName = "Binbas
     })
     numofmiss = sum(miss)
   }else{
+
     miss = apply(data.matrix(e),1,function(x){
+      x[is.na(x)] = missindex
       sum(x==missindex)
     })
     numofmiss = sum(miss)

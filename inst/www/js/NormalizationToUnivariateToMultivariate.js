@@ -101,7 +101,6 @@ $scope.dataToShare = [];
         }else{
           $("#misstext").attr('class', 'text-danger');
         }
-
         var all = new CanvasJS.Chart("misingallplot",{
           width:1400,
       			title:{
