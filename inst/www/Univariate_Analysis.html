@@ -73,7 +73,7 @@
     <script src="js/myJS.js"></script>
     <script src="js/NormalizationToUnivariateToMultivariate.js"></script>
     <!-- My CSS -->
-    <link rel="stylesheet" type="text/css" href="css/Univariate_Analysis.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/Univariate_Analysis.css">-->
 
     <!-- Scrolling Nav JavaScript&CSS -->
     <link href="css/scrolling-nav.css" rel="stylesheet">
@@ -126,7 +126,7 @@
       <p class='text-muted'>Different study design corresponse to different statistical hypothesis testing procedure. To know what types of study designs are supported and how they are related testings, please visit <a href="http://www.google.com" target="_blank">this page</a></p>
       <div class="well">
        <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-3">
               <form><label>Factors</label>
                   <div class="radio">
                   <label><input type="radio" ng-model="factors" value="one factor" >one factor</label>
@@ -136,7 +136,7 @@
                   </div>
               </form>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-3">
             <div ng-switch="factors">
               <div ng-switch-when="one factor">
                 <form><label>Groups</label>
@@ -169,11 +169,11 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-6">
             <div ng-switch="test.groups" ng-click="summarygroup();">
               <div ng-switch-when="two independent groups">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor:</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor:</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -181,7 +181,7 @@
               </div>
               <div ng-switch-when="two paired groups">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor (paired):</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor (paired):</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -189,7 +189,7 @@
               </div>
               <div ng-switch-when="multiple independent groups">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor:</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor:</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -197,7 +197,7 @@
               </div>
               <div ng-switch-when="multiple paired groups">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor (paired):</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor (paired):</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -205,11 +205,11 @@
               </div>
               <div ng-switch-when="independent*independent">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor1:</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor1:</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
-                  <label class="control-label">Factor2:</label><span class="pull-right">{{group.secondmemberlength}}</span>
+                  <label class="control-label">Factor2:</label><!--<span class="pull-right">{{group.secondmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.second">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -217,11 +217,11 @@
               </div>
               <div ng-switch-when="independent*paired">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor1:</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor1:</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
-                  <label class="control-label">Factor2 (paired):</label><span class="pull-right">{{group.secondmemberlength}}</span>
+                  <label class="control-label">Factor2 (paired):</label><!--<span class="pull-right">{{group.secondmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.second">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
@@ -229,25 +229,27 @@
               </div>
               <div ng-switch-when="paired*paired">
                 <div class="form-group has-error">
-                  <label class="control-label">Factor1 (paired):</label><span class="pull-right">{{group.firstmemberlength}}</span>
+                  <label class="control-label">Factor1 (paired):</label><!--<span class="pull-right">{{group.firstmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.first">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
-                  <label class="control-label">Factor2 (paired):</label><span class="pull-right">{{group.secondmemberlength}}</span>
+                  <label class="control-label">Factor2 (paired):</label><!--<span class="pull-right">{{group.secondmemberlength}}</span>-->
                   <select  class="form-control"  ng-model="group.second">
                       <option ng-repeat="phenotypename in sharedData.phenotypenames">{{phenotypename}}</option>
                   </select>
                 </div>
               </div>
             </div>
+            <pre><code id="sampleSizeTable_univariateanalysis">Waiting user to select factor.</code></pre>
+
           </div>
         </div>
       </div>
       <div class="row">
         <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="univariateanalysis();">Submit!</button>
-      </div>
+      </div><hr />
       <div class="row">
-        <ul class="nav nav-pills">
+        <ul class="nav nav-tabs">
             <li class="active"><a href="#viewresult-pills" data-toggle="tab">View Result Table</a>
             </li>
             <li><a href="#viewcompound-pills" data-toggle="tab">View Compound</a>
@@ -262,7 +264,7 @@
                      object-property="name"
                      suggestions-arr="optionsList">
                 </multiple-autocomplete>
-                <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="drawUnivariateResult();">Submit!</button>
+                <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="drawUnivariateResult();">Update Table!</button>
               </div>
               <div class="col-lg-9">
                 <table id="univariatetable_univariateanalysis" class="table table-striped table-bordered display" cellspacing="0" width="100%"></table>

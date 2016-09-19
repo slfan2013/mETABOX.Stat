@@ -187,10 +187,9 @@
                 </div>
                 <button type="button" class="btn btn-outline btn-primary" ng-click="calnumberofmiss();">Submit</button>
                 <hr />
-                <label>Plot Option:</label>
-                <div ng-show="$(#missingonlymissingcompounds-pills)">
-
-                </div>
+                <label>Note:</label>
+                <p class="text-muted">all the empty cells in the file will be treated as missing value.</p>
+                <p class="text-muted">to download the missing value information, see the <span class="text-info">Data Normalization</span> tab.</p>
               </div>
               <div class="col-lg-9">
                   <ul class="nav nav-pills">
@@ -257,7 +256,7 @@
              </div>
              </div></div><hr />
              <h4>Data Transformation</h4>
-             <p class='text-muted'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+             <p class='text-muted'>One of the main purposes of data transformation is to make the data fit the assumptions of hypothesis testing. For example, normality is a common assumption of parametric hypothesis testing, e.g. <em>t</em> test, ANOVA. However, in reality it is not uncommon that the data violates the assumption of normlity. In this case, we usually apply the log transformation to the data so the data is "more normal" than before thus increasing the statistical power of the hypothesis testing.</p>
                  <center><form>
                   <label class="radio-inline">
                   <input type="radio" ng-model="transformation.value" value="none">None
@@ -293,7 +292,7 @@
             </div>
            </div></div></div><hr />
               <h4>Featurewise Scaling</h4>
-              <p class='text-muted'>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <p class='text-muted'>Featurewise scaling means scaling features one by one. Most of the time, people use scaling in multivariate analysis to make the features have same mean (or similar) and same (or similar) standard deviation. By scale the features, features will be at the "same level" so none of the feature won't dominate the multivariate model just by its large magnitude. Note that scaling won't effect the result of univariate analysis.</p>
               <center><form>
                   <label class="radio-inline">
                   <input type="radio" ng-model="scaling.value" value="none">None
@@ -312,7 +311,10 @@
                   </label>
                 </form></center><br /><br />
           <div class="row">
-            <div class="col-lg-2 col-lg-offset-5">
+            <div class="col-lg-2">
+              <button type="button" class="btn btn-info btn-block btn-outline" ng-click='download_norm()'>Download Normalized Data</button>
+            </div>
+            <div class="col-lg-2 col-lg-offset-3">
               <button type="button" class="btn btn-warning btn-block btn-outline" ng-click="visualizenormalization();"><strong>Visualize</strong></button>
             </div>
             <div class="col-lg-2 col-lg-offset-1">
@@ -352,7 +354,7 @@
 
 
                     <label>Show Legend?
-                      <input type="checkbox" ng-model="PCA.showlegend">
+                      <input type="checkbox" ng-model="PCA.showlegend" ng-change="PCArelayout();">
                     </label><br />
                     <label class="control-label">Dots Size:</label><br />
                       <input id="pca_dotsize" type="number" data-slider-min="5" data-slider-max="30" data-slider-step="1" data-slider-value="15" ng-model="PCA.dotsize"/><br />
@@ -362,28 +364,28 @@
                       <input id="pca_ellipse_confidenceLevel" type="number" data-slider-min="0.1" data-slider-max="1" data-slider-step="0.01" data-slider-value="0.95" ng-model="PCA.ellipseConfidenceLevel"/><br />
                       <label class="control-label">Paper Color:</label><br />
                       <div id="pca_paper_bgcolor" class="input-group colorpicker-component">
-                          <input id="pca_paper_bgcolor_value" type="text" value="#ffffff" class="form-control" />
+                          <input id="pca_paper_bgcolor_value" type="text" value="#ffffff" class="form-control"/>
                           <span class="input-group-addon"><i></i></span>
                       </div>
                        <label class="control-label">Plot Color:</label><br />
                       <div id="pca_plot_bgcolor" class="input-group colorpicker-component">
-                          <input id="pca_plot_bgcolor_value" type="text" value="#ffffff" class="form-control" />
+                          <input id="pca_plot_bgcolor_value" type="text" value="#ffffff" class="form-control"/>
                           <span class="input-group-addon"><i></i></span>
                       </div><br />
                       <label>Title:<br />
-                        <input class="form-control" ng-model="PCA.title">
+                        <input class="form-control" ng-model="PCA.title" ng-change="PCArelayout();">
                       </label>
                       <div class="row">
                         <div class="col-lg-6">
                             <label>Plot Height:
                                 <input class="form-control" type="number" ng-model="PCA.height"
-                                       min="200" max="1000">
+                                       min="200" max="1000" ng-change="PCArelayout();">
                              </label>
                         </div>
                         <div class="col-lg-6">
                             <label>Plot Width:
                                 <input class="form-control" type="number" ng-model="PCA.width"
-                                       min="200" max="1000">
+                                       min="200" max="1000" ng-change="PCArelayout();">
                              </label>
                         </div>
                       </div>
@@ -397,27 +399,45 @@
                       <select  class="form-control"  ng-model="Selected.factor" ng-init="Selected.factor = 'treatment'" ng-change="updateSelectedPlot();">
                         <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
                       </select>
-                    <div id="Selectedplot"></div>
+
                     <div class="row">
                       <div class="col-lg-6">
-                        <label>Plot Height:
+                        <label>Plot Height:</label>
                                 <input class="form-control" type="number" ng-model="Selected.height"
-                                       min="200" max="1000">
-                             </label>
+                                       min="200" max="1000" ng-change="updateSelectedPlot();">
+
                       </div>
                       <div class="col-lg-6">
-                        <label>Plot Width:
+                        <label>Plot Width:</label>
                                 <input class="form-control" type="number" ng-model="Selected.width"
-                                       min="200" max="1000">
-                             </label>
+                                       min="200" max="1000" ng-change="updateSelectedPlot();">
+
                       </div>
                     </div>
                     <div class="row">
-                        <label>xAxis text size:
-                          <input class="form-control" type="number" ng-model="Selected.xAxisTextSize"
-                                 min="2" max="20">
-                       </label>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>xAxis text size:</label>
+                              <input class="form-control" type="number" ng-model="Selected.xAxisTextSize"
+                                     min="2" max="20" ng-change="updateSelectedPlot();">
+
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>xAxis text angle:</label>
+                              <input class="form-control" type="number" ng-model="Selected.xAxisTextAngle"
+                                     min="0" max="360" ng-change="updateSelectedPlot();">
+
+                        </div>
+                      </div>
                     </div>
+                    <div class="form-group">
+                      <label>Title</label>
+                      <input class="form-control" ng-model="Selected.Title" ng-change="updateSelectedPlot();">
+                    </div>
+
+                    <div id="Selectedplot"></div>
                   </div>
                 </div><hr />
                 <div class="row">

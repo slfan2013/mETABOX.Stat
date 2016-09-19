@@ -7,6 +7,7 @@ var continueuploadshow = false;
 var evtD;
 var univariateResultColumnName=[];
 var firsttimeplottable=true;
+var download_norm_data_adress;
 
 appNorm.run(function(editableOptions) {//MIGHT NOT BE USEFUL.
   editableOptions.theme = 'bs3';
@@ -50,7 +51,7 @@ appNorm.controller('ctrl_norm', function($scope,srvShareData,$location) {
   $scope.samplewisenormindex = {value:'none'};
   $scope.scaling = {value:'none'};
   $scope.PCA = {color:'species',ellipseNeeded:true,showlegend:true,height:800,width:800,ellipseLineType:'dash',title:"PCA Plot"};
-  $scope.Selected = {factor:'treatment',height:500,width:500,xAxisTextSize:10}
+  $scope.Selected = {factor:'treatment',height:500,width:500,xAxisTextSize:10,xAxisTextAngle:45,Title:"Selected-Sample Info"}
   $scope.UniResultSelected = {}
 
   }
@@ -197,6 +198,17 @@ $scope.dataToShare = [];
     }).always(function(){$('#mytabs a[href="#normalization-pills"]').tab('show');})
   }
 
+  $scope.download_norm = function(){
+   var req=ocpu.call("normalization_downloadnormalization",{
+      e1:e1,f1:f1,p1:p1,
+     samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
+     transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
+     scaling : $scope.scaling.value
+    },function(sess){
+      window.open(sess.getLoc()+"R/.val/csv");
+    })
+  }
+
   $scope.visualizenormalization = function(){
     var req=ocpu.call("normalization_normalization",{
       e1:e1,f1:f1,p1:p1,
@@ -226,7 +238,6 @@ $scope.dataToShare = [];
   }
 
   $scope.drawPCA = function(){
-
     var req = ocpu.call("normalization_PCA",{
       e2:e2,f2:f2,p2:p2,
       color:$scope.PCA.color,shape:"no_shape", opacity:$("#pca_opacity").val(),
@@ -238,7 +249,6 @@ $scope.dataToShare = [];
       plot_bgcolor:$("#pca_plot_bgcolor_value").val(),
       width:$scope.PCA.width,height:$scope.PCA.height,
       title:$scope.PCA.title
-
     },function(sess){
       sess.getObject(function(obj){
       PCAplot = document.getElementById('PCAplot');
@@ -246,110 +256,41 @@ $scope.dataToShare = [];
       PCAplot.on('plotly_selected',function(eventData){
         evtD = eventData;
         total = p2.map(function(ind){return ind[$scope.Selected.factor]});
-        //see if total is number or character.
-        if(isNaN(Number(total[0]))){//character
-          temp1 = countunique(total);
-          levelsnames = temp1[0];
-          levelscount = temp1[1];
-          selects = eventData.points;
-          subsetofp2 = [];
-          for(ii=0;ii < selects.length;ii++){
-            if(selects[ii]["curveNumber"]==0){
-              subsetofp2.push(p2[selects[ii]["pointNumber"]]);
-            }else{
-              subsetofp2.push(p2[Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
-             Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1]);
-            }
-          }
-          subset = subsetofp2.map(function(ind){return ind[$scope.Selected.factor]});
-          temp2 = countunique(subset);
-          subsetlevelsnames = temp2[0];
-          subsetlevelscount = []
-          for(ii=0;ii<levelscount.length;ii++){
-            subsetlevelscount.push(levelscount[ii])
-          }
-          oo = 0
-          for(ii=0;ii<subsetlevelscount.length;ii++){
-            if($.inArray(levelsnames[ii], subsetlevelsnames)===-1){
-              subsetlevelscount[ii] = 0;
-            }else{
-              subsetlevelscount[ii] = temp2[1][oo];oo++
-            }
-          }
-          infodata = [];
-          infodata.push({
-            x:levelsnames,y:subsetlevelscount,name:"selected",type:'bar'
-          })
-          diff = [];for(ii=0;ii<levelscount.length;ii++){diff.push(levelscount[ii]-subsetlevelscount[ii])}
-          infodata.push({
-            x:levelsnames,y:diff,name:"total",type:"bar"
-          })
-          Plotly.newPlot('Selectedplot', infodata, {barmode: 'relative',title:"Selected Sample Info"});
-        }else{//numeric
-
-        var totaldata={x:[],y:[],
-            mode:'markers',type:'scatter',name:'unselected',marker:{size:12}};
-        var subsetdata={x:[],y:[],
-            mode:'markers',type:'scatter',name:'selected',marker:{size:12}};
-        var total_temp = []//for some reason, countunique() sort the parameter.
-        for(ii=0;ii<total.length;ii++){
-          total_temp.push(total[ii])
-        }
-        temp1 = countunique(total_temp);
-          levelsnames = temp1[0];
-          levelscount = temp1[1];
-          selects = eventData.points;
-          subsetofp2 = [];
-          for(ii=0;ii < selects.length;ii++){
-            if(selects[ii]["curveNumber"]==0){
-              subsetofp2.push(p2[selects[ii]["pointNumber"]]);
-              subsetdata.x.push(selects[ii]["pointNumber"]);
-            }else{
-              subsetofp2.push(p2[Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
-             Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1]);
-
-             subsetdata.x.push(Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
-             Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1)
-
-            }
-          }
-          subset = subsetofp2.map(function(ind){return ind[$scope.Selected.factor]});
-
-
-
-          for(ii=0;ii<total.length;ii++){
-            totaldata.x.push(ii)
-            totaldata.y.push(Number(total[ii]))
-          }
-          for(ii=0;ii<subset.length;ii++){
-            subsetdata.y.push(Number(subset[ii]))
-          }
-
-
-
-          var infodata = [totaldata,subsetdata];
-          var layout = {
-            height:$scope.Selected.height,
-            width:$scope.Selected.width,
-            title:"Selected Sample Info"
-          }
-          Plotly.newPlot('Selectedplot', infodata, layout);
-        }
-
+      $scope.drawSelectedPlot()
       })
       })
     })
+  }
+  $scope.PCArelayout = function(){
+    var update = {
+      marker:{ opacity:$("#pca_opacity").val()},
 
+      //ellipse_needed:$scope.PCA.ellipseNeeded,
+      //ellipse_line_width:$("#pca_ellipse_line_width").val(),ellipseLineType:$scope.PCA.ellipseLineType,
+      //confidence_level:$("#pca_ellipse_confidenceLevel").val(),
+      showlegend:$scope.PCA.showlegend,dotsize:$("#pca_dotsize").val(),
+      paper_bgcolor:$("#pca_paper_bgcolor_value").val(),
+      plot_bgcolor:$("#pca_plot_bgcolor_value").val(),
+      width:$scope.PCA.width,height:$scope.PCA.height,
+      title:$scope.PCA.title
+        }
+    Plotly.relayout(PCAplot, update);
   }
 
   $scope.updateSelectedPlot = function(){
         total = p2.map(function(ind){return ind[$scope.Selected.factor]});
-        //see if total is number or character.
+        $scope.drawSelectedPlot()
+  }
+  $scope.drawSelectedPlot = function(){
+            //see if total is number or character.
         if(isNaN(Number(total[0]))){//character
           temp1 = countunique(total);
           levelsnames = temp1[0];
           levelscount = temp1[1];
-          selects = evtD.points;
+          if(evtD===undefined){
+            Plotly.purge("Selectedplot")
+          }else{
+            selects = evtD.points;
           subsetofp2 = [];
           for(ii=0;ii < selects.length;ii++){
             if(selects[ii]["curveNumber"]==0){
@@ -382,7 +323,22 @@ $scope.dataToShare = [];
           infodata.push({
             x:levelsnames,y:diff,name:"total",type:"bar"
           })
-          Plotly.newPlot('Selectedplot', infodata, {barmode: 'relative',title:"Selected Sample Info"});
+
+
+          var layout = {
+            barmode: 'relative',
+            height:$scope.Selected.height,
+            width:$scope.Selected.width,
+            title:$scope.Selected.Title,
+            xaxis:{
+              tickfont:{size:$scope.Selected.xAxisTextSize},
+              tickangle: $scope.Selected.xAxisTextAngle
+            }
+          }
+
+          Plotly.newPlot('Selectedplot', infodata, layout);
+          }
+
         }else{//numeric
 
         var totaldata={x:[],y:[],
@@ -396,6 +352,9 @@ $scope.dataToShare = [];
         temp1 = countunique(total_temp);
           levelsnames = temp1[0];
           levelscount = temp1[1];
+                    if(evtD===undefined){
+            Plotly.purge("Selectedplot")
+          }else{
           selects = evtD.points;
           subsetofp2 = [];
           for(ii=0;ii < selects.length;ii++){
@@ -405,10 +364,8 @@ $scope.dataToShare = [];
             }else{
               subsetofp2.push(p2[Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
              Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1]);
-
              subsetdata.x.push(Number(selects[ii]["pointNumber"]) + Number(selects[ii]["curveNumber"]) +
              Number(temp1[1].slice(0,Number(selects[ii]["curveNumber"])).reduce((a, b) => a + b, 0))-1)
-
             }
           }
           subset = subsetofp2.map(function(ind){return ind[$scope.Selected.factor]});
@@ -424,15 +381,16 @@ $scope.dataToShare = [];
           var layout = {
             height:$scope.Selected.height,
             width:$scope.Selected.width,
-            title:"Selected Sample Info",
+            title:$scope.Selected.Title,
             xaxis:{
-              tickfont:{size:$scope.Selected.xAxisTextSize}
+              tickfont:{size:$scope.Selected.xAxisTextSize},
+              tickangle: $scope.Selected.xAxisTextAngle
             }
 
           }
           Plotly.newPlot('Selectedplot', infodata, layout);
+          }
         }
-
   }
 
   $scope.drawboxplots = function(){
@@ -497,14 +455,31 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   f2 = $scope.sharedData.f2
 
   $scope.summarygroup = function(){
-    $scope.group['firstmemberlength']=[];
+  /*  $scope.group['firstmemberlength']=[];
     $scope.group['secondmemberlength']=[];
       tempfirst= countunique(p2.map(function(ind){return ind[$scope.group.first]}))
       $scope.group['firstmember'] = tempfirst[0];$scope.group['firstlength'] = tempfirst[1];
       for(ii=0;ii<$scope.group['firstmember'].length;ii++){ $scope.group['firstmemberlength'].push($scope.group['firstmember'][ii]+"("+$scope.group['firstlength'][ii]+")")}
       tempsecond= countunique(p2.map(function(ind){return ind[$scope.group.second]}))
       $scope.group['secondmember'] = tempsecond[0];$scope.group['secondlength'] = tempsecond[1];
-      for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}
+      for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}*/
+
+
+      console.log($scope.test['groups']);
+
+      console.log($scope.group.first);
+      console.log($scope.group.second);
+
+    var req = ocpu.call("univariateanalysis_summarizegroup",{e2:e2,f2:f2,p2:p2,
+    group1:$scope.group.first,
+    group2:$scope.group.second,
+      test:$scope.test['groups']
+    },function(sess){
+      sess.getStdout(function(outtxt){
+            $("#sampleSizeTable_univariateanalysis").text(outtxt);
+        });
+    })
+
   }
 
   $scope.univariateanalysis = function(){
@@ -527,7 +502,6 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
 
     }
     if($scope.test['groups'] == "independent*independent"){
-
       var req=ocpu.call("univariateanalysis_twowayIndependentGroups",{
         e2:e2,f2:f2,p2:p2,group1:$scope.group.first,group2:$scope.group.second
       },
@@ -542,10 +516,13 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
             ii++
           }
           ii=1;
-          $scope.optionsList = univariateResultColumnName;
           $scope.drawUnivariateResult();
       })
     })
+  }
+
+  if($scope.test['groups'] == "independent*paired"){
+
   }
 
 }
