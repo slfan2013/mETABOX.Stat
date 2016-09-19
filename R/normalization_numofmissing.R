@@ -58,7 +58,9 @@ normalization_numofmissing <- function(e,f,p,missindex=NA,compoundName = "Binbas
 
   missing = missing[!sapply(missing,is.null)]
 
-  missing = missing[order(as.numeric(unlist(missing)[seq(1,length(unlist(missing)),by=2)]))]
+  if(!length(missing)==0){#if missing == 0; then sort. Else dont sort and return list().
+    missing = missing[order(as.numeric(unlist(missing)[seq(1,length(unlist(missing)),by=2)]))]
+  }
 
 
 

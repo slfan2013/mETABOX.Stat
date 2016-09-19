@@ -73,18 +73,6 @@
                 <li>
                     <a href="Univariate_Analysis.html">Univariate Analysis</a>
                 </li>
-                <li>
-                    <a href="#">Events</a>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -522,16 +510,16 @@
                     </div>
                 </div>
 <div ng-show="show" style="height:1000px;">
-<center><div id="chartContainer" style="height: 700px; width: 70%;"></div></center>
+<center><div id="chartContainer" style="height: 700px; width: 70%;"></div></center><hr />
 <div class="row">
   <div class="col-lg-4 col-lg-offset-4">
-    <label>Sample Size Range</label>
+    <label>Sample Size Range</label><em class="text-muted pull-right">min-max,step</em>
     <input class="form-control" placeholder="min-max,by" ng-model="samplerange">
   </div>
   </div>
   <div class="row">
   <div class="col-lg-4 col-lg-offset-4">
-    <label>Effect Sizes</label>
+    <label>Effect Sizes</label><em class="text-muted pull-right">ef1,ef2,ef3,ef4</em>
     <input class="form-control" placeholder="value1,value2,value3" ng-model="effectsizerange" min = 0>
   </div>
 </div>
