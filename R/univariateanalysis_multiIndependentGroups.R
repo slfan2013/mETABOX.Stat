@@ -57,5 +57,9 @@ univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
 
 
   result = data.frame(f2,pararesult,nonpararesult)
+
+  colnames(result) = gsub("\\.", "_", colnames(result))
+  result[is.na(result)] = ""
+
   return(result)
 }

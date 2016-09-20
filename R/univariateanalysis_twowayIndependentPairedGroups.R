@@ -40,7 +40,7 @@ univariateanalysis_twowayIndependentPairedGroups <- function(e2,f2,p2,
                                                        multicore = TRUE){
   # first things first: check if ID has duplicate.
   if(sum(duplicated(p2$ID))==0){
-    stop("If samples are different with each other (i.e. ID are idendical to each other), paired hypothesis testing cannot be proceed! Please correct the ID in the data processing tab.")
+    stop("Error: If samples are different with each other (i.e. ID are idendical to each other), paired hypothesis testing cannot be proceed! Please correct the ID in the data processing tab.")
   }
 
   p_beforeRemoveWrongID = p2
@@ -303,6 +303,7 @@ univariateanalysis_twowayIndependentPairedGroups <- function(e2,f2,p2,
   # result = data.frame(f2,result,check.names = FALSE)
   # return(list(hypo_test_result=result,hypo_test_result_json=toJSON(result)))
   result = data.frame(f2,result,check.names = F);
+  colnames(result) = gsub("\\.", "_", colnames(result))
   result[is.na(result)] = ""
   return(result)
 }

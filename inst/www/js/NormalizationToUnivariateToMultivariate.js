@@ -57,6 +57,8 @@ appNorm.controller('ctrl_norm', function($scope,srvShareData,$location) {
   }
 $scope.dataToShare = [];
   $scope.shareMyData = function (myValue) {
+    console.log(myValue)
+  $scope.dataToShare = [];
   $scope.dataToShare = myValue;
   srvShareData.addData($scope.dataToShare);
   window.location.href = "Univariate_Analysis.html";
@@ -232,6 +234,8 @@ $scope.dataToShare = [];
     },function(sess){
       sess.getObject(function(obj){
         e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
+        console.log($scope.featurenames)
+        console.log($scope.phenotypenames)
         $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames,featurenames:$scope.featurenames})//!!!
         })
     })
@@ -484,16 +488,76 @@ console.log($scope.sharedData);
     if($scope.test['groups'] == "two independent groups"){
       var req=ocpu.call("univariateanalysis_twoIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
-        console.log(sess)
+        sess.getObject(function(obj){
+          univariateresult = obj;
+          //univariateresult_forrecovery = obj;//Used for when user delete a column and would like recover it
+          var toGetColumnName = obj[0]
+          var ii=1;
+          for(var name in toGetColumnName){
+            univariateResultColumnName.push({id:ii,name:name})
+            ii++
+          }
+          ii=1;
+          $scope.optionsList = univariateResultColumnName;
+          $scope.drawUnivariateResult();
+        })
+         download_address = sess.getLoc() + "R/.val/csv";
+              $("#download_statistical_result_button").empty();
+              var r= $('<a download = "file.csv" href='+download_address+' class="btn btn-primary btn-lg active" role="button">Download Statistical Analysis Result</a>');
+              $("#download_statistical_result_button").append(r);
       }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
     }
     if($scope.test['groups'] == "two paired groups"){
 
+
+      var req=ocpu.call("univariateanalysis_twoPairedGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
+      function(sess){
+        sess.getObject(function(obj){
+          univariateresult = obj;
+          //univariateresult_forrecovery = obj;//Used for when user delete a column and would like recover it
+          var toGetColumnName = obj[0]
+          var ii=1;
+          for(var name in toGetColumnName){
+            univariateResultColumnName.push({id:ii,name:name})
+            ii++
+          }
+          ii=1;
+          $scope.optionsList = univariateResultColumnName;
+
+          $scope.drawUnivariateResult();
+      })
+       download_address = sess.getLoc() + "R/.val/csv";
+              $("#download_statistical_result_button").empty();
+              var r= $('<a download = "file.csv" href='+download_address+' class="btn btn-primary btn-lg active" role="button">Download Statistical Analysis Result</a>');
+              $("#download_statistical_result_button").append(r);
+      }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
     }
     if($scope.test['groups'] == "multiple independent groups"){
       var req=ocpu.call("univariateanalysis_multiIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
-        console.log(sess)
+
+
+        sess.getObject(function(obj){
+          univariateresult = obj;
+          //univariateresult_forrecovery = obj;//Used for when user delete a column and would like recover it
+          var toGetColumnName = obj[0]
+          var ii=1;
+          for(var name in toGetColumnName){
+            univariateResultColumnName.push({id:ii,name:name})
+            ii++
+          }
+          ii=1;
+          $scope.optionsList = univariateResultColumnName;
+
+          $scope.drawUnivariateResult();
+        })
+
+
+         download_address = sess.getLoc() + "R/.val/csv";
+              $("#download_statistical_result_button").empty();
+              var r= $('<a download = "file.csv" href='+download_address+' class="btn btn-primary btn-lg active" role="button">Download Statistical Analysis Result</a>');
+              $("#download_statistical_result_button").append(r);
+
       }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
     }
     if($scope.test['groups'] == "multiple paired groups"){
@@ -518,6 +582,12 @@ console.log($scope.sharedData);
 
           $scope.drawUnivariateResult();
       })
+
+               download_address = sess.getLoc() + "R/.val/csv";
+              $("#download_statistical_result_button").empty();
+              var r= $('<a download = "file.csv" href='+download_address+' class="btn btn-primary btn-lg active" role="button">Download Statistical Analysis Result</a>');
+              $("#download_statistical_result_button").append(r);
+
     }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
   }
 
@@ -537,9 +607,12 @@ var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
           }
           ii=1;
           $scope.optionsList = univariateResultColumnName;
-console.log(univariateResultColumnName);
           $scope.drawUnivariateResult();
       })
+       download_address = sess.getLoc() + "R/.val/csv";
+              $("#download_statistical_result_button").empty();
+              var r= $('<a download = "file.csv" href='+download_address+' class="btn btn-primary btn-lg active" role="button">Download Statistical Analysis Result</a>');
+              $("#download_statistical_result_button").append(r);
     }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
   }
 
@@ -557,16 +630,11 @@ console.log(univariateResultColumnName);
     univariateresult0 = univariateresult[0];
 
     temp[0] = jQuery.extend(true, {}, univariateresult0);
-    $scope.selectedList =
     for(ii=0;ii<$scope.selectedList.length;ii++){
       delete temp[0][$scope.selectedList[ii].name]
     }
     univaraitetable = drawTable('#univariatetable_univariateanalysis',temp, "Univariate Statistical Result");
-
   }
-
-
-
 })
 appNorm.service('srvShareData', function($window) {
         var KEY = 'appNorm.SelectedValue';

@@ -40,5 +40,9 @@ univariateanalysis_twoIndependentGroups <- function(e2,f2,p2,
   result = data.frame(f2,result,check.names = FALSE)
   colnames(result)[(ncol(result)-4+1):ncol(result)] = c(paste0("pvalue_para(",group1,")"),paste0("pvalue_para_adj(",group1,")"),
                                                         paste0("pvalue_nonpara(",group1,")"),paste0("pvalue_nonpara_adj(",group1,")"))
+
+
+  colnames(result) = gsub("\\.", "_", colnames(result))
+  result[is.na(result)] = ""
   return(result)
 }
