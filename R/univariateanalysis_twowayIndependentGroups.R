@@ -134,7 +134,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
             return(c(oneway.test(e[j,] ~ as.factor(p[[group2]]), var.equal = parasimplemaineffectvariance)$p.value,paraANOVAposthoc))
           },e,p,group1,group2,parasimplemaineffectvariance,posthocTGH,parasimplemaineffectpost)
           rownames(paravar2simplemain)[1] = paste0("pvalue_para_ANOVA(",p[[group1]][1],":",group2,")")
-          rownames(paravar2simplemain)[2:nrow(paravar2simplemain)] = paste0("pvalue_para_posthoc(",p[[group1]][1],":",group2,")_",rownames(paravar2simplemain)[-1])
+          rownames(paravar2simplemain)[2:nrow(paravar2simplemain)] = paste0("pvalue_para_posthoc(",p[[group1]][1],":",group2,")_",rownames(paravar2simplemain[[1]])[-1])
           return(paravar2simplemain)
         })
       }
@@ -244,7 +244,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
 
           rownames(nonparavar2simplemain) = 1:nrow(nonparavar2simplemain)
           rownames(nonparavar2simplemain)[1] = paste0("pvalue_nonpara_ANOVA(",p[[group1]][1],":",group2,")")
-          rownames(nonparavar2simplemain)[2:nrow(nonparavar2simplemain)] = paste0("pvalue_nonpara_posthoc(",p[[group1]][1],":",group2,")_",rownames(paravar2simplemain)[-1])
+          rownames(nonparavar2simplemain)[2:nrow(nonparavar2simplemain)] = paste0("pvalue_nonpara_posthoc(",p[[group1]][1],":",group2,")_",rownames(paravar2simplemain[[1]])[-1])
           return(nonparavar2simplemain)
         })
       }

@@ -10,7 +10,7 @@
 normalization_uploadfile <- function(file){
   message = NULL
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\A\\mx 131933_tomatillo vs pumpkin_summer course_08-2015_submit.xlsx"
-  # file = "C:\\Users\\fansi\\Desktop\\mx_274941_Francisco Portell_human cells_06-2016_submit.xlsx"
+  # file = "C:\\Users\\fansi\\Desktop\\mx 69088_HepG2 cells_Hirahatake & Meissen_high fructose_summer course_08-2015_submit.xlsx"
   d <- openxlsx::read.xlsx(file, sheet = 1,colNames = FALSE)
 
   #get phenotype
@@ -21,10 +21,9 @@ normalization_uploadfile <- function(file){
 
 
   if(sum(duplicated(p[[1]]))>0){
-    message = paste0("Warning: Duplicated '",p[[1]][duplicated(p[[1]])],"' found in phenotype set. The first '",p[[1]][duplicated(p[[1]])],
-                    "' is kept and others are removed.")
+    stop("Error: Duplicated '",p[[1]][duplicated(p[[1]])],"' found in phenotype set. ")
   }
-  p = p[!duplicated(p[[1]])]
+  p = p[!duplicated(p[[1]]),]
   colnames_p = p[[1]]
   p= t(p)
   colnames(p) = colnames_p
@@ -56,7 +55,12 @@ normalization_uploadfile <- function(file){
     p$ID = 1:nrow(p)
   }
 
-  writeLines(message,"warning.txt")
+  if(is.null(message)){
+
+  }else{
+    writeLines(message,"warning.txt")
+  }
+
   writeLines("Data is successfully uploaded!","success.txt")
 
   p = cbind(phenotypeindex = 1:nrow(p),p);

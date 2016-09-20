@@ -454,6 +454,8 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   e2 = $scope.sharedData.e2
   f2 = $scope.sharedData.f2
 
+
+
   $scope.summarygroup = function(){
   /*  $scope.group['firstmemberlength']=[];
     $scope.group['secondmemberlength']=[];
@@ -464,11 +466,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
       $scope.group['secondmember'] = tempsecond[0];$scope.group['secondlength'] = tempsecond[1];
       for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}*/
 
-
-      console.log($scope.test['groups']);
-
-      console.log($scope.group.first);
-      console.log($scope.group.second);
+console.log($scope.sharedData);
 
     var req = ocpu.call("univariateanalysis_summarizegroup",{e2:e2,f2:f2,p2:p2,
     group1:$scope.group.first,
@@ -478,7 +476,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
       sess.getStdout(function(outtxt){
             $("#sampleSizeTable_univariateanalysis").text(outtxt);
         });
-    })
+    }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
 
   }
 
@@ -487,7 +485,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
       var req=ocpu.call("univariateanalysis_twoIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
         console.log(sess)
-      })
+      }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
     }
     if($scope.test['groups'] == "two paired groups"){
 
@@ -496,7 +494,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
       var req=ocpu.call("univariateanalysis_multiIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
         console.log(sess)
-      })
+      }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
     }
     if($scope.test['groups'] == "multiple paired groups"){
 
@@ -516,13 +514,33 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
             ii++
           }
           ii=1;
+          $scope.optionsList = univariateResultColumnName;
+
           $scope.drawUnivariateResult();
       })
-    })
+    }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
   }
 
   if($scope.test['groups'] == "independent*paired"){
-
+var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
+        e2:e2,f2:f2,p2:p2,group1:$scope.group.first,group2:$scope.group.second
+      },
+      function(sess){
+        sess.getObject(function(obj){
+          univariateresult = obj;
+          //univariateresult_forrecovery = obj;//Used for when user delete a column and would like recover it
+          var toGetColumnName = obj[0]
+          var ii=1;
+          for(var name in toGetColumnName){
+            univariateResultColumnName.push({id:ii,name:name})
+            ii++
+          }
+          ii=1;
+          $scope.optionsList = univariateResultColumnName;
+console.log(univariateResultColumnName);
+          $scope.drawUnivariateResult();
+      })
+    }).fail(function() {alert("Error: " + req.responseText);});//ocpu.call
   }
 
 }
@@ -539,7 +557,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
     univariateresult0 = univariateresult[0];
 
     temp[0] = jQuery.extend(true, {}, univariateresult0);
-
+    $scope.selectedList =
     for(ii=0;ii<$scope.selectedList.length;ii++){
       delete temp[0][$scope.selectedList[ii].name]
     }

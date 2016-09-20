@@ -16,5 +16,8 @@ Imports:
 	  parallel,
 	  userfriendlyscience,
 	  ggplot2,
-	  ez
+	  ez,
+	  colorspace,
+	  multcomp,
+	  coin
 RoxygenNote: 5.0.1
