@@ -13,3 +13,15 @@ install.packages('opencpu')
 library(opencpu)
 opencpu$browse('library/metabox.stat/www')
 ```
+
+
+# metabox launching method.
+
+In R, run following code.
+
+```r
+library(devtools)
+library(metabox.stat)
+library(opencpu)
+opencpu$browse('library/metabox.stat/www')
+```
