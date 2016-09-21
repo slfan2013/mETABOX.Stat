@@ -37,5 +37,21 @@ Imports:
 	  car,
 	  SCRT,
 	  GGally,
-	  reshape2
+	  reshape2,
+	  munsell,
+	  plyr,
+	  mnormt,
+	  timeDate,
+	  timeSeries,
+	  dplyr,
+	  mosaicData,
+	  ggdendro,
+	  dridExtra,
+	  tidyr,
+	  pbkrtest,
+	  quantreg,
+	  reshape,
+	  lavaan,
+	  mvtnorm,
+	  zoo
 RoxygenNote: 5.0.1
