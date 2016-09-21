@@ -53,7 +53,7 @@ normalization_numofmissing <- function(e,f,p,missindex=NA,compoundName = "Binbas
       untolerable[[i]] = list(x = i, label = f[[compoundName]][i], y = miss_rate[i]);
     }
   }
-  percofmiss=numofmiss/ncol(e)
+  percofmiss=(numofmiss/(ncol(e)*nrow(e)))*100
 
   missing = missing[!sapply(missing,is.null)]
 

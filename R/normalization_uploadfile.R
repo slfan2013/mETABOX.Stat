@@ -8,7 +8,8 @@
 #' normalization_uploadfile()
 
 normalization_uploadfile <- function(file){
-  message = NULL
+  warningmessage = NULL;
+  successmessage = NULL;
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\A\\mx 131933_tomatillo vs pumpkin_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\B\\mx 107155 _lung cancer tissue_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\Sili Fan\\Desktop\\Sili's data\\C\\mx 69088_HepG2 cells_Hirahatake & Meissen_high fructose_summer course_08-2015_submit.xlsx"
@@ -54,21 +55,41 @@ normalization_uploadfile <- function(file){
 
   #warning when data doesn't have ID.
   if(!"ID"%in%names(p)){
-    message = paste0(message,"\n",
-                    "'ID' not found in phenotype set. This means there is no repeated measure in the data. 'ID' automatically added.")
+    warningmessage = paste0(warningmessage,
+                    "<p class='text-warning'>'ID' not found in phenotype set. This means there is no repeated measure in the data. 'ID' automatically added as 1, 2, 3,...</p>")
     p$ID = 1:nrow(p)
   }
 
-  if(is.null(message)){
+  if(!"phenotypeindex"%in%names(p)){
+    warningmessage = paste0(warningmessage,
+                            "<p class='text-warning'>'phenotypeindex' not found in phenotype set. 'phenotypeindex' is automatically added as 1, 2, 3,...</p>")
 
-  }else{
-    writeLines(message,"warning.txt")
+    p = cbind(phenotypeindex = 1:nrow(p),p);
   }
 
-  writeLines("Data is successfully uploaded!","success.txt")
+  if(!"featureindex"%in%names(p)){
+    warningmessage = paste0(warningmessage,
+                            "<p class='text-warning'>'featureindex' not found in feature set. 'featureindex' is automatically added as 1, 2, 3,...</p>")
 
-  p = cbind(phenotypeindex = 1:nrow(p),p);
-  f = cbind(featureindex=1:nrow(f),f);
+    f = cbind(featureindex=1:nrow(f),f);
+  }
+
+  if(is.null(warningmessage)){
+    writeLines("","warning.txt")
+  }else{
+    writeLines(warningmessage,"warning.txt")
+  }
+
+  successmessage = paste0("<p class='text-success'>File, ",substring(file,tail(gregexpr("\\\\",file)[[1]],n=1)+2)," is successfully uploaded!</p>
+                          <p class='text-success'>The data file contains ",nrow(p)," samples and ", nrow(f), " compounds.</p>
+                          <p class='text-success'>Note: samples are ", ifelse(sum(duplicated(p$ID))==0,"NOT",""), " paired.</p>
+                          <p class='text-danger'>A total of ", sum(is.na(e))," (",round(sum(is.na(e))/(nrow(e)*ncol(e))*100,2),"%) missing values (i.e. empty cells in the file) are detected.
+                          By default these missing values will be replaced by a small value. Click <strong>Continue</strong> to proceed missing value imputation.</p>")
+
+
+  writeLines(successmessage,"success.txt")
+
+
 
   if("compound_name" %in% colnames(f)){#compound name is required for missing value plot.
     compound_name = "compound_name";
@@ -82,6 +103,7 @@ normalization_uploadfile <- function(file){
     sample_name = FALSE;
   }
   return(list(expression = e, phenotype = p, feature = f,
+              fileName=file,
               phenotypenames = colnames(p),featurenames = colnames(f),compound_name=compound_name,sample_name=sample_name))
 }
 

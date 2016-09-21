@@ -112,7 +112,7 @@
                   <div ng-switch="compoundName">
                     <div ng-switch-when="false">
                       <div class="form-group has-error">
-                          <label class="control-label">compound name:</label>
+                          <label class="control-label">*compound name:</label>
                             <select  class="form-control"  ng-model="compound.name">
                               <option ng-repeat="featurename in featurenames">{{featurename}}</option>
                             </select>
@@ -134,9 +134,9 @@
                 <div class="col-lg-8 col-lg-offset-2" ng-hide="sampleName=='sudo'">
                   <div ng-switch="sampleName">
                     <div ng-switch-when="false">
-                      <div class="form-group has-warning">
-                          <label class="control-label">sample name:</label><span class='text-warning pull-right'>'ID' is added</span>
-                            <select  class="form-control"  ng-model="sample.name" ng-init="sample.name = 'ID'">
+                      <div class="form-group has-error">
+                          <label class="control-label">*sample name:</label>
+                            <select  class="form-control"  ng-model="sample.name">
                               <option ng-repeat="phenotypename in phenotypenames">{{phenotypename}}</option>
                             </select>
                       </div>
@@ -151,8 +151,17 @@
                     </div>
                   </div>
                 </div>
+              </div><br />
+              <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                  <div id="warningMessage_normalization"></div>
+                </div>
               </div>
-
+              <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                  <div id="successMessage_normalization"></div>
+                </div>
+              </div><br />
               <div class="row">
                 <div class="col-lg-2 col-lg-offset-5">
                   <a ng-click="submitupload();" class="btn btn-success btn-block" id="continueupload" ng-show="continueuploadshow">Continue</a>
@@ -223,16 +232,17 @@
                   <input type="radio" ng-model="samplewisenorm" value="none">None
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="samplewisenorm" value="mTIC">mTIC
+                  <input type="radio" ng-model="samplewisenorm" value="mTIC">mTIC<span class="pull-right"><a href="#" id="mTICtooltip_normalization" data-toggle="tooltip" title="metabolite Total Ion Chromatogram. Required Value:'known' and 'unknown'." class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="samplewisenorm" value="batcheffect">Batch Effect
+                  <input type="radio" ng-model="samplewisenorm" value="batcheffect">Batch Effect<span class="pull-right"><a href="#" id="BatchEffecttooltip_normalization" data-toggle="tooltip" title="Required Value: names of batches [character], e.g. 'batch1','batch2',..." class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="samplewisenorm" value="samplespecific">Sample Specific
+                  <input type="radio" ng-model="samplewisenorm" value="samplespecific">Sample Specific<span class="pull-right"><a href="#" id="SampleSpecifictooltip_normalization" data-toggle="tooltip" title="Required Value: weight of each sample [number]. Formula: after=before*weight" class = "fa fa-info-circle"></a></span>
                   </label>
                 </form>
              </center>
+
              <div class="row"><div class="col-lg-2 col-lg-offset-5">
                <div ng-switch="samplewisenorm">
               <div ng-switch-when="mTIC">
@@ -262,10 +272,10 @@
                   <input type="radio" ng-model="transformation.value" value="none">None
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="transformation.value" value="log">generalized log
+                  <input type="radio" ng-model="transformation.value" value="log">generalized log<span class="pull-right"><a href="#" id="logtooltip_normalization" data-toggle="tooltip" title="Formula: <img src='img/pictures/glog.png'/>" class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="transformation.value" value="power">power
+                  <input type="radio" ng-model="transformation.value" value="power">power<span class="pull-right"><a href="#" id="powertooltip_normalization" data-toggle="tooltip" title="Formula: after=before^power" class = "fa fa-info-circle"></a></span>
                   </label>
                 </form></center>
                 <div class="row"><div class="col-lg-2 col-lg-offset-5">
@@ -298,16 +308,16 @@
                   <input type="radio" ng-model="scaling.value" value="none">None
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="scaling.value" value="meancentering">Mean Centering
+                  <input type="radio" ng-model="scaling.value" value="meancentering">Mean Centering<span class="pull-right"><a href="#" id="meancenteringtooltip_normalization" data-toggle="tooltip" title="Formula: <img src='img/pictures/meancentering.png'/>Focus on the differences and not the similarities in the data" class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="scaling.value" value="autoscaling">Auto Scaling
+                  <input type="radio" ng-model="scaling.value" value="autoscaling">Auto Scaling<span class="pull-right"><a href="#" id="autoscalingtooltip_normalization" data-toggle="tooltip" title="Formula: <img src='img/pictures/autoscaling.png'/>Compare metabolites based on correlations" class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="scaling.value" value="paretoscaling">Pareto Scaling
+                  <input type="radio" ng-model="scaling.value" value="paretoscaling">Pareto Scaling<span class="pull-right"><a href="#" id="paretoscalingtooltip_normalization" data-toggle="tooltip" title="Formula: <img src='img/pictures/paretoscaling.png'/>Reduce the relative importance of large values, but keep data structure partially intact" class = "fa fa-info-circle"></a></span>
                   </label>
                   <label class="radio-inline">
-                  <input type="radio" ng-model="scaling.value" value="rangescaling">Range Scaling
+                  <input type="radio" ng-model="scaling.value" value="rangescaling">Range Scaling<span class="pull-right"><a href="#" id="rangescalingtooltip_normalization" data-toggle="tooltip" title="Formula: <img src='img/pictures/rangescaling.png'/>Compare metabolites relative to the biological response range" class = "fa fa-info-circle"></a></span>
                   </label>
                 </form></center><br /><br />
           <div class="row">
@@ -321,7 +331,7 @@
               <button type="button" class="btn btn-success btn-block" ng-click="applynormalizationtoUni();">Univariate Analysis</button>
             </div>
             <div class="col-lg-2">
-              <button type="button" class="btn btn-success btn-block">Multivariate Analysis</button>
+              <button type="button" class="btn btn-success btn-block" disabled>Multivariate Analysis</button>
             </div>
           </div><br />
           <div class="panel panel-default">

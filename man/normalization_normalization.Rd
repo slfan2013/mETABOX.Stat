@@ -6,7 +6,8 @@
 \usage{
 normalization_normalization(e1, f1, p1, samplewisenorm = "mTIC",
   samplewisenormindex = "knownornotknown", transformation = "log",
-  loga = 1, logbase = 2, power = 1/2, scaling = "autoscaling")
+  loga = 1, logbase = 2, power = 1/2, scaling = "autoscaling",
+  fileName = NULL, compoundName = NULL, sampleName = NULL)
 }
 \description{
 stat

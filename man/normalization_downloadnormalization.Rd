@@ -4,9 +4,10 @@
 \alias{normalization_downloadnormalization}
 \title{normalization_downloadnormalization}
 \usage{
-normalization_downloadnormalization(e1, f1, p1, samplewisenorm = "mTIC",
-  samplewisenormindex = "knownornotknown", transformation = "log",
-  loga = 1, logbase = 2, power = 1/2, scaling = "autoscaling")
+normalization_downloadnormalization(e1, f1, p1, miss_rate = NULL,
+  samplewisenorm = "mTIC", samplewisenormindex = "knownornotknown",
+  transformation = "log", loga = 1, logbase = 2, power = 1/2,
+  scaling = "autoscaling")
 }
 \description{
 stat

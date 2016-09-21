@@ -8,6 +8,9 @@ var evtD;
 var univariateResultColumnName=[];
 var firsttimeplottable=true;
 var download_norm_data_adress;
+var fileName;
+var compoundName;
+var sampleName;
 
 appNorm.run(function(editableOptions) {//MIGHT NOT BE USEFUL.
   editableOptions.theme = 'bs3';
@@ -38,7 +41,7 @@ appNorm.controller('ctrl_norm', function($scope,srvShareData,$location) {
   $scope.phenotypenames = [];
   $scope.featurenames = [];
   $scope.compound = {name:null};
-  $scope.sample = {name:'ID'};
+  $scope.sample = {name:null};
   $scope.numofmiss = [];
   $scope.percofmiss = [];
   $scope.miss_rate = [];
@@ -186,7 +189,7 @@ $scope.dataToShare = [];
           missing.render();
       })
 
-    }).always(function(){$('#mytabs a[href="#dealwithmissingvalue-pills"]').tab('show');})
+    }).fail(function() {alert("Error: " + req.responseText);}).always(function(){$('#mytabs a[href="#dealwithmissingvalue-pills"]').tab('show');})
   }
   $scope.dealwithmissing = function(){
     var req = ocpu.call("normalization_dealwithmissing",{
@@ -197,18 +200,18 @@ $scope.dataToShare = [];
       sess.getObject(function(obj){
         e1 = obj.e1;p1=obj.p1;f1=obj.f1;
       })
-    }).always(function(){$('#mytabs a[href="#normalization-pills"]').tab('show');})
+    }).fail(function() {alert("Error: " + req.responseText);}).always(function(){$('#mytabs a[href="#normalization-pills"]').tab('show');})
   }
 
   $scope.download_norm = function(){
    var req=ocpu.call("normalization_downloadnormalization",{
-      e1:e1,f1:f1,p1:p1,
+      e1:e1,f1:f1,p1:p1,miss_rate:$scope.miss_rate,
      samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
      transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
      scaling : $scope.scaling.value
     },function(sess){
       window.open(sess.getLoc()+"R/.val/csv");
-    })
+    }).fail(function() {alert("Error: " + req.responseText);})
   }
 
   $scope.visualizenormalization = function(){
@@ -223,22 +226,25 @@ $scope.dataToShare = [];
         $scope.drawPCA();
         //$scope.drawboxplots();
         })
-    })
+    }).fail(function() {alert("Error: " + req.responseText);})
   }
   $scope.applynormalizationtoUni = function(){
     var req=ocpu.call("normalization_normalization",{
       e1:e1,f1:f1,p1:p1,
+      fileName:fileName,compoundName:$scope.compound.name,sampleName:$scope.sample.name,
      samplewisenorm : $scope.samplewisenorm,samplewisenormindex:$scope.samplewisenormindex.value,
      transformation : $scope.transformation.value, loga : $scope.loga.value, logbase : $scope.logbase.value, power : $scope.power.value,
      scaling : $scope.scaling.value
     },function(sess){
       sess.getObject(function(obj){
-        e2 = obj.e2;f2 = obj.f2;p2=obj.p2;
-        console.log($scope.featurenames)
-        console.log($scope.phenotypenames)
-        $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames,featurenames:$scope.featurenames})//!!!
+        e2 = obj.e2;f2 = obj.f2;p2=obj.p2;normalizationmethod = obj.method;fileName=obj.fileName;compoundName=obj.compoundName;sampleName=obj.sampleName;
+
+        $scope.shareMyData({e2:e2,f2:f2,p2:p2,phenotypenames:$scope.phenotypenames,featurenames:$scope.featurenames,
+          normalizationmethod:normalizationmethod,
+          fileName:fileName,compoundName:compoundName,sampleName:sampleName
+        })//!!!
         })
-    })
+    }).fail(function() {alert("Error: " + req.responseText);})
   }
 
   $scope.drawPCA = function(){
@@ -263,7 +269,7 @@ $scope.dataToShare = [];
       $scope.drawSelectedPlot()
       })
       })
-    })
+    }).fail(function() {alert("Error: " + req.responseText);})
   }
   $scope.PCArelayout = function(){
     var update = {
@@ -405,7 +411,7 @@ $scope.dataToShare = [];
       sess.getObject(function(obj){
         BOXplots = Plotly.newPlot('BOXplots', JSON.parse(obj.data[0]), JSON.parse(obj.layout[0]));
       })
-    })
+    }).fail(function() {alert("Error: " + req.responseText);})
   }
 
 //dps.map(function(a) {return parseFloat(a.y);});
@@ -416,21 +422,35 @@ $scope.dataToShare = [];
   var req=ocpu.call("normalization_uploadfile",{
     file:$("#upload_norm")[0].files[0]
   },function(session){
+
+
+      session.getFile("warning.txt", function(text){
+          $("#warningMessage_normalization").empty().append(text);
+      })
+      session.getFile("success.txt", function(text){
+          $("#successMessage_normalization").empty().append(text);
+      })
+
+
+
     session.getObject(function(obj){
       e0=obj.expression;
       f0=obj.feature;
       p0=obj.phenotype;
+      fileName=obj.fileName[0];
+      //sampleName=obj.sampleName[0];
+      //compoundName=obj.compoundName[0];
+
       $scope.$apply(function(){
         $scope.compoundName = obj.compound_name[0];
         $scope.compound.name = obj.compound_name[0];
         $scope.sampleName = obj.sample_name[0];
-
         $scope.sample.name = obj.sample_name[0];
         $scope.phenotypenames = obj.phenotypenames;
         $scope.featurenames = obj.featurenames;
       });
     })
-  })
+  }).fail(function() {alert("Error: " + req.responseText);})
 }
 
 
@@ -458,7 +478,12 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   e2 = $scope.sharedData.e2
   f2 = $scope.sharedData.f2
 
+  normalizationmethod = $scope.sharedData.normalizationmethod
 
+  fileName = $scope.sharedData.fileName[0]
+
+  compoundName = $scope.sharedData.compoundName[0]
+  sampleName = $scope.sharedData.sampleName[0]
 
   $scope.summarygroup = function(){
   /*  $scope.group['firstmemberlength']=[];
@@ -469,8 +494,6 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
       tempsecond= countunique(p2.map(function(ind){return ind[$scope.group.second]}))
       $scope.group['secondmember'] = tempsecond[0];$scope.group['secondlength'] = tempsecond[1];
       for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}*/
-
-console.log($scope.sharedData);
 
     var req = ocpu.call("univariateanalysis_summarizegroup",{e2:e2,f2:f2,p2:p2,
     group1:$scope.group.first,
@@ -687,6 +710,17 @@ $('#missingreplacemethod_norm').editable({
         alert( 'You clicked on '+data[0]+'\'s row' );
     } );
 
+$('#mTICtooltip_normalization').tooltip();
+$('#BatchEffecttooltip_normalization').tooltip();
+$('#SampleSpecifictooltip_normalization').tooltip();
+$('#logtooltip_normalization').tooltip({html: true});
+$('#powertooltip_normalization').tooltip();
+
+
+$('#meancenteringtooltip_normalization').tooltip({html: true});
+$('#autoscalingtooltip_normalization').tooltip({html: true});
+$('#paretoscalingtooltip_normalization').tooltip({html: true});
+$('#rangescalingtooltip_normalization').tooltip({html: true});
 })
 //$.fn.editable.defaults.mode = 'popup';
 var e0;

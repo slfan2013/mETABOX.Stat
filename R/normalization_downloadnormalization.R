@@ -7,11 +7,13 @@
 #' @examples
 #' normalization_downloadnormalization()
 
-normalization_downloadnormalization <- function(e1,f1,p1,
+normalization_downloadnormalization <- function(e1,f1,p1,miss_rate=NULL,
                                         samplewisenorm = 'mTIC',samplewisenormindex='knownornotknown',
                                         transformation = 'log', loga = 1, logbase = 2, power = 1/2,
                                         scaling = 'autoscaling'
 ){
+
+
 
   # samplewise normalization.
   if(samplewisenorm == 'none'){
@@ -69,7 +71,7 @@ normalization_downloadnormalization <- function(e1,f1,p1,
     e1.3 = t(scale(t(e1.2),scale=FALSE)) / apply(e1.2,1,function(x){diff(range(x))})
     method = paste0(method," Data Scaling: Range scaling;")
   }
-  e2=e1.3;f2=f1;p2=p1
+  e2=e1.3;f2=data.frame(f1,missing_value_rate=miss_rate,check.names = F);p2=p1
   result = matrix(NA, nrow = ncol(p2)+nrow(f2),ncol = ncol(f2)+nrow(p2))
   result[1:ncol(p2),(ncol(f2)+1):ncol(result)] = t(p2)
   result[1:ncol(p2),ncol(f2)] = colnames(p2)

@@ -115,7 +115,7 @@
     <p class="text-muted">Univariate analysis is intuitive and is most helpful of making discoveries. "Uni" means "one", so we take a look at each compound and see what's going on with everybody.</p>
     <div class="alert alert-success alert-dismissable" ng-show="dataexist">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      Data successfully passed from 'Data Processing' page.
+      Data {{sharedData.fileName}} successfully passed from 'Data Processing' page.
     </div>
     <div class="alert alert-danger alert-dismissable" ng-show="dataexist==false">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -265,6 +265,7 @@
                      suggestions-arr="optionsList">
                 </multiple-autocomplete>
                 <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="drawUnivariateResult();">Update Table!</button>
+<br /><hr />
                 <div id="download_statistical_result_button"></div>
               </div>
               <div class="col-lg-9">
@@ -272,7 +273,6 @@
                 <table id="univariatetable_univariateanalysis" class="table table-striped table-bordered display" cellspacing="0" width="100%"></table>
               </div>
             </div>
-
           </div>
           <div class="tab-pane fade" id="viewcompound-pills">
             <div class="row">
@@ -283,6 +283,9 @@
                 <label>Input Note (optional):</label>
                 <textarea class="form-control" ng-model="UniResultSelected.note"></textarea>
 
+                <hr />
+                <label>Boxplot Options:</label>
+
                 <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="getCompoundInfoFromResult();">Submit!</button>
               </div>
               <div class="col-lg-9">
@@ -291,8 +294,7 @@
                   <h4>Compound name: </h4>
                   <h4>Compound notes: </h4>
                 </div>
-                <h3>Compound Statistics</h3>
-
+                <h3>Boxplot</h3>
               </div>
             </div>
 

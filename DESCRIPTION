@@ -19,5 +19,6 @@ Imports:
 	  ez,
 	  colorspace,
 	  multcomp,
-	  coin
+	  coin,
+	  grDevices
 RoxygenNote: 5.0.1
