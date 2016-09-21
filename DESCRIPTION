@@ -53,5 +53,13 @@ Imports:
 	  reshape,
 	  lavaan,
 	  mvtnorm,
-	  zoo
+	  zoo,
+	  DBI,
+	  assertthat,
+	  tibble,
+	  lme4,
+	  SparseM,
+	  MatrixModels,
+	  quadprog,
+	  pbivnorm
 RoxygenNote: 5.0.1
