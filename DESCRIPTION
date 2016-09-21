@@ -46,7 +46,7 @@ Imports:
 	  dplyr,
 	  mosaicData,
 	  ggdendro,
-	  dridExtra,
+	  gridExtra,
 	  tidyr,
 	  pbkrtest,
 	  quantreg,
