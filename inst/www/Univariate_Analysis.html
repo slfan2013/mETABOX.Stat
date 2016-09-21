@@ -13,8 +13,8 @@
 <script>document.write('<base href="' + document.location + '" />');</script>
     <!-- JQuery and Opencpu JS -->
     <script src="js/jquery-3.1.0.min.js"></script>
-    <!--<script src="js/opencpu-0.5.js"></script>-->
-    <script src="js/opencpu.js"></script>
+    <script src="js/opencpu-0.5.js"></script>
+    <!--<script src="js/opencpu.js"></script>-->
     <script src="js/angular.js"></script>
     <script src="js/angular-route.js"></script>
     <script src="js/plotly-latest.min.js"></script>
@@ -66,6 +66,8 @@
     <script type="text/javascript" src="js/dataTables.tableTools.js"></script>
     <script type="text/javascript" src="js/dataTables.select.js"></script>
     <script type="text/javascript" src="js/dataTables.select.js"></script>
+
+    <script type="text/javascript" src="js/waitingfor.js"></script>
 
 
 
@@ -278,23 +280,93 @@
             <div class="row">
               <div class="col-lg-3">
                 <label>Input a Compound Name:</label>
-                <input class="form-control" ng-model="UniResultSelected.compoundName">
+                <input class="form-control" ng-model="UniResultSelected.compoundName" ng-init="UniResultSelected.compoundName='z C30 FAME internal standard'">
 
                 <label>Input Note (optional):</label>
-                <textarea class="form-control" ng-model="UniResultSelected.note"></textarea>
+                <textarea class="form-control" ng-model="UniResultSelected.note" ></textarea>
 
                 <hr />
-                <label>Boxplot Options:</label>
+                <label><em>Boxplot Options:</em></label>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <label>group1 order:</label>
+                    <textarea class="form-control" ng-model="factor_order1"></textarea>
+                  </div>
+                  <div class="col-lg-6">
+                    <label>group2 order:</label>
+                    <textarea class="form-control" ng-model="factor_order2"></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <label>title:</label>
+                    <select disabled class="form-control">
+                                                    <option>{{sharedData.compoundName[0]}}</option>
+                                                </select>
+                  </div>
+                  <div class="col-lg-6">
+                    <label>main title color:</label>
+                    <input class="form-control" ng-model="col_main" ng-init="col_main='black'"/>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-4">
+                    <label>y title:</label>
+                    <input class="form-control" ng-model="ylab" ng-init="ylab='value'"/>
+                  </div>
+                  <div class="col-lg-4">
+                    <label>x title:</label>
+                    <input class="form-control" ng-model="xlab">
+                  </div>
+                  <div class="col-lg-4">
+                    <label>axis title color:</label>
+                    <input class="form-control" ng-model="col_lab" ng-init="col_lab='grey'"/>
+                  </div>
+                </div>
 
-                <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="getCompoundInfoFromResult();">Submit!</button>
+                 legend_position:,rotation_x:,
+                <div class="row">
+                  <div class="col-lg-6">
+                    <label>xlab size:</label>
+                    <input class="form-control" ng-model="xlab_size" type='number' ng-init="xlab_size=1">
+                  </div>
+                  <div class="col-lg-6">
+                    <label>xlab angle:</label>
+                    <input class="form-control" ng-model="rotation_x" type='number' min=0 max=359 ng-init="rotation_x=0">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <label>legend position:</label>
+                    <select class="form-control" ng-model="legend_position" ng-init="legend_position='topright'">
+                        <option value="none">none</option>
+                        <option value="bottomright">bottomright</option>
+                        <option value="bottom">bottom</option>
+                        <option value="bottomleft">bottomleft</option>
+                        <option value="left">left</option>
+                        <option value="topleft">topleft</option>
+                        <option value="top">top</option>
+                        <option value="topright">topright</option>
+                        <option value="right">right</option>
+                        <option value="center">center</option>
+                      </select>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="viewCompounds();">Submit!</button>
+                <br /><br />
+                <button type="button" class="btn btn-success btn-block btn-outline" ng-click="downloadAllBoxplots();">Apply the settings. Download boxplots of all compounds!</button>
               </div>
               <div class="col-lg-9">
                 <h3>Compound Overview</h3>
                 <div class="well">
                   <h4>Compound name: </h4>
+                  <p>{{UniResultSelected.compoundName}}</p>
                   <h4>Compound notes: </h4>
+                  <p>{{UniResultSelected.note}}</p>
                 </div>
                 <h3>Boxplot</h3>
+                <div id="visualizeCompound_univariateanalysis"  style="width800px;height:600px">
+                </div>
               </div>
             </div>
 

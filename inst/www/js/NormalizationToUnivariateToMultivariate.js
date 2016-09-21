@@ -486,14 +486,21 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   sampleName = $scope.sharedData.sampleName[0]
 
   $scope.summarygroup = function(){
-  /*  $scope.group['firstmemberlength']=[];
-    $scope.group['secondmemberlength']=[];
+          $scope.xlab = $scope.group.first+"*"+$scope.group.second;
+          $scope.factor_order1;
+          $scope.factor_order2;
+          $scope.UniResultSelected = {note:normalizationmethod[0]}
+
+
       tempfirst= countunique(p2.map(function(ind){return ind[$scope.group.first]}))
-      $scope.group['firstmember'] = tempfirst[0];$scope.group['firstlength'] = tempfirst[1];
-      for(ii=0;ii<$scope.group['firstmember'].length;ii++){ $scope.group['firstmemberlength'].push($scope.group['firstmember'][ii]+"("+$scope.group['firstlength'][ii]+")")}
+      $scope.factor_order1 = tempfirst[0].join();//$scope.group['firstlength'] = tempfirst[1];
+//      for(ii=0;ii<$scope.group['firstmember'].length;ii++){ $scope.group['firstmemberlength'].push($scope.group['firstmember'][ii]+"("+$scope.group['firstlength'][ii]+")")}
       tempsecond= countunique(p2.map(function(ind){return ind[$scope.group.second]}))
-      $scope.group['secondmember'] = tempsecond[0];$scope.group['secondlength'] = tempsecond[1];
-      for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}*/
+      $scope.factor_order2 = tempsecond[0].join();//$scope.group['secondlength'] = tempsecond[1];
+      //for(ii=0;ii<$scope.group['secondmember'].length;ii++){ $scope.group['secondmemberlength'].push($scope.group['secondmember'][ii]+"("+$scope.group['secondlength'][ii]+")")}
+
+
+
 
     var req = ocpu.call("univariateanalysis_summarizegroup",{e2:e2,f2:f2,p2:p2,
     group1:$scope.group.first,
@@ -508,6 +515,7 @@ appNorm.controller('ctrl_univariateanalysis',function($scope,srvShareData){
   }
 
   $scope.univariateanalysis = function(){
+    waitingDialog.show('I\'m working');
     if($scope.test['groups'] == "two independent groups"){
       var req=ocpu.call("univariateanalysis_twoIndependentGroups",{e2:e2,f2:f2,p2:p2,group1:$scope.group.first},
       function(sess){
@@ -647,17 +655,71 @@ var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
     }else{
       firsttimeplottable = false;
     }
-
     temp = univariateresult.slice();
-
     univariateresult0 = univariateresult[0];
-
     temp[0] = jQuery.extend(true, {}, univariateresult0);
     for(ii=0;ii<$scope.selectedList.length;ii++){
       delete temp[0][$scope.selectedList[ii].name]
     }
     univaraitetable = drawTable('#univariatetable_univariateanalysis',temp, "Univariate Statistical Result");
+
+
+    waitingDialog.hide();
   }
+
+
+  $scope.col_main;
+  $scope.ylab;
+  $scope.col_lab;
+  $scope.xlab_size;
+  $scope.legend_position;
+  $scope.rotation_x;
+
+  $scope.viewCompounds = function(){
+    setTimeout(function(){
+       var req = $("#visualizeCompound_univariateanalysis").rplot("univariateanalysis_boxplot", {
+      e2:e2,f2:f2,p2:p2,
+      test:$scope.test['groups'],
+      group1:$scope.group.first,group2:$scope.group.second,
+      factor_order1:$scope.factor_order1,factor_order2:$scope.factor_order2,//!
+      main:compoundName,col_main:$scope.col_main,
+      ylab:$scope.ylab,xlab:$scope.xlab,col_lab:$scope.col_lab,
+      xlab_size:$scope.xlab_size,legend_position:$scope.legend_position,rotation_x:$scope.rotation_x,
+      draw_single:true,compoundName:$scope.UniResultSelected.compoundName,sub:$scope.UniResultSelected.note,
+      title_column:compoundName
+    })
+    }, 1);
+
+
+
+
+  }
+
+
+
+
+
+
+  $scope.downloadAllBoxplots = function(){
+    waitingDialog.show('I\'m working');
+     var req = ocpu.call("univariateanalysis_boxplot",{
+      e2:e2,f2:f2,p2:p2,
+      test:$scope.test['groups'],
+      group1:$scope.group.first,group2:$scope.group.second,
+      factor_order1:$scope.factor_order1,factor_order2:$scope.factor_order2,//!
+      main:compoundName,col_main:$scope.col_main,
+      ylab:$scope.ylab,xlab:$scope.xlab,col_lab:$scope.col_lab,
+      xlab_size:$scope.xlab_size,legend_position:$scope.legend_position,rotation_x:$scope.rotation_x,
+      draw_single:false,sub:$scope.UniResultSelected.note,
+      title_column:compoundName
+    },function(sess){
+      download_boxplot_address = sess.getLoc() + "tar";
+      window.open(download_boxplot_address);
+    }).always(function(){waitingDialog.hide();})
+  }
+
+
+
 })
 appNorm.service('srvShareData', function($window) {
         var KEY = 'appNorm.SelectedValue';
@@ -689,6 +751,9 @@ appNorm.service('srvShareData', function($window) {
 
 
 $(document).ready(function(){
+
+
+
 $("#pca_opacity").slider();$("#pca_dotsize").slider();$("#pca_ellipse_line_width").slider();
 $("#pca_ellipse_confidenceLevel").slider();
 $('#pca_paper_bgcolor').colorpicker();
@@ -705,7 +770,7 @@ $('#missingreplacemethod_norm').editable({
            ]
     });
 
-   $('#univariatetable_univariateanalysis tbody').on('click', 'tr', function () {
+$('#univariatetable_univariateanalysis tbody').on('click', 'tr', function () {
         var data = univaraitetable.row( this ).data();
         alert( 'You clicked on '+data[0]+'\'s row' );
     } );
