@@ -61,5 +61,8 @@ Imports:
 	  SparseM,
 	  MatrixModels,
 	  quadprog,
-	  pbivnorm
+	  pbivnorm,
+	  lazyeval,
+	  minqa,
+	  nloptr
 RoxygenNote: 5.0.1
