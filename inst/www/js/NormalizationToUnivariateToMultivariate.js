@@ -677,6 +677,8 @@ var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
 
   $scope.viewCompounds = function(){
     setTimeout(function(){
+      console.log($scope.UniResultSelected.compoundName);
+      console.log(compoundName)
        var req = $("#visualizeCompound_univariateanalysis").rplot("univariateanalysis_boxplot", {
       e2:e2,f2:f2,p2:p2,
       test:$scope.test['groups'],
@@ -686,7 +688,7 @@ var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
       ylab:$scope.ylab,xlab:$scope.xlab,col_lab:$scope.col_lab,
       xlab_size:$scope.xlab_size,legend_position:$scope.legend_position,rotation_x:$scope.rotation_x,
       draw_single:true,compoundName:$scope.UniResultSelected.compoundName,sub:$scope.UniResultSelected.note,
-      title_column:compoundName
+      title_column:compoundName,compoundName:$scope.UniResultSelected.compoundName
     })
     }, 1);
 

@@ -63,11 +63,13 @@ univariateanalysis_boxplot <- function(e2,f2,p2,
     text.pos.x = text.pos.x + 0:(length(text.pos.x)-1)
 
     if(draw_single){
-      index=which(f2[[main]]%in%compoundName)
+      index=which(gsub(" ", "", f2[[main]], fixed = TRUE)==gsub(" ", "", compoundName, fixed = TRUE))
+      oo = index
     }else{
       index=1:nrow(f2)
+      oo=1
     }
-    oo=1
+
     for(j in index){
       if(f2$missingremoved[j]){
 
@@ -103,11 +105,13 @@ univariateanalysis_boxplot <- function(e2,f2,p2,
     }
 
     if(draw_single){
-      index=which(f2[[main]]%in%compoundName)
+      index=which(gsub(" ", "", f2[[main]], fixed = TRUE)==gsub(" ", "", compoundName, fixed = TRUE))
+      oo = index
     }else{
       index=1:nrow(f2)
+      oo=1
     }
-    oo=1
+
     for(j in index){
       if(f2$missingremoved[j]){
 
