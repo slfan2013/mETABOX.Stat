@@ -20,5 +20,22 @@ Imports:
 	  colorspace,
 	  multcomp,
 	  coin,
-	  grDevices
+	  sandwich,
+	  modeltools,
+	  TH.data,
+	  survival,
+	  grDevices,
+	  gtable,
+	  scales,
+	  psych,
+	  fBasics,
+	  MBESS,
+	  SuppDists,
+	  GPArotation,
+	  mosaic,
+	  xtable,
+	  car,
+	  SCRT,
+	  GGally,
+	  reshape2
 RoxygenNote: 5.0.1
