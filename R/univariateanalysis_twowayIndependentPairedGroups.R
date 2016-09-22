@@ -201,7 +201,7 @@ univariateanalysis_twowayIndependentPairedGroups <- function(e2,f2,p2,
         o = rownames(paravar1main)[-1]
         position = regexpr(')_', o)
         temp.name = substring(o, position+2)
-        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",p[[group2]][1],":",group1,")_",temp.name)
+        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",group1,")_",temp.name)
 
         }
       # var2
@@ -223,7 +223,7 @@ univariateanalysis_twowayIndependentPairedGroups <- function(e2,f2,p2,
         o = rownames(paravar2main)[-1]
         position = regexpr(')_', o)
         temp.name = substring(o, position+2)
-        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",p[[group1]][1],":",group2,")_",temp.name)
+        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",group2,")_",temp.name)
         }
     }
     #simple main effect
@@ -344,7 +344,7 @@ univariateanalysis_twowayIndependentPairedGroups <- function(e2,f2,p2,
   }
   colnames(sds) = temp.name
 
-  result = data.frame(result,means,sds,check.names = F)
+  result = data.frame(result,means,sds,check.names = F,stringsAsFactors = F)
 
   colnames(result) = gsub("\\.", "_", colnames(result))
   result[is.na(result)] = ""

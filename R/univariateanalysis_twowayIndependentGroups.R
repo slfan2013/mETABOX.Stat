@@ -146,9 +146,6 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
   colnames(parasubresult)[1] = paste0("pvalue_para_interaction(",group1,"*",group2,")")
 
 
-
-
-
   #nonparametric
   if(nonpara){
     #interaction
@@ -175,7 +172,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         o = rownames(paravar1main)[-1]
         position = regexpr(')_', o)
         temp.name = substring(o, position+2)
-        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",p[[group2]][1],":",group1,")_",temp.name)
+        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",group1,")_",temp.name)
       }
       # var2
       if(length(unique(p2[[group2]]))==2){
@@ -196,7 +193,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         o = rownames(paravar2main)[-1]
         position = regexpr(')_', o)
         temp.name = substring(o, position+2)
-        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",p[[group1]][1],":",group2,")_",temp.name)
+        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",group2,")_",temp.name)
       }
     }
     #simple main effect
@@ -206,7 +203,6 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         nonparavar1simplemain = by(p2,p2[[group2]],FUN=function(x){ # x=p2[p2[[group2]]==p2[[group2]][1],]
           e=e2[,p2[[group2]]%in%x[[group2]]];p=x
           nonparavar1simplemain = parSapply(cl,1:nrow(e),function(j,e,p,group1,group2){
-            #oneway.test(e[j,] ~ as.factor(p[[group1]]), var.equal = nonparasimplemaineffectvariance)$p.value
             wilcox.test(e[j,] ~ as.factor(p[[group1]]))$p.value
           },e,p,group1,group2)
           nonparavar1simplemain = rbind(nonparavar1simplemain,adj = p.adjust(nonparavar1simplemain,nonparasimplemaineffectadj))
@@ -247,7 +243,6 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         nonparavar2simplemain = by(p2,p2[[group1]],FUN=function(x){ # x=p2[p2[[group1]]==p2[[group1]][1],]
           e=e2[,p2[[group1]]%in%x[[group1]]];p=x
           nonparavar2simplemain = parSapply(cl,1:nrow(e),function(j,e,p,group1,group2,nonparasimplemaineffectpost){
-            #nonparaANOVAposthoc = posthocTGH(e[j,],as.factor(p[[group2]]),digits = 4)$output[[nonparasimplemaineffectpost]][,3]
             o = as.vector(pairwise.wilcox.test(e[j,],as.factor(p[[group2]]))$p.value)
             nonparaANOVAposthoc = o[!is.na(o)]
             return(c(kruskal.test(e[j,] ~ as.factor(p[[group2]]))$p.value,nonparaANOVAposthoc))
@@ -318,7 +313,7 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
   temp = matrix(,nrow=nrow(result), ncol = ncol(result)+ncol(means)+ncol(sds))
   temp[!f2$missingremoved,(ncol(result)+1):ncol(temp)] = data.matrix(data.frame(means,sds,check.names = F))
   temp[,1:ncol(result)] = as.matrix(result)
-  temp = data.frame(temp,check.names = F)
+  temp = data.frame(temp,check.names = F,stringsAsFactors=FALSE)
   colnames(temp) = c(colnames(as.matrix(result)),colnames(data.matrix(data.frame(means,sds,check.names = F))))
   result = temp
 

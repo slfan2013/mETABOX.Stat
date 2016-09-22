@@ -656,14 +656,14 @@ var req=ocpu.call("univariateanalysis_twowayIndependentPairedGroups",{
       firsttimeplottable = false;
     }
     temp = univariateresult.slice();
-    univariateresult0 = univariateresult[0];
+    univariateresult0 = univariateresult[0];//!!!
+    console.log(univariateresult);
     temp[0] = jQuery.extend(true, {}, univariateresult0);
+    console.log(temp)
     for(ii=0;ii<$scope.selectedList.length;ii++){
       delete temp[0][$scope.selectedList[ii].name]
     }
     univaraitetable = drawTable('#univariatetable_univariateanalysis',temp, "Univariate Statistical Result");
-
-
     waitingDialog.hide();
   }
 
