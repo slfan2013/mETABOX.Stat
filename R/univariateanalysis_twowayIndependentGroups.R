@@ -15,6 +15,8 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
                                                       parasimplemaineffect = T,parasimplemaineffectvariance=F,parasimplemaineffectadj = "fdr",parasimplemaineffectpost = "games.howell",
                                                       paraposthoc = "games.howell",
 
+
+                                                      # group1 = 'Gender';group2="treatment"
                                                       # para = T;
                                                       # parainteraction = T;
                                                       # paramaineffect = T;paramaineffectvariance=F;paramaineffectadj = "fdr";paramaineffectpost = "games.howell";
@@ -170,7 +172,10 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         },e2,p2,group1,group2,nonparamaineffectpost)
         rownames(nonparavar1main) = 1:nrow(nonparavar1main)# this is because the pairwise.wilcox.test cannot give me the name.
         rownames(nonparavar1main)[1] = paste0("pvalue_nonpara_ANOVA(",group1,")")
-        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",group1,")_",rownames(paravar1main)[-1])#borrow name from para!
+        o = rownames(paravar1main)[-1]
+        position = regexpr(')_', o)
+        temp.name = substring(o, position+2)
+        rownames(nonparavar1main)[2:nrow(nonparavar1main)] = paste0("pvalue_nonpara_posthoc(",p[[group2]][1],":",group1,")_",temp.name)
       }
       # var2
       if(length(unique(p2[[group2]]))==2){
@@ -188,7 +193,10 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
         },e2,p2,group1,group2,nonparamaineffectpost)
         rownames(nonparavar2main) = 1:nrow(nonparavar2main)# this is because the pairwise.wilcox.test cannot give me the name.
         rownames(nonparavar2main)[1] = paste0("pvalue_nonpara_ANOVA(",group2,")")
-        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",group2,")_",rownames(paravar2main)[-1])#borrow name from para!
+        o = rownames(paravar2main)[-1]
+        position = regexpr(')_', o)
+        temp.name = substring(o, position+2)
+        rownames(nonparavar2main)[2:nrow(nonparavar2main)] = paste0("pvalue_nonpara_posthoc(",p[[group1]][1],":",group2,")_",temp.name)
       }
     }
     #simple main effect
@@ -277,6 +285,46 @@ univariateanalysis_twowayIndependentGroups <- function(e2,f2,p2,
   # result = data.frame(f2,result,check.names = FALSE)
   # return(list(hypo_test_result=result,hypo_test_result_json=toJSON(result)))
   result = data.frame(f2,result,check.names = F);
+
+
+  means  = t(parSapply(cl,1:nrow(e2),function(j,e2,p2,group1,group2){
+    dta = data.frame(value = e2[j,],var1=p2[[group1]],var2=p2[[group2]])
+    return(aggregate(value~.,data=dta, mean)$value)
+  },e2,p2,group1,group2))
+  means = data.frame(means,check.names = F)
+  dta = data.frame(value = e2[1,],var1=p2[[group1]],var2=p2[[group2]])
+  temp.next = aggregate(value~.,data=dta, mean)
+  temp.name = vector()
+  for(i in 1:nrow(temp.next)){
+    temp.name[i] = paste0("mean_",temp.next[i,1],"*",temp.next[i,2])
+  }
+  colnames(means) = temp.name
+
+
+  sds  = t(parSapply(cl,1:nrow(e2),function(j,e2,p2,group1,group2){
+    dta = data.frame(value = e2[j,],var1=p2[[group1]],var2=p2[[group2]])
+    return(aggregate(value~.,data=dta, sd)$value)
+  },e2,p2,group1,group2))
+  sds = data.frame(sds,check.names = F)
+  dta = data.frame(value = e2[1,],var1=p2[[group1]],var2=p2[[group2]])
+  temp.next = aggregate(value~.,data=dta, sd)
+  temp.name = vector()
+  for(i in 1:nrow(temp.next)){
+    temp.name[i] = paste0("sd_",temp.next[i,1],"*",temp.next[i,2])
+  }
+  colnames(sds) = temp.name
+
+
+  temp = matrix(,nrow=nrow(result), ncol = ncol(result)+ncol(means)+ncol(sds))
+  temp[!f2$missingremoved,(ncol(result)+1):ncol(temp)] = data.matrix(data.frame(means,sds,check.names = F))
+  temp[,1:ncol(result)] = as.matrix(result)
+  temp = data.frame(temp,check.names = F)
+  colnames(temp) = c(colnames(as.matrix(result)),colnames(data.matrix(data.frame(means,sds,check.names = F))))
+  result = temp
+
+
+
+
   colnames(result) = gsub("\\.", "_", colnames(result))
   result[is.na(result)] = ""
   return(result)

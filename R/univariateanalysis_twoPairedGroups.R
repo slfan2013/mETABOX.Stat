@@ -46,6 +46,38 @@ univariateanalysis_twoPairedGroups <- function(e2,f2,p2,
   colnames(result)[(ncol(result)-4+1):ncol(result)] = c(paste0("pvalue_para(",group1,")"),paste0("pvalue_para_adj(",group1,")"),
                                                         paste0("pvalue_nonpara(",group1,")"),paste0("pvalue_nonpara_adj(",group1,")"))
 
+
+  means  = t(parSapply(cl,1:nrow(e2),function(j,e2,p2,group1){
+    dta = data.frame(value = e2[j,],var1=p2[[group1]])
+    return(aggregate(value~.,data=dta, mean)$value)
+  },e2,p2,group1))
+  means = data.frame(means,check.names = F)
+  dta = data.frame(value = e2[1,],var1=p2[[group1]])
+  temp.next = aggregate(value~.,data=dta, mean)
+  temp.name = vector()
+  for(i in 1:nrow(temp.next)){
+    temp.name[i] = paste0("mean_",temp.next[i,1])
+  }
+  colnames(means) = temp.name
+
+
+  sds  = t(parSapply(cl,1:nrow(e2),function(j,e2,p2,group1){
+    dta = data.frame(value = e2[j,],var1=p2[[group1]])
+    return(aggregate(value~.,data=dta, sd)$value)
+  },e2,p2,group1))
+  sds = data.frame(sds,check.names = F)
+  dta = data.frame(value = e2[1,],var1=p2[[group1]])
+  temp.next = aggregate(value~.,data=dta, sd)
+  temp.name = vector()
+  for(i in 1:nrow(temp.next)){
+    temp.name[i] = paste0("sd_",temp.next[i,1])
+  }
+  colnames(sds) = temp.name
+
+  result = data.frame(result,means,sds,check.names = F)
+
+
+
   colnames(result) = gsub("\\.", "_", colnames(result))
   result[is.na(result)] = ""
 

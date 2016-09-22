@@ -1,1 +1,5 @@
-Data is successfully uploaded!
+<p class='text-success'>File, x 149713 + mx 145984_non-obese diabetic mice_summer Course_08-2015_submit.xlsx is successfully uploaded!</p>
+                          <p class='text-success'>The data file contains 71 samples and 1088 compounds.</p>
+                          <p class='text-success'>Note: samples are NOT paired.</p>
+                          <p class='text-danger'>A total of 0 (0%) missing values (i.e. empty cells in the file) are detected.
+                          By default these missing values will be replaced by a small value. Click <strong>Continue</strong> to proceed missing value imputation.</p>
