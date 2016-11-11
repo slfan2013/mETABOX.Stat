@@ -10,7 +10,7 @@
 normalization_uploadfile <- function(file){
   warningmessage = NULL;
   successmessage = NULL;
-  # file = "C:\\Users\\Sili Fan\\Desktop\\data\\A\\mx 131933_tomatillo vs pumpkin_summer course_08-2015_submit.xlsx"
+  # file = "C:\\Users\\Sili Fan\\Desktop\\WORK\\WCMC\\projects\\Roro\\LC1.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\B\\mx 107155 _lung cancer tissue_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\Sili Fan\\Desktop\\data\\C\\mx 69088_HepG2 cells_Hirahatake & Meissen_high fructose_summer course_08-2015_submitDATA.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\D\\mx 149713 + mx 145984_non-obese diabetic mice_summer Course_08-2015_submit.xlsx"

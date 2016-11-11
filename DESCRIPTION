@@ -50,6 +50,7 @@ Imports:
 	  tidyr,
 	  pbkrtest,
 	  quantreg,
+	  RCurl,
 	  reshape,
 	  lavaan,
 	  mvtnorm,
