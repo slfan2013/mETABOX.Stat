@@ -10,7 +10,7 @@
 normalization_uploadfile <- function(file){
   warningmessage = NULL;
   successmessage = NULL;
-  # file = "C:\\Users\\Sili Fan\\Desktop\\WORK\\WCMC\\projects\\Roro\\LC1.xlsx"
+  # file = "C:\\Users\\Sili Fan\\Downloads\\mx 289532_Jang Youn_rat plasma pilot.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\B\\mx 107155 _lung cancer tissue_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\Sili Fan\\Desktop\\data\\C\\mx 69088_HepG2 cells_Hirahatake & Meissen_high fructose_summer course_08-2015_submitDATA.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\D\\mx 149713 + mx 145984_non-obese diabetic mice_summer Course_08-2015_submit.xlsx"
@@ -72,6 +72,15 @@ normalization_uploadfile <- function(file){
                             "<p class='text-warning'>'featureindex' not found in feature set. 'featureindex' is automatically added as 1, 2, 3,...</p>")
 
     f = cbind(featureindex=1:nrow(f),f);
+  }
+  # check if there is compound with no sd.
+  sds = apply(e,1,sd)
+  if(sum(sds==0)>0){
+    for(i in which(sds==0)){
+      e[i,] = rnorm(length(e[i,]))
+    }
+    warningmessage = paste0(warningmessage,
+                            "<p class='text-warning'>BE CAUTIONS: compound # ,",paste(which(sds==0),collapse=",")," is constant! They are replaced with random values for metabox to proceed forward.</p>")
   }
 
   if(is.null(warningmessage)){
