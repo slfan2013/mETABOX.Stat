@@ -24,7 +24,7 @@ univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
 
   if(para){
     paraANOVA = parSapply(cl=cl,X=1:nrow(e2),function(j,e2,p2,group1,equalvariance,posthocTGH,paraposthoc){
-      paraANOVAposthoc = posthocTGH(e2[j,],as.factor(p2[[group1]]),digits = 4)$output[[paraposthoc]][,3]
+      paraANOVAposthoc = posthocTGH(e2[j,],as.factor(p2[[group1]]),digits = 4)$output[[paraposthoc]]$p
       return(c(oneway.test(e2[j,] ~ as.factor(p2[[group1]]), var.equal = equalvariance)$p.value,paraANOVAposthoc))
     },e2,p2,group1,equalvariance,posthocTGH,paraposthoc)
   }else{paraANOVA=NA}
@@ -47,7 +47,7 @@ univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
   #names.
   pararesult = data.frame(t(pararesult),check.names = FALSE)
   colnames(pararesult) = c(paste0("pvalue_para(",group1,")"),paste("pvalue_para_posthoc:",
-                               names(posthocTGH(e2[1,],as.factor(p2[[group1]]),digits = 4)$output[[paraposthoc]][,3])))
+                               rownames(posthocTGH(e2[1,],as.factor(p2[[group1]]),digits = 4)$output[[paraposthoc]])))
 
   nonpararesult = data.frame(t(nonpararesult),check.names = FALSE)
   o = pairwise.t.test(e2[1,] , as.factor(p2[[group1]]),method = nonpposthocadj)$p.value

@@ -10,7 +10,7 @@
 normalization_uploadfile <- function(file){
   warningmessage = NULL;
   successmessage = NULL;
-  # file = "C:\\Users\\Sili Fan\\Downloads\\mx 289532_Jang Youn_rat plasma pilot.xlsx"
+  # file = "C:\\Users\\Sili Fan\\Desktop\\WORK\\WCMC\\projects\\mx 255636 Jan Schilling\\mx 255636 Jan Schilling_Project 2_mouse serum_04-2016_submit_4.29.2016.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\B\\mx 107155 _lung cancer tissue_summer course_08-2015_submit.xlsx"
   # file = "C:\\Users\\Sili Fan\\Desktop\\data\\C\\mx 69088_HepG2 cells_Hirahatake & Meissen_high fructose_summer course_08-2015_submitDATA.xlsx"
   # file = "C:\\Users\\fansi\\Desktop\\data\\D\\mx 149713 + mx 145984_non-obese diabetic mice_summer Course_08-2015_submit.xlsx"
