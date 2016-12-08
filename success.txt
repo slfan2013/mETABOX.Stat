@@ -1,5 +1,5 @@
-<p class='text-success'>File, C1.xlsx is successfully uploaded!</p>
-                          <p class='text-success'>The data file contains 54 samples and 2045 compounds.</p>
+<p class='text-success'>File, x 289532_Jang Youn_rat plasma pilot.xlsx is successfully uploaded!</p>
+                          <p class='text-success'>The data file contains 16 samples and 1258 compounds.</p>
                           <p class='text-success'>Note: samples are NOT paired.</p>
                           <p class='text-danger'>A total of 0 (0%) missing values (i.e. empty cells in the file) are detected.
                           By default these missing values will be replaced by a small value. Click <strong>Continue</strong> to proceed missing value imputation.</p>

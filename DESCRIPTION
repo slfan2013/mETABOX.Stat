@@ -66,4 +66,4 @@ Imports:
 	  lazyeval,
 	  minqa,
 	  nloptr
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000
