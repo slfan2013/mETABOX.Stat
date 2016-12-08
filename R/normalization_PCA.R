@@ -20,9 +20,9 @@ normalization_PCA <- function(e2,f2,p2,
                               title = NULL
                               ){
   # check if color has only one sample case!
-  if(sum(table(p[[color]])==1)){
+  if(sum(table(p2[[color]])==1)){
     stop(paste("The coloring group cannot have only one sample! The number of sample in each group is [group(#sample)]:",
-               paste0(paste0(names(table(p[[color]])),table(p[[color]]),collapse ="|"),collapse=',')))
+               paste0(paste0(names(table(p2[[color]])),table(p2[[color]]),collapse ="|"),collapse=',')))
   }
 
 
