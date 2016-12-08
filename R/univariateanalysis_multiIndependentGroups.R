@@ -52,7 +52,7 @@ univariateanalysis_multiIndependentGroups <- function(e2,f2,p2,
   nonpararesult = data.frame(t(nonpararesult),check.names = FALSE)
   o = pairwise.t.test(e2[1,] , as.factor(p2[[group1]]),method = nonpposthocadj)$p.value
   name = apply(expand.grid(rownames(o), colnames(o)), 1, paste, collapse=":")[!is.na(c(o))]
-  colnames(nonpararesult) = c(paste0("pvalue_nonpara(",group1,")"),name)
+  colnames(nonpararesult) = c(paste0("pvalue_nonpara(",group1,")",name))
 
 
 
