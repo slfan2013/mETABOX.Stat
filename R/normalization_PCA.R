@@ -56,7 +56,10 @@ normalization_PCA <- function(e2,f2,p2,
                   ell.info$center - lengths[2] * eigen.info$vectors[,2])
         r <- cluster::ellipsoidhull(d)
         predict(r,100)
-      },error = function(e){
+      },warning = function(w){
+        NULL
+      },
+      error = function(e){
         NULL
       })
     }else{
