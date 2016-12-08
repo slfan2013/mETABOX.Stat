@@ -19,6 +19,14 @@ normalization_PCA <- function(e2,f2,p2,
                               width=1000,height=1000,
                               title = NULL
                               ){
+  # check if color has only one sample case!
+  if(sum(table(p[[color]])==1)){
+    stop(paste("The coloring group cannot have only one sample! The number of sample in each group is [group(#sample)]:",
+               paste0(paste0(names(table(p[[color]])),table(p[[color]]),collapse ="|"),collapse=',')))
+  }
+
+
+
   library(jsonlite)
   cols = normalization_gg_color_hue(length(unique(p2[[color]])))
 
@@ -46,22 +54,26 @@ normalization_PCA <- function(e2,f2,p2,
     })
 
     if(ellipse_needed){
-      ellipse = tryCatch({
-        ell.info <- cov.wt(cbind(x[,1], x[,2]))
-        eigen.info <- eigen(ell.info$cov)
-        lengths <- sqrt(eigen.info$values * 2 * qf(as.numeric(confidence_level), 2, length(x[,1])-1))
-        d = rbind(ell.info$center + lengths[1] * eigen.info$vectors[,1],
-                  ell.info$center - lengths[1] * eigen.info$vectors[,1],
-                  ell.info$center + lengths[2] * eigen.info$vectors[,2],
-                  ell.info$center - lengths[2] * eigen.info$vectors[,2])
-        r <- cluster::ellipsoidhull(d)
-        predict(r,100)
-      },warning = function(w){
-        NULL
-      },
-      error = function(e){
-        NULL
-      })
+      if(nrow(x)>3){
+        ellipse = tryCatch({
+          ell.info <- cov.wt(cbind(x[,1], x[,2]))
+          eigen.info <- eigen(ell.info$cov)
+          lengths <- sqrt(eigen.info$values * 2 * qf(as.numeric(confidence_level), 2, length(x[,1])-1))
+          d = rbind(ell.info$center + lengths[1] * eigen.info$vectors[,1],
+                    ell.info$center - lengths[1] * eigen.info$vectors[,1],
+                    ell.info$center + lengths[2] * eigen.info$vectors[,2],
+                    ell.info$center - lengths[2] * eigen.info$vectors[,2])
+          r <- cluster::ellipsoidhull(d)
+          predict(r,100)
+        },warning = function(w){
+          NULL
+        },
+        error = function(e){
+          NULL
+        })
+      }else{
+        ellipse = NULL
+      }
     }else{
       ellipse = NULL
     }
