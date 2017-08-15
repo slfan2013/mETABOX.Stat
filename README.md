@@ -19,7 +19,7 @@ opencpu$browse('library/metabox.stat/www')
 opencpu$browse('library/MetaMapp2016/www')
 ```
 
-
+(to change the lib directory" https://stackoverflow.com/questions/2615128/where-does-r-store-packages)
 # metabox launching method.
 
 In R, run following code.
