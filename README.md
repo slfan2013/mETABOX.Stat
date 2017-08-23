@@ -1,4 +1,4 @@
-# A new version is here, https://github.com/slfan2013/WCMC_DA.
+
 
 # metabox installation method.
 
