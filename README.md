@@ -1,6 +1,6 @@
 
 
-# metabox installation method.
+# metabox.stat installation method.
 
 In R, run following code.
 
