@@ -24,7 +24,6 @@ Imports:
 	  modeltools,
 	  TH.data,
 	  survival,
-	  grDevices,
 	  gtable,
 	  scales,
 	  psych,
